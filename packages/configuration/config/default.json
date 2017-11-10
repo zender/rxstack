@@ -1,0 +1,8 @@
+{
+  "app": {
+    "name": "My App"
+  },
+  "sample_path": {
+    "required_value": "my required value"
+  }
+}

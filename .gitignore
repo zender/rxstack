@@ -1,0 +1,8 @@
+build
+node_modules
+coverage
+html-report
+npm-debug.log
+coverage.json
+*.iml
+.idea/
