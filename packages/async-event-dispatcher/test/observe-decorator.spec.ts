@@ -1,7 +1,7 @@
 import 'es6-shim';
-import {GenericEvent} from '../../src/generic-event';
-import {Observe} from '../../src/decorators';
-import {asyncEventDispatcher} from '../../src/async-event-dispatcher';
+import {GenericEvent} from '../src/generic-event';
+import {Observe} from '../src/decorators';
+import {asyncEventDispatcher} from '../src/async-event-dispatcher';
 
 describe('@Observe decorator', function() {
   beforeEach(() => {

@@ -7,7 +7,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git://github.com/rxstack/service-registry.git"
+    "url": "git://github.com/rxstack/rxstack.git"
   },
   "readmeFilename": "README.md",
   "scripts": {

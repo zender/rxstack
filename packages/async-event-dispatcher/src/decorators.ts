@@ -9,7 +9,7 @@ import {asyncEventDispatcher} from './async-event-dispatcher';
  * @constructor
  */
 export function Observe<T>(eventName: string, priority = 0): MethodDecorator {
-  return function (target: any, propertyKey: string): void {
+  return function (target: Object, propertyKey: string): void {
     asyncEventDispatcher.addListener(eventName, target[propertyKey].bind(target), priority);
   };
 }

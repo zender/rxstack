@@ -1,5 +1,5 @@
-import {asyncEventDispatcher} from '../../src/async-event-dispatcher';
-import {GenericEvent} from '../../src/generic-event';
+import {asyncEventDispatcher} from '../src/async-event-dispatcher';
+import {GenericEvent} from '../src/generic-event';
 
 class CustomEvent extends GenericEvent {
   modified = 0;
@@ -50,11 +50,13 @@ describe('AsyncEventDispatcher', () => {
     event.should.be.an.instanceof(GenericEvent);
   });
 
-  it('should remove listeners', () => {
+  it('should remove listeners', async () => {
     asyncEventDispatcher
       .addListener('pre.foo', async (event: GenericEvent): Promise<void> => { });
     asyncEventDispatcher.removeListeners('pre.foo');
     asyncEventDispatcher.getListeners('pre.foo').length.should.be.equal(0);
+    // should do nothing
+    await asyncEventDispatcher.dispatch('pre.foo');
   });
 
 
@@ -84,7 +86,7 @@ describe('AsyncEventDispatcher', () => {
         throw new Error('error');
       });
 
-    await asyncEventDispatcher.dispatch('pre.bar').catch((err: any) => {
+    await asyncEventDispatcher.dispatch('pre.bar').catch((err) => {
       err.message.should.be.equal('error');
     });
   });

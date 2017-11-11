@@ -1,12 +1,6 @@
-# @rxstack/configuration
+# RxStack
 
-> The Config component autofills and validates configuration values of any kind.
-
-## Installation
-
-```
-npm install rxstack-configuration --save
-```
+> RxStack is a REST and realtime framework for developing micro service web applications.
 
 ## Documentation
 

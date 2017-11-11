@@ -1,4 +1,4 @@
-import {GenericEvent} from '../../src/generic-event';
+import {GenericEvent} from '../src/generic-event';
 
 describe('GenericEvent', () => {
 

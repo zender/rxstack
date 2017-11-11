@@ -7,7 +7,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git://github.com/rxstack/configuration.git"
+    "url": "git://github.com/rxstack/rxstack.git"
   },
   "readmeFilename": "README.md",
   "scripts": {

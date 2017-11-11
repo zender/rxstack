@@ -61,7 +61,7 @@ export class AsyncEventDispatcher {
    * Removes all event listeners
    */
   reset(): void {
-    this.stack = new Map();
+    this.stack.clear();
   }
 
   /**
@@ -74,7 +74,6 @@ export class AsyncEventDispatcher {
   async dispatch(eventName: string, event?: GenericEvent): Promise<GenericEvent> {
     if (!event)
       event = new GenericEvent();
-
     const listeners = this.getListeners(eventName);
     if (listeners.length > 0)
       await this.doDispatch(listeners, event);

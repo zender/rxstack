@@ -1,17 +1,25 @@
 {
   "name": "@rxstack/async-event-dispatcher",
-  "version": "0.0.1",
+  "version": "0.0.7",
   "description": "RxStack AsyncEventDispatcher Component",
-  "private": true,
+  "private": false,
   "author": "Nikolay Gergiev",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git://github.com/rxstack/async-event-dispatcher.git"
+    "url": "git://github.com/rxstack/rxstack.git"
   },
-  "readmeFilename": "README.md",
+  "engines": {
+    "node": ">=8"
+  },
+  "keywords": [
+    "RxStack",
+    "Async Event Dispatcher"
+  ],
   "scripts": {
-    "test": "gulp tests"
+    "test": "gulp tests",
+    "watch": "gulp watch",
+    "publish": "gulp publish"
   },
   "devDependencies": {
     "@types/chai": "^3.4.35",
@@ -42,5 +50,14 @@
     "tslint": "^4.5.1",
     "tslint-stylish": "^2.1.0",
     "typescript": "^2.5.3"
-  }
+  },
+  "bugs": {
+    "url": "https://github.com/rxstack/rxstack/issues"
+  },
+  "homepage": "https://github.com/rxstack/rxstack#readme",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "dependencies": {}
 }
