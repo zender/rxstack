@@ -9,7 +9,7 @@ export class GenericEvent {
    *
    * @type {boolean}
    */
-  private propagationStopped: boolean = false;
+  private propagationStopped = false;
 
   /**
    * Returns whether further event listeners should be triggered.
