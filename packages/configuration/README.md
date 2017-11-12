@@ -5,7 +5,7 @@
 ## Installation
 
 ```
-npm install rxstack-configuration --save
+npm install @rxstack/configuration --save
 ```
 
 ## Documentation

@@ -116,7 +116,7 @@ describe('Configuration', () => {
 
     configuration.lock();
 
-    let error: any;
+    let error;
 
     try {
       configuration.register('another_sample_path', {
@@ -146,7 +146,7 @@ describe('Configuration', () => {
       }
     }, {'env_var': 'MY_VALUE'});
 
-    let error: any;
+    let error;
 
     try {
       configuration.register('sample_path', {
@@ -166,7 +166,7 @@ describe('Configuration', () => {
   });
 
   it('should throw an error if root path is not an object', () => {
-    let error: any;
+    let error;
 
     try {
       configuration.register('sample_path', {
@@ -181,7 +181,7 @@ describe('Configuration', () => {
   });
 
   it('should throw an error if path does not exist', () => {
-    let error: any;
+    let error;
 
     configuration.register('sample_path', {
       type: 'object',
@@ -206,7 +206,7 @@ describe('Configuration', () => {
 
 
   it('should throw an error if schema is not valid', () => {
-    let error: any;
+    let error;
 
     try {
       configuration.register('sample_path', {

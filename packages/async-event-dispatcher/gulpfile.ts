@@ -17,44 +17,44 @@ const remapIstanbul = require('remap-istanbul/lib/gulpRemapIstanbul');
 @Gulpclass()
 export class Gulpfile {
 
-    // -------------------------------------------------------------------------
-    // General tasks
-    // -------------------------------------------------------------------------
+  // -------------------------------------------------------------------------
+  // General tasks
+  // -------------------------------------------------------------------------
 
-    /**
-     * Cleans build folder.
-     */
-    @Task()
-    clean(cb: Function) {
-        return del([
-            'build/**',
-            '!build',
-            '!build/package',
-            '!build/package/node_modules',
-            '!build/package/node_modules/**'
-        ], cb);
-    }
+  /**
+   * Cleans build folder.
+   */
+  @Task()
+  clean(cb: Function) {
+    return del([
+      'build/**',
+      '!build',
+      '!build/package',
+      '!build/package/node_modules',
+      '!build/package/node_modules/**'
+    ], cb);
+  }
 
-    /**
-     * Runs typescript files compilation.
-     */
-    @Task()
-    compile() {
-        return gulp.src('*.ts', { read: false })
-            .pipe(shell(['tsc']));
-    }
+  /**
+   * Runs typescript files compilation.
+   */
+  @Task()
+  compile() {
+    return gulp.src('*.ts', { read: false })
+      .pipe(shell(['tsc']));
+  }
 
 
-    /**
-    * Runs typescript file watcher.
-    */
-    @Task()
-    watch() {
-      return gulp.watch([__dirname + '/*.ts'], () => {
-          console.log('compiling..');
-          this.compile();
-      });
-    }
+  /**
+  * Runs typescript file watcher.
+  */
+  @Task()
+  watch() {
+    return gulp.watch([__dirname + '/*.ts'], () => {
+      console.log('compiling..');
+      this.compile();
+    });
+  }
 
   // -------------------------------------------------------------------------
   // Packaging and Publishing tasks
@@ -151,77 +151,77 @@ export class Gulpfile {
     return ['package', 'npmPublish'];
   }
 
-    // -------------------------------------------------------------------------
-    // Run tests tasks
-    // -------------------------------------------------------------------------
+  // -------------------------------------------------------------------------
+  // Run tests tasks
+  // -------------------------------------------------------------------------
 
-    /**
-     * Runs ts linting to validate source code.
-     */
-    @Task()
-    tslint() {
-        return gulp.src(['./test/**/*.ts'])
-            .pipe(tslint())
-            .pipe(tslint.report(stylish, {
-                emitError: true,
-                sort: true,
-                bell: true
-            }));
-    }
+  /**
+   * Runs ts linting to validate source code.
+   */
+  @Task()
+  tslint() {
+    return gulp.src(['./test/**/*.ts'])
+      .pipe(tslint())
+      .pipe(tslint.report(stylish, {
+        emitError: true,
+        sort: true,
+        bell: true
+      }));
+  }
 
-    /**
-     * Runs unit-tests.
-     */
-    @Task()
-    unit() {
-        chai.should();
-        chai.use(require('sinon-chai'));
-        chai.use(require('chai-as-promised'));
-        return gulp.src('./build/compiled/test/**/*.js')
-            .pipe(mocha());
-    }
+  /**
+   * Runs unit-tests.
+   */
+  @Task()
+  unit() {
+    chai.should();
+    chai.use(require('sinon-chai'));
+    chai.use(require('chai-as-promised'));
+    return gulp.src('./build/compiled/test/**/*.js')
+      .pipe(mocha());
+  }
 
-    /**
-     * Runs before test coverage, required step to perform a test coverage.
-     */
-    @Task()
-    coveragePre() {
-        return gulp.src(['./build/compiled/src/**/*.js'])
-            .pipe(istanbul())
-            .pipe(istanbul.hookRequire());
-    }
+  /**
+   * Runs before test coverage, required step to perform a test coverage.
+   */
+  @Task()
+  coveragePre() {
+    return gulp.src(['./build/compiled/src/**/*.js'])
+      .pipe(istanbul())
+      .pipe(istanbul.hookRequire());
+  }
 
-    /**
-     * Runs post coverage operations.
-     */
-    @Task('coveragePost', ['coveragePre'])
-    coveragePost() {
-        chai.should();
-        chai.use(require('sinon-chai'));
-        chai.use(require('chai-as-promised'));
+  /**
+   * Runs post coverage operations.
+   */
+  @Task('coveragePost', ['coveragePre'])
+  coveragePost() {
+    chai.should();
+    chai.use(require('sinon-chai'));
+    chai.use(require('chai-as-promised'));
 
-        return gulp.src(['./build/compiled/test/**/*.js'])
-            .pipe(mocha())
-            .pipe(istanbul.writeReports());
-    }
+    return gulp.src(['./build/compiled/test/**/*.js'])
+      .pipe(mocha())
+      .pipe(istanbul.writeReports());
+  }
 
-    @Task()
-    coverageRemap() {
-        return gulp.src('./coverage/coverage-final.json')
-            .pipe(remapIstanbul({
-              reports: {
-                'json': 'coverage.json',
-                'html': 'html-report'
-              }
-            }))
-            .pipe(gulp.dest('./coverage'));
-    }
+  @Task()
+  coverageRemap() {
+    return gulp.src('./coverage/coverage-final.json')
+      .pipe(remapIstanbul({
+        reports: {
+          'json': 'coverage.json',
+          'html': 'html-report'
+        }
+      }))
+      .pipe(gulp.dest('./coverage'));
+  }
 
-    /**
-     * Compiles the code and runs tests.
-     */
-    @SequenceTask()
-    tests() {
-        return ['clean', 'compile', 'tslint', 'coveragePost', 'coverageRemap'];
-    }
+  /**
+   * Compiles the code and runs tests.
+   */
+  @SequenceTask()
+  tests() {
+    return ['clean', 'compile', 'tslint', 'coveragePost', 'coverageRemap'];
+  }
 }

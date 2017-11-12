@@ -3,7 +3,7 @@
   "version": "0.0.7",
   "description": "RxStack AsyncEventDispatcher Component",
   "private": false,
-  "author": "Nikolay Gergiev",
+  "author": "Nikolay Gergiev <symfonist@gmail.com>",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -19,7 +19,7 @@
   "scripts": {
     "test": "gulp tests",
     "watch": "gulp watch",
-    "publish": "gulp publish"
+    "publish-package": "gulp publish"
   },
   "devDependencies": {
     "@types/chai": "^3.4.35",
