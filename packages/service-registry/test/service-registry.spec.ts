@@ -1,5 +1,6 @@
 import {metadataStorage} from '../src/metadata-storage';
 import {MyInterface, MyManager, MyService1, MyService2, MyService3, MyService4} from './stubs';
+import {ServiceRegistryMetadata} from '../src/metadata';
 const chai = require('chai');
 const expect = chai.expect;
 

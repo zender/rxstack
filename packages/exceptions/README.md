@@ -1,11 +1,11 @@
 # @rxstack/exceptions
 
-> The Exceptions component converts error to exceptions.
+> The Exceptions component converts error to exception.
 
 ## Installation
 
 ```
-npm install @rxstack-exceptions --save
+npm install @rxstack/exceptions --save
 ```
 
 ## Documentation

@@ -1,7 +1,7 @@
 /**
  * This metadata contains all information about registered service.
  */
-class ServiceRegistryMetadata {
+export class ServiceRegistryMetadata {
   /**
    * Target class where decorator is used
    */

@@ -5,7 +5,7 @@
 ## Installation
 
 ```
-npm install @rxstack-logger --save
+npm install @rxstack/logger --save
 ```
 
 ## Documentation

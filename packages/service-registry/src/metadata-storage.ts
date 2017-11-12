@@ -1,6 +1,8 @@
 /**
  * The MetadataStorage registers service with @ServiceRegistry annotation.
  */
+import {ServiceRegistryMetadata} from './metadata';
+
 export class MetadataStorage {
   /**
    * Container of all services

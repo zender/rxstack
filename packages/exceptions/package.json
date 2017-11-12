@@ -2,16 +2,20 @@
   "name": "@rxstack/exceptions",
   "version": "0.0.1",
   "description": "RxStack Exceptions Component",
-  "private": true,
-  "author": "Nikolay Gergiev",
+  "private": false,
+  "author": "Nikolay Gergiev <symfonist@gmail.com>",
   "license": "MIT",
   "repository": {
     "type": "git",
     "url": "git://github.com/rxstack/rxstack.git"
   },
-  "readmeFilename": "README.md",
+  "engines": {
+    "node": ">=8"
+  },
   "scripts": {
-    "test": "gulp tests"
+    "test": "gulp tests",
+    "watch": "gulp watch",
+    "publish-package": "gulp publish"
   },
   "devDependencies": {
     "@types/chai": "^3.4.35",
@@ -42,5 +46,17 @@
     "tslint": "^4.5.1",
     "tslint-stylish": "^2.1.0",
     "typescript": "^2.5.3"
-  }
+  },
+  "bugs": {
+    "url": "https://github.com/rxstack/rxstack/issues"
+  },
+  "homepage": "https://github.com/rxstack/rxstack#readme",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "dependencies": {},
+  "keywords": [
+    "exceptions"
+  ]
 }

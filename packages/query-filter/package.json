@@ -2,8 +2,8 @@
   "name": "@rxstack/query-filter",
   "version": "0.0.1",
   "description": "RxStack QueryFilter Component",
-  "private": true,
-  "author": "Nikolay Gergiev",
+  "private": false,
+  "author": "Nikolay Gergiev <symfonist@gmail.com>",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -11,7 +11,9 @@
   },
   "readmeFilename": "README.md",
   "scripts": {
-    "test": "gulp tests"
+    "test": "gulp tests",
+    "watch": "gulp watch",
+    "publish-package": "gulp publishPackage"
   },
   "devDependencies": {
     "@types/chai": "^3.4.35",
@@ -47,5 +49,16 @@
   },
   "dependencies": {
     "lodash": "^4.17.4"
-  }
+  },
+  "bugs": {
+    "url": "https://github.com/rxstack/rxstack/issues"
+  },
+  "homepage": "https://github.com/rxstack/rxstack#readme",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "keywords": [
+    "query-filter"
+  ]
 }

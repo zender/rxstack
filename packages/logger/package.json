@@ -2,16 +2,21 @@
   "name": "@rxstack/logger",
   "version": "0.0.1",
   "description": "RxStack Logger Component",
-  "private": true,
-  "author": "Nikolay Gergiev",
+  "private": false,
+  "author": "Nikolay Gergiev <symfonist@gmail.com>",
   "license": "MIT",
   "repository": {
     "type": "git",
     "url": "git://github.com/rxstack/rxstack.git"
   },
   "readmeFilename": "README.md",
+  "engines": {
+    "node": ">=8"
+  },
   "scripts": {
-    "test": "gulp tests"
+    "test": "gulp tests",
+    "watch": "gulp watch",
+    "publish-package": "gulp publish"
   },
   "devDependencies": {
     "@types/chai": "^3.4.35",
@@ -48,5 +53,16 @@
   "dependencies": {
     "chalk": "^2.3.0",
     "moment": "^2.19.1"
-  }
+  },
+  "bugs": {
+    "url": "https://github.com/rxstack/rxstack/issues"
+  },
+  "homepage": "https://github.com/rxstack/rxstack#readme",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "keywords": [
+    "logger"
+  ]
 }
