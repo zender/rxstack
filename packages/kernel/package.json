@@ -1,7 +1,7 @@
 {
-  "name": "@rxstack/exceptions",
-  "version": "0.0.2",
-  "description": "RxStack Exceptions Component",
+  "name": "@rxstack/kernel",
+  "version": "0.0.1",
+  "description": "RxStack Kernel Component",
   "private": false,
   "author": "Nikolay Gergiev <symfonist@gmail.com>",
   "license": "MIT",
@@ -55,8 +55,13 @@
   "directories": {
     "test": "test"
   },
-  "dependencies": {},
+  "dependencies": {
+    "@rxstack/async-event-dispatcher": "0.0.6",
+    "@rxstack/exceptions": "0.0.2",
+    "@rxstack/logger": "0.0.1",
+    "injection-js": "^2.1.0"
+  },
   "keywords": [
-    "exceptions"
+    "kernel"
   ]
 }

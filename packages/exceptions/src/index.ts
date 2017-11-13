@@ -34,15 +34,10 @@ export declare class ValidationError {
 export class Exception implements Error {
   name: string;
   stack?: string;
-
-  protected data: any;
+  data: any;
 
   constructor(public message: string) {
     this.name = 'Exception';
-  }
-
-  public getData(): any {
-    return this.data;
   }
 }
 
@@ -58,7 +53,7 @@ export abstract class HttpException extends Exception {
     this.name = 'HttpException';
   }
 
-  public getStatusCode(): number {
+  getStatusCode(): number {
     return this.statusCode;
   }
 }
@@ -371,4 +366,18 @@ export class ValidationException extends BadRequestException {
     super(message);
     this.data = errors;
   }
+}
+
+/**
+ * Transform an error to exception
+ *
+ * @param e
+ * @returns {Exception}
+ */
+export function transformToException(e: any): Exception {
+  if (!(e instanceof Exception)) {
+    e = new Exception(e.message);
+    e.data = e.stack;
+  }
+  return e;
 }

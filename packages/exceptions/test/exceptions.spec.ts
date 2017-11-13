@@ -9,6 +9,7 @@ import {
   NotFoundException, NotImplementedException, PayloadTooLargeException,
   PaymentRequiredException, PreconditionFailedException, ProxyAuthenticationRequiredException,
   RangeNotSatisfiableException, RequestTimeoutException, ServiceUnavailableException, TooManyRequestsException,
+  transformToException,
   UnauthorizedException, UnavailableForLegalReasonsException, UnprocessableEntityException,
   UnsupportedMediaTypeException, URITooLongException, ValidationError, ValidationException
 } from '../src/index';
@@ -57,7 +58,7 @@ describe('Exceptions', () => {
     });
   });
 
-  it('retrieves data from exception with .data()', () => {
+  it('retrieves data from exception with .data', () => {
 
     let errors: ValidationError[] = [{
       target: null,
@@ -71,6 +72,14 @@ describe('Exceptions', () => {
 
     let exception = new ValidationException(null, errors);
 
-    exception.getData().should.be.equal(errors);
+    exception.data.should.be.equal(errors);
+  });
+
+  it('converts error to exception', () => {
+
+    let exception = transformToException(new Error('generic'));
+    exception.name.should.be.equal('Exception');
+    let sameException = transformToException(exception);
+    sameException.should.be.equal(exception);
   });
 });
