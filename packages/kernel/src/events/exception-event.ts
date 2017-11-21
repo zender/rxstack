@@ -8,7 +8,7 @@ export class ExceptionEvent extends KernelEvent {
   }
 
   setException(exception: Exception): void {
-    this.exception = this.exception;
+    this.exception = exception;
   }
 
   getException(): Exception {

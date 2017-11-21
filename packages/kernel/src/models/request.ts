@@ -2,10 +2,8 @@ import {ParameterBag} from './parameter-bag';
 import {FileBag} from './file-bag';
 import {HeaderBag} from './header-bag';
 import {AttributeBag} from './attribute-bag';
-import {HttpMethod} from '../interfaces';
+import {HttpMethod, Transport} from '../interfaces';
 import {Token} from './token';
-
-export type Transport = 'HTTP' | 'SOCKET';
 
 export class Request {
 

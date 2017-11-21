@@ -3,6 +3,9 @@ import {Response} from '../../src/models/response';
 import {Observe} from '@rxstack/async-event-dispatcher';
 import {KernelEvents} from '../../src/kernel-events';
 import {Injectable} from 'injection-js';
+import {ResponseEvent} from '../../src/events/response-event';
+import {ExceptionEvent} from '../../src/events/exception-event';
+import {InternalServerErrorException} from '@rxstack/exceptions';
 
 @Injectable()
 export class AnnotatedListener {
@@ -12,11 +15,44 @@ export class AnnotatedListener {
       return;
     }
 
-    await this.handleRequestEvent(event);
-  }
-
-  private async handleRequestEvent(event: RequestEvent): Promise<void> {
     const response = new Response('modified_by_request_event');
     event.setResponse(response);
+  }
+
+  @Observe(KernelEvents.KERNEL_RESPONSE)
+  async onResponse(event: ResponseEvent): Promise<void> {
+    if (event.getRequest().params.get('type') !== 'test_response_event') {
+      return;
+    }
+
+    const response = new Response('modified_by_response_event');
+    event.setResponse(response);
+  }
+
+  @Observe(KernelEvents.KERNEL_EXCEPTION)
+  async onException(event: ExceptionEvent): Promise<void> {
+    if (event.getRequest().params.get('type') !== 'test_exception_event') {
+      return;
+    }
+
+    const response = new Response('modified_by_exception_event');
+    event.setResponse(response);
+  }
+
+  @Observe(KernelEvents.KERNEL_EXCEPTION, -10)
+  async onExceptionWithChangedException(event: ExceptionEvent): Promise<void> {
+    if (event.getRequest().params.get('type') !== 'test_exception_event_with_changed_exception') {
+      return;
+    }
+    event.setException(new InternalServerErrorException());
+  }
+
+  @Observe(KernelEvents.KERNEL_RESPONSE, 10)
+  async onResponseWithException(event: ResponseEvent): Promise<void> {
+    if (event.getRequest().params.get('type') !== 'test_response_event_with_exception') {
+      return;
+    }
+
+    throw new Error('ExceptionInResponseEvent');
   }
 }

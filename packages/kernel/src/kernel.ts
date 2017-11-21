@@ -16,16 +16,19 @@ import {ExceptionEvent} from './events/exception-event';
 export class Kernel {
   private injector: Injector;
   private routeDefinitions: RouteDefinition[] = [];
+  private initialized = false;
 
   setInjector(injector: Injector): void {
     this.injector = injector;
   }
 
   initialize(): void {
-    this.routeDefinitions = [];
+    if (this.initialized)
+      throw new Exception('Kernel is already initialized.');
     metadataStorage.getControllerMetadataCollection().forEach((metadata: ControllerMetadata) => {
       this.registerDefinition(metadata);
     });
+    this.initialized = true;
   }
 
   getRouteDefinitions(): RouteDefinition[] {
@@ -58,9 +61,8 @@ export class Kernel {
             await this.injector.get(AsyncEventDispatcher).dispatch(KernelEvents.KERNEL_REQUEST, requestEvent);
             request = requestEvent.getRequest();
 
-            if (requestEvent.hasResponse()) {
+            if (requestEvent.hasResponse())
               return await this.handleResponse(requestEvent.getResponse(), request);
-            }
 
             // call controller
             response = await controller[methodName].bind(controller).call(this, request);
@@ -69,13 +71,12 @@ export class Kernel {
             let exception = transformToException(e);
 
             try {
-              let exceptionEvent = new ExceptionEvent(exception, request);
+              const exceptionEvent = new ExceptionEvent(exception, request);
               await this.injector.get(AsyncEventDispatcher).dispatch(KernelEvents.KERNEL_EXCEPTION, exceptionEvent);
               exception = exceptionEvent.getException();
 
-              if (exceptionEvent.hasResponse()) {
+              if (exceptionEvent.hasResponse())
                 return await this.handleResponse(exceptionEvent.getResponse(), request);
-              }
 
               throw exception;
 
@@ -96,7 +97,7 @@ export class Kernel {
     try {
       const responseEvent = new ResponseEvent(request, response);
       await this.injector.get(AsyncEventDispatcher).dispatch(KernelEvents.KERNEL_RESPONSE, responseEvent);
-      return Promise.resolve(responseEvent.getResponse());
+      return responseEvent.getResponse();
     } catch (e) {
       const exception = transformToException(e);
       throw exception;

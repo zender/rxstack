@@ -1,36 +1,34 @@
 import 'reflect-metadata';
 import {metadataStorage} from '../src/metadata/metadata-storage';
-import {NoAnnotationController} from './stubs/no-annotation.controller';
 import {ControllerMetadata} from '../src/metadata/metadata';
-import {AnnotationController} from './stubs/annotation.controller';
+import {AnnotatedController} from './stubs/annotated.controller';
+import {NotAnnotatedController} from './stubs/not-annotated.controller';
 
 describe('Metadata', () => {
-  it('should has TestController metadata', async () => {
-    metadataStorage.hasControllerMetadata(AnnotationController).should.be.true;
+  it('should has AnnotatedController metadata', async () => {
+    metadataStorage.hasControllerMetadata(AnnotatedController).should.be.true;
   });
 
-  it('should find TestController metadata', async () => {
-    const metadata = metadataStorage.findControllerMetadata(AnnotationController);
+  it('should find AnnotatedController metadata', async () => {
+    const metadata = metadataStorage.findControllerMetadata(AnnotatedController);
     metadata.should.be.not.null;
-    metadata.target.should.be.equal(AnnotationController);
-    metadata.methodDefinitions.has('findAction');
-    metadata.methodDefinitions.has('getAction');
+    metadata.target.should.be.equal(AnnotatedController);
+    metadata.methodDefinitions.has('indexAction');
   });
 
-  it('should add NoAnnotationController metadata', async () => {
+  it('should add NotAnnotatedController metadata', async () => {
 
-    let newMetadata = new ControllerMetadata(NoAnnotationController);
+    const newMetadata = new ControllerMetadata(NotAnnotatedController);
     newMetadata.options = {routeBase: 'no-annotation'};
-    newMetadata.methodDefinitions.set('listAction', {
+    newMetadata.methodDefinitions.set('indexAction', {
       'method': 'GET',
-      'route': '/list'
+      'route': '/index'
     });
     metadataStorage.registerControllerMetadata(newMetadata);
-    let metadata = metadataStorage.findControllerMetadata(NoAnnotationController);
+    const metadata = metadataStorage.findControllerMetadata(NotAnnotatedController);
     metadata.should.be.not.null;
-    metadata.target.should.be.equal(NoAnnotationController);
-    metadata.methodDefinitions.has('findAction');
-    metadata.methodDefinitions.has('getAction');
+    metadata.target.should.be.equal(NotAnnotatedController);
+    metadata.methodDefinitions.has('indexAction');
 
     let error = null;
     try {
@@ -43,6 +41,6 @@ describe('Metadata', () => {
 
   it('should reset metadata', async () => {
     metadataStorage.reset();
-    metadataStorage.getControllerMetadataCollection().length.should.not.be.null;
+    metadataStorage.getControllerMetadataCollection().length.should.be.equal(0);
   });
 });

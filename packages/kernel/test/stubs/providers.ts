@@ -1,10 +1,10 @@
 import {Provider} from 'injection-js';
-import {NoAnnotationController} from './no-annotation.controller';
-import {AnnotationController} from './annotation.controller';
 import {AnnotatedListener} from './annotated-listener';
+import {AnnotatedController} from './annotated.controller';
+import {NotAnnotatedController} from './not-annotated.controller';
 
 export const STUB_PROVIDERS: Provider[] = [
-  { provide: AnnotationController, useClass: AnnotationController },
-  { provide: NoAnnotationController, useClass: NoAnnotationController },
+  { provide: AnnotatedController, useClass: AnnotatedController },
+  { provide: NotAnnotatedController, useClass: NotAnnotatedController },
   { provide: AnnotatedListener, useClass: AnnotatedListener },
 ];

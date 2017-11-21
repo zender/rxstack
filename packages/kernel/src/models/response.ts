@@ -1,8 +1,6 @@
-import {ParameterBag} from './parameter-bag';
+import {HeaderBag} from './header-bag';
 
 export class Response {
-  public headers: ParameterBag = new ParameterBag();
-  constructor(public content?: any, public statusCode = 200) {
-    this.headers.set('Content-Type', 'application/json');
-  }
+  public headers: HeaderBag = new HeaderBag();
+  constructor(public content?: any, public statusCode = 200) { }
 }

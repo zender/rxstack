@@ -3,6 +3,8 @@ import {Response} from './models/response';
 
 export type HttpMethod = 'GET' | 'PUT' | 'PATCH' | 'POST' | 'DELETE';
 
+export type Transport = 'HTTP' | 'SOCKET';
+
 export interface MethodDefinition {
   method: HttpMethod;
   route: string;
