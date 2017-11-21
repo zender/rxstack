@@ -59,7 +59,8 @@
     "@rxstack/async-event-dispatcher": "0.0.6",
     "@rxstack/exceptions": "0.0.2",
     "@rxstack/logger": "0.0.1",
-    "injection-js": "^2.1.0"
+    "injection-js": "^2.1.0",
+    "reflect-metadata": "^0.1.10"
   },
   "keywords": [
     "kernel"

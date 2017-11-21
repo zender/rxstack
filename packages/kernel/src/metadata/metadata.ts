@@ -1,4 +1,4 @@
-import {MethodDefinition} from '../intefaces';
+import {MethodDefinition} from '../interfaces';
 import {ControllerOptions} from './controller-options';
 
 export class ControllerMetadata {

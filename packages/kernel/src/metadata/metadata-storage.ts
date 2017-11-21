@@ -1,37 +1,46 @@
 import {ControllerMetadata} from './metadata';
 import {ControllerOptions} from './controller-options';
-import {MethodDefinition} from '../intefaces';
+import {MethodDefinition} from '../interfaces';
 
 export class MetadataStorage {
-  public controllerMetadata: ControllerMetadata[] = [];
+  private controllerMetadata: ControllerMetadata[] = [];
 
-  public hasControllerMetadata(target: Function): boolean {
+  getControllerMetadataCollection(): ControllerMetadata[] {
+    return this.controllerMetadata;
+  }
+
+  hasControllerMetadata(target: Function): boolean {
     return !!this.controllerMetadata.find(meta => meta.target === target);
   }
 
-  public addControllerMetadata(target: Function, options: ControllerOptions): void {
+  addControllerMetadata(target: Function, options: ControllerOptions): void {
     const metadata = this.findControllerMetadata(target);
     metadata.options.routeBase = options.routeBase;
   }
 
-  public addMethodDefinition(target: Function, propertyKey: string, methodDefinition: MethodDefinition): void {
-    const metadata = this.findControllerMetadata(target);
-    metadata.methodDefinitions.set(propertyKey, methodDefinition);
-
-    if (!this.hasControllerMetadata(target)) {
-      this.controllerMetadata.push(metadata);
-    }
-  }
-
-  private findControllerMetadata(target: Function): ControllerMetadata {
+  findControllerMetadata(target: Function): ControllerMetadata {
     let metadata = this.controllerMetadata.find(meta => meta.target === target);
-
-    if (!metadata) {
+    if (!metadata)
       metadata = new ControllerMetadata(target);
-    }
-
+      this.controllerMetadata.push(metadata);
     return metadata;
   }
+
+  addMethodDefinition(target: Function, propertyKey: string, methodDefinition: MethodDefinition): void {
+    const metadata = this.findControllerMetadata(target);
+    metadata.methodDefinitions.set(propertyKey, methodDefinition);
+  }
+
+  registerControllerMetadata(metadata: ControllerMetadata): void {
+    if (this.hasControllerMetadata(metadata.target))
+      throw new Error(`Controller ${metadata.target.name} is already registered.`);
+    this.controllerMetadata.push(metadata);
+  }
+
+  reset(): void {
+    this.controllerMetadata = [];
+  }
+
 }
 
 /**

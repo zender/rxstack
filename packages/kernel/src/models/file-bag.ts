@@ -1,3 +1,6 @@
 import {GenericBag} from './generic-bag';
 
-export class FileBag extends GenericBag<File> {}
+/**
+ * todo - implement File
+ */
+export class FileBag extends GenericBag<any> { }

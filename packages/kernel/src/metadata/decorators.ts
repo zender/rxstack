@@ -1,5 +1,5 @@
 import {metadataStorage} from './metadata-storage';
-import {HttpMethod, MethodDefinition} from '../intefaces';
+import {HttpMethod} from '../interfaces';
 import {ControllerOptions} from './controller-options';
 
 export function Controller(options: ControllerOptions): ClassDecorator {
@@ -9,11 +9,9 @@ export function Controller(options: ControllerOptions): ClassDecorator {
 }
 
 export function Route<T>(method: HttpMethod, route: string): MethodDecorator {
-  return function (target: Function, propertyKey: string, descriptor) {
-    const methodDefinition: MethodDefinition = {
-      method,
-      route
-    };
-    metadataStorage.addMethodDefinition(target.constructor, propertyKey, methodDefinition);
+  return function (target: Function, propertyKey: string): void {
+    metadataStorage.addMethodDefinition(target.constructor, propertyKey, {
+      method, route
+    });
   };
 }

@@ -1,4 +1,4 @@
-import {InjectorAwareInterface, MethodDefinition, RouteDefinition} from './intefaces';
+import {MethodDefinition, RouteDefinition} from './interfaces';
 import {Injectable, Injector} from 'injection-js';
 import {ControllerMetadata} from './metadata/metadata';
 import {metadataStorage} from './metadata/metadata-storage';
@@ -13,21 +13,17 @@ import {ResponseEvent} from './events/response-event';
 import {ExceptionEvent} from './events/exception-event';
 
 @Injectable()
-export class Kernel implements InjectorAwareInterface {
+export class Kernel {
   private injector: Injector;
   private routeDefinitions: RouteDefinition[] = [];
-  private isInitialized = false;
 
   setInjector(injector: Injector): void {
     this.injector = injector;
   }
 
   initialize(): void {
-    if (this.isInitialized) {
-      throw new Exception('Kernel is already initialized.');
-    }
-
-    metadataStorage.controllerMetadata.forEach((metadata: ControllerMetadata) => {
+    this.routeDefinitions = [];
+    metadataStorage.getControllerMetadataCollection().forEach((metadata: ControllerMetadata) => {
       this.registerDefinition(metadata);
     });
   }
@@ -43,6 +39,7 @@ export class Kernel implements InjectorAwareInterface {
       let path = `${metadata.options.routeBase}${methodDefinition.route}`;
 
       this.routeDefinitions.push({
+        controllerName: controller.constructor.name,
         methodName: methodName,
         method: methodDefinition.method,
         basePath: metadata.options.routeBase,

@@ -6,13 +6,13 @@ export class GenericBag<T> extends Map<string, T> {
     }
   }
 
-  public toObject(): Object {
+  toObject(): Object {
     const data: Object = {};
     this.forEach((value: T, key: string) => data[key] = value);
     return data;
   }
 
-  public fromObject(data?: Object): this {
+  fromObject(data?: Object): this {
     for (let key in data) {
       this.set(key, data[key]);
     }

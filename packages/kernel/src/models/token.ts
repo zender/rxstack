@@ -1,28 +1,15 @@
 import {User} from './user';
+import {Credentials} from '../interfaces';
 
 export class Token {
-
-  private authenticated = false;
-
-  constructor(public username?: string, public password?: string , public user?: User) {}
-
-  getRoles(): string[] {
-    return this.user.roles;
-  }
+  isAuthenticated = false;
+  constructor(public credentials: Credentials , public user?: User) {}
 
   getUsername(): string {
-    return this.user.username;
+    return this.user ? this.user.username : null;
   }
 
-  isAuthenticated(): boolean {
-    return this.authenticated;
-  }
-
-  public setAuthenticated(isAuthenticated: boolean): void {
-    this.authenticated = isAuthenticated;
-  }
-
-  getCredentials(): string {
-    return this.password;
+  getRoles(): string[] {
+    return this.user ? this.user.roles : [];
   }
 }

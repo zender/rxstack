@@ -2,7 +2,7 @@ import {ParameterBag} from './parameter-bag';
 import {FileBag} from './file-bag';
 import {HeaderBag} from './header-bag';
 import {AttributeBag} from './attribute-bag';
-import {HttpMethod} from '../intefaces';
+import {HttpMethod} from '../interfaces';
 import {Token} from './token';
 
 export type Transport = 'HTTP' | 'SOCKET';
