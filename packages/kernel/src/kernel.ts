@@ -1,4 +1,4 @@
-import {MethodDefinition, RouteDefinition} from './interfaces';
+import {RouteDefinition} from './interfaces';
 import {Injectable, Injector} from 'injection-js';
 import {ControllerMetadata} from './metadata/metadata';
 import {metadataStorage} from './metadata/metadata-storage';
@@ -35,27 +35,23 @@ export class Kernel {
     return this.routeDefinitions;
   }
 
-  private registerDefinition(metadata: ControllerMetadata): void {
-    const controller: Object = this.injector.get(metadata.target);
+  private registerDefinition(controllerMetadata: ControllerMetadata): void {
+    const controller: Object = this.injector.get(controllerMetadata.target);
 
-    metadata.methodDefinitions.forEach((methodDefinition: MethodDefinition, methodName: string) => {
-      let path = `${metadata.options.routeBase}${methodDefinition.route}`;
+    metadataStorage.getRouteMetadataCollection(controllerMetadata.target).forEach((routeMetadata) => {
+      let path = `${controllerMetadata.path}${routeMetadata.path}`.replace(new RegExp('/*$'), '');
 
       this.routeDefinitions.push({
-        controllerName: controller.constructor.name,
-        methodName: methodName,
-        method: methodDefinition.method,
-        basePath: metadata.options.routeBase,
         path: path,
+        routeName: routeMetadata.name,
+        method: routeMetadata.httpMethod,
         handler: async (request: Request): Promise<Response> => {
-          request.method = methodDefinition.method;
-          request.basePath = metadata.options.routeBase;
+          request.method = routeMetadata.httpMethod;
+          request.basePath = controllerMetadata.path;
           request.path = path;
-          request.methodName = methodName;
+          request.methodName = routeMetadata.name;
           request.controller = controller;
-
           let response: Response;
-
           try {
             const requestEvent = new RequestEvent(request);
             await this.injector.get(AsyncEventDispatcher).dispatch(KernelEvents.KERNEL_REQUEST, requestEvent);
@@ -63,9 +59,8 @@ export class Kernel {
 
             if (requestEvent.hasResponse())
               return await this.handleResponse(requestEvent.getResponse(), request);
-
             // call controller
-            response = await controller[methodName].bind(controller).call(this, request);
+            response = await controller[routeMetadata.propertyKey].bind(controller).call(this, request);
             return await this.handleResponse(response, request);
           } catch (e) {
             let exception = transformToException(e);
@@ -74,12 +69,9 @@ export class Kernel {
               const exceptionEvent = new ExceptionEvent(exception, request);
               await this.injector.get(AsyncEventDispatcher).dispatch(KernelEvents.KERNEL_EXCEPTION, exceptionEvent);
               exception = exceptionEvent.getException();
-
               if (exceptionEvent.hasResponse())
                 return await this.handleResponse(exceptionEvent.getResponse(), request);
-
               throw exception;
-
             } catch (e) {
               exception = transformToException(e);
               throw exception;
@@ -89,7 +81,7 @@ export class Kernel {
       });
 
       this.injector.get(Logger).source(this.constructor.name)
-        .debug(`registered ${methodDefinition.method} ${metadata.options.routeBase}${methodDefinition.route} to ${controller.constructor.name}@${methodName}`);
+        .debug(`registered ${routeMetadata.httpMethod} ${path} to ${controller.constructor.name}::${routeMetadata.propertyKey}`);
     });
   }
 

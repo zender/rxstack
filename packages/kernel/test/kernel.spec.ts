@@ -7,11 +7,10 @@ import {RouteDefinition} from '../src/interfaces';
 import {Request} from '../src/models/request';
 import {Response} from '../src/models/response';
 import {Exception, InternalServerErrorException} from '@rxstack/exceptions';
-import {AnnotatedController} from './stubs/annotated.controller';
 
-const findRouteDefinition = function (data: RouteDefinition[], controllerName: string, methodName: string) {
+const findRouteDefinition = function (data: RouteDefinition[], routeName: string) {
   const def = data.find((routeDef: RouteDefinition) =>
-    routeDef.controllerName === controllerName && routeDef.methodName === methodName);
+    routeDef.routeName === routeName);
   if (!def)
     throw new Error('Route definition not found.');
   return def;
@@ -39,7 +38,7 @@ describe('Kernel', () => {
   });
 
   it('should call controller index action', async () => {
-    const def = findRouteDefinition(kernel.getRouteDefinitions(), AnnotatedController.name, 'indexAction');
+    const def = findRouteDefinition(kernel.getRouteDefinitions(), 'annotated_index');
     const request = new Request('HTTP');
     const response: Response = await def.handler(request);
     response.statusCode.should.be.equal(200);
@@ -48,7 +47,7 @@ describe('Kernel', () => {
 
 
   it('should throw an exception', async () => {
-    const def = findRouteDefinition(kernel.getRouteDefinitions(), AnnotatedController.name, 'exceptionAction');
+    const def = findRouteDefinition(kernel.getRouteDefinitions(), 'annotated_exception');
     const request = new Request('HTTP');
     let exception: Exception;
 
@@ -63,7 +62,7 @@ describe('Kernel', () => {
   });
 
   it('should stop after request event is dispatched', async () => {
-    const def = findRouteDefinition(kernel.getRouteDefinitions(), AnnotatedController.name, 'indexAction');
+    const def = findRouteDefinition(kernel.getRouteDefinitions(), 'annotated_index');
     const request = new Request('HTTP');
     request.params.set('type', 'test_request_event');
     const response: Response = await def.handler(request);
@@ -71,7 +70,7 @@ describe('Kernel', () => {
   });
 
   it('should stop after response event is dispatched', async () => {
-    const def = findRouteDefinition(kernel.getRouteDefinitions(), AnnotatedController.name, 'indexAction');
+    const def = findRouteDefinition(kernel.getRouteDefinitions(), 'annotated_index');
     const request = new Request('HTTP');
     request.params.set('type', 'test_response_event');
     let response: Response = await def.handler(request);
@@ -79,7 +78,7 @@ describe('Kernel', () => {
   });
 
   it('should stop after exception event is dispatched', async () => {
-    const def = findRouteDefinition(kernel.getRouteDefinitions(), AnnotatedController.name, 'exceptionAction');
+    const def = findRouteDefinition(kernel.getRouteDefinitions(), 'annotated_exception');
     const request = new Request('HTTP');
     request.params.set('type', 'test_exception_event');
     const response: Response = await def.handler(request);
@@ -88,7 +87,7 @@ describe('Kernel', () => {
 
 
   it('should throw different exception than original one after exception event is dispatched', async () => {
-    const def = findRouteDefinition(kernel.getRouteDefinitions(), AnnotatedController.name, 'exceptionAction');
+    const def = findRouteDefinition(kernel.getRouteDefinitions(), 'annotated_exception');
     const request = new Request('HTTP');
     request.params.set('type', 'test_exception_event_with_changed_exception');
     let exception;
@@ -101,7 +100,7 @@ describe('Kernel', () => {
   });
 
   it('should throw an exception after response event is dispatched', async () => {
-    const def = findRouteDefinition(kernel.getRouteDefinitions(), AnnotatedController.name, 'indexAction');
+    const def = findRouteDefinition(kernel.getRouteDefinitions(), 'annotated_index');
     const request = new Request('HTTP');
     request.params.set('type', 'test_response_event_with_exception');
     let exception: Exception;

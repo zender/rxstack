@@ -5,16 +5,9 @@ export type HttpMethod = 'GET' | 'PUT' | 'PATCH' | 'POST' | 'DELETE';
 
 export type Transport = 'HTTP' | 'SOCKET';
 
-export interface MethodDefinition {
-  method: HttpMethod;
-  route: string;
-}
-
 export interface RouteDefinition {
-  basePath: string;
   path: string;
-  controllerName: string;
-  methodName: string;
+  routeName: string;
   method: HttpMethod;
   handler: (request: Request) => Promise<Response>;
 }

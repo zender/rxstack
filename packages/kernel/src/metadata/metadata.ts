@@ -1,10 +1,12 @@
-import {MethodDefinition} from '../interfaces';
-import {ControllerOptions} from './controller-options';
+import {HttpMethod} from '../interfaces';
 
 export class ControllerMetadata {
-  public options?: ControllerOptions;
-  public methodDefinitions: Map<string, MethodDefinition> = new Map();
-  constructor(public target: Function) {
-    this.options = new ControllerOptions();
-  }
+  target: Function;
+  path: string;
+}
+
+export class RouteMetadata extends ControllerMetadata {
+  httpMethod: HttpMethod;
+  name: string;
+  propertyKey: string;
 }

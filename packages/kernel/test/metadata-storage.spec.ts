@@ -1,6 +1,6 @@
 import 'reflect-metadata';
 import {metadataStorage} from '../src/metadata/metadata-storage';
-import {ControllerMetadata} from '../src/metadata/metadata';
+import {ControllerMetadata, RouteMetadata} from '../src/metadata/metadata';
 import {AnnotatedController} from './stubs/annotated.controller';
 import {NotAnnotatedController} from './stubs/not-annotated.controller';
 
@@ -10,29 +10,34 @@ describe('Metadata', () => {
   });
 
   it('should find AnnotatedController metadata', async () => {
-    const metadata = metadataStorage.findControllerMetadata(AnnotatedController);
+    const metadata = metadataStorage.getControllerMetadata(AnnotatedController);
     metadata.should.be.not.null;
     metadata.target.should.be.equal(AnnotatedController);
-    metadata.methodDefinitions.has('indexAction');
   });
 
   it('should add NotAnnotatedController metadata', async () => {
 
-    const newMetadata = new ControllerMetadata(NotAnnotatedController);
-    newMetadata.options = {routeBase: 'no-annotation'};
-    newMetadata.methodDefinitions.set('indexAction', {
-      'method': 'GET',
-      'route': '/index'
-    });
-    metadataStorage.registerControllerMetadata(newMetadata);
-    const metadata = metadataStorage.findControllerMetadata(NotAnnotatedController);
-    metadata.should.be.not.null;
-    metadata.target.should.be.equal(NotAnnotatedController);
-    metadata.methodDefinitions.has('indexAction');
+    const controllerMetadata = new ControllerMetadata();
+    controllerMetadata.target = NotAnnotatedController;
+    controllerMetadata.path = '/non-annotated';
+
+    const routeMetadata = new RouteMetadata();
+    routeMetadata.target = NotAnnotatedController;
+    routeMetadata.path = '/index';
+    routeMetadata.name = 'not_annotated_index';
+    routeMetadata.propertyKey = 'indexAction';
+
+    metadataStorage.registerMetadata(controllerMetadata, [routeMetadata]);
+    const metadataCollection = metadataStorage.getRouteMetadataCollection(NotAnnotatedController);
+    metadataCollection.length.should.be.equal(1);
+    metadataCollection[0].target.should.be.equal(NotAnnotatedController);
+    metadataCollection[0].propertyKey.should.be.equal('indexAction');
+    metadataCollection[0].name.should.be.equal('not_annotated_index');
+    metadataCollection[0].path.should.be.equal('/index');
 
     let error = null;
     try {
-      metadataStorage.registerControllerMetadata(newMetadata);
+      metadataStorage.registerMetadata(controllerMetadata, [routeMetadata]);
     } catch (e) {
       error = e;
     }
@@ -42,5 +47,6 @@ describe('Metadata', () => {
   it('should reset metadata', async () => {
     metadataStorage.reset();
     metadataStorage.getControllerMetadataCollection().length.should.be.equal(0);
+    metadataStorage.getRouteMetadataCollection().length.should.be.equal(0);
   });
 });

@@ -1,17 +1,23 @@
 import {metadataStorage} from './metadata-storage';
 import {HttpMethod} from '../interfaces';
-import {ControllerOptions} from './controller-options';
 
-export function Controller(options: ControllerOptions): ClassDecorator {
+export function Controller(path: string): ClassDecorator {
   return function (target: Function): void {
-    metadataStorage.addControllerMetadata(target, options);
+    metadataStorage.addControllerMetadata({
+      target: target,
+      path: path
+    });
   };
 }
 
-export function Route<T>(method: HttpMethod, route: string): MethodDecorator {
+export function Route<T>(httpMethod: HttpMethod, path: string, name: string): MethodDecorator {
   return function (target: Function, propertyKey: string): void {
-    metadataStorage.addMethodDefinition(target.constructor, propertyKey, {
-      method, route
+    metadataStorage.addRouteMetadata({
+      'target': target.constructor,
+      'name': name,
+      'path': path,
+      'httpMethod': httpMethod,
+      'propertyKey': propertyKey,
     });
   };
 }

@@ -4,16 +4,14 @@ import {Request} from '../../src/models/request';
 import {Injectable} from 'injection-js';
 
 @Injectable()
-@Controller({
-  routeBase: 'annotated'
-})
+@Controller('/annotated')
 export class AnnotatedController {
-  @Route('GET', '/')
+  @Route('GET', '/', 'annotated_index')
   async indexAction(request: Request): Promise<Response> {
     return new Response('AnnotatedController::indexAction');
   }
 
-  @Route('GET', '/exception')
+  @Route('GET', '/exception', 'annotated_exception')
   async exceptionAction(request: Request): Promise<Response> {
     throw new Error('Exception');
   }
