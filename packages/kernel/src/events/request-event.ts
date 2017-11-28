@@ -1,8 +1,16 @@
 import {KernelEvent} from './kernel-event';
 import {Response} from '../models/response';
 
+/**
+ * Allows to create a response for a request.
+ */
 export class RequestEvent extends KernelEvent {
-  public setResponse(response: Response): void {
+  /**
+   * Sets the response object
+   *
+   * @param {Response} response
+   */
+  setResponse(response: Response): void {
     super.setResponse(response);
     this.stopPropagation();
   }

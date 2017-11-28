@@ -45,7 +45,6 @@ describe('Kernel', () => {
     response.content.should.be.equal('AnnotatedController::indexAction');
   });
 
-
   it('should throw an exception', async () => {
     const def = findRouteDefinition(kernel.getRouteDefinitions(), 'annotated_exception');
     const request = new Request('HTTP');
@@ -84,7 +83,6 @@ describe('Kernel', () => {
     const response: Response = await def.handler(request);
     response.content.should.be.equal('modified_by_exception_event');
   });
-
 
   it('should throw different exception than original one after exception event is dispatched', async () => {
     const def = findRouteDefinition(kernel.getRouteDefinitions(), 'annotated_exception');

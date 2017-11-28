@@ -12,34 +12,67 @@ import {RequestEvent} from './events/request-event';
 import {ResponseEvent} from './events/response-event';
 import {ExceptionEvent} from './events/exception-event';
 
+/**
+ * The core of rxstack framework
+ */
 @Injectable()
 export class Kernel {
+  /**
+   * DI Injector
+   */
   private injector: Injector;
+
+  /**
+   * Route definitions
+   *
+   * @type {Array}
+   */
   private routeDefinitions: RouteDefinition[] = [];
+
+  /**
+   *  Kernel state
+   *
+   * @type {boolean}
+   */
   private initialized = false;
 
   setInjector(injector: Injector): void {
     this.injector = injector;
   }
 
+  /**
+   * Initializes the kernel and registers route definitions.
+   */
   initialize(): void {
     if (this.initialized)
       throw new Exception('Kernel is already initialized.');
+    this.initialized = true;
     metadataStorage.getControllerMetadataCollection().forEach((metadata: ControllerMetadata) => {
       this.registerDefinition(metadata);
     });
-    this.initialized = true;
   }
 
+  /**
+   * Retrieves route definitions
+   *
+   * @returns {RouteDefinition[]}
+   */
   getRouteDefinitions(): RouteDefinition[] {
     return this.routeDefinitions;
   }
 
+  /**
+   * Register route definitions
+   *
+   * @param {ControllerMetadata} controllerMetadata
+   */
   private registerDefinition(controllerMetadata: ControllerMetadata): void {
+    // controller instance
     const controller: Object = this.injector.get(controllerMetadata.target);
 
     metadataStorage.getRouteMetadataCollection(controllerMetadata.target).forEach((routeMetadata) => {
-      let path = `${controllerMetadata.path}${routeMetadata.path}`.replace(new RegExp('/*$'), '');
+      // route path including controller prefix
+      const path = `${controllerMetadata.path}${routeMetadata.path}`.replace(new RegExp('/*$'), '');
 
       this.routeDefinitions.push({
         path: path,
@@ -49,7 +82,7 @@ export class Kernel {
           request.method = routeMetadata.httpMethod;
           request.basePath = controllerMetadata.path;
           request.path = path;
-          request.methodName = routeMetadata.name;
+          request.routeName = routeMetadata.name;
           request.controller = controller;
           let response: Response;
           try {
@@ -60,7 +93,7 @@ export class Kernel {
             if (requestEvent.hasResponse())
               return await this.handleResponse(requestEvent.getResponse(), request);
             // call controller
-            response = await controller[routeMetadata.propertyKey].bind(controller).call(this, request);
+            response = await controller[routeMetadata.propertyKey].call(controller, request);
             return await this.handleResponse(response, request);
           } catch (e) {
             let exception = transformToException(e);
@@ -85,6 +118,13 @@ export class Kernel {
     });
   }
 
+  /**
+   * Dispatched response event and returns response object or throws an exception
+   *
+   * @param {Response} response
+   * @param {Request} request
+   * @returns {Promise<Response>}
+   */
   private async handleResponse(response: Response, request: Request): Promise<Response> {
     try {
       const responseEvent = new ResponseEvent(request, response);

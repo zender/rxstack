@@ -1,6 +1,6 @@
 # @rxstack/kernel
 
-> Add async event dispatcher to your app.
+> This the the core of RxStack framework
 
 ## Installation
 

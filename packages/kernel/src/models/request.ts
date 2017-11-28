@@ -5,33 +5,77 @@ import {AttributeBag} from './attribute-bag';
 import {HttpMethod, Transport} from '../interfaces';
 import {Token} from './token';
 
+/**
+ * Container for request data
+ */
 export class Request {
 
-  public headers: HeaderBag;
+  /**
+   * Headers
+   */
+  headers: HeaderBag;
 
-  public query: ParameterBag;
+  /**
+   * Query params
+   */
+  query: ParameterBag;
 
-  public params: ParameterBag;
+  /**
+   * Parameters
+   */
+  params: ParameterBag;
 
-  public files: FileBag;
+  /**
+   * Files
+   */
+  files: FileBag;
 
-  public body: any;
+  /**
+   *  Body
+   */
+  body: any;
 
-  public attributes: AttributeBag;
+  /**
+   * Extra data
+   */
+  attributes: AttributeBag;
 
-  public basePath: string;
+  /**
+   * Base path
+   */
+  basePath: string;
 
-  public path: string;
+  /**
+   * Route path
+   */
+  path: string;
 
-  public method: HttpMethod;
+  /**
+   * Http method
+   */
+  method: HttpMethod;
 
-  public controller: Object;
+  /**
+   * Controller instance
+   */
+  controller: Object;
 
-  public methodName: string;
+  /**
+   * Name of th route
+   */
+  routeName: string;
 
-  public token: Token;
+  /**
+   * Security token
+   */
+  token: Token;
 
-  public constructor(public readonly transport: Transport) {
+  /**
+   * Constructor
+   *
+   * @param {Transport} transport
+   */
+  constructor(public readonly transport: Transport) {
     this.headers = new HeaderBag();
     this.query = new ParameterBag();
     this.params = new ParameterBag();

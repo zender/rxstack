@@ -5,6 +5,12 @@ import {AnnotatedController} from './stubs/annotated.controller';
 import {NotAnnotatedController} from './stubs/not-annotated.controller';
 
 describe('Metadata', () => {
+
+  it('should has 1 controller and 2 methods regstered', async () => {
+    metadataStorage.getControllerMetadataCollection().length.should.be.equal(1);
+    metadataStorage.getRouteMetadataCollection().length.should.be.equal(2);
+  });
+
   it('should has AnnotatedController metadata', async () => {
     metadataStorage.hasControllerMetadata(AnnotatedController).should.be.true;
   });
@@ -38,6 +44,49 @@ describe('Metadata', () => {
     let error = null;
     try {
       metadataStorage.registerMetadata(controllerMetadata, [routeMetadata]);
+    } catch (e) {
+      error = e;
+    }
+    error.should.be.not.null;
+  });
+
+  it('should throw an exception when adding existing route metadata', async () => {
+    const routeMetadata = new RouteMetadata();
+    routeMetadata.target = NotAnnotatedController;
+    routeMetadata.path = '/index';
+    routeMetadata.name = 'not_annotated_index';
+    routeMetadata.propertyKey = 'indexAction';
+
+    let error = null;
+    try {
+      metadataStorage.addRouteMetadata(routeMetadata);
+    } catch (e) {
+      error = e;
+    }
+    error.should.be.not.null;
+  });
+
+  it('should remove controller metadata', async () => {
+    metadataStorage.removeControllerMetadata(NotAnnotatedController);
+    metadataStorage.hasControllerMetadata(NotAnnotatedController).should.be.false;
+    metadataStorage.getRouteMetadataCollection(NotAnnotatedController).length.should.be.equal(0);
+  });
+
+  it('should throw exception when removing not existing controller metadata', async () => {
+    let error = null;
+    try {
+      metadataStorage.removeControllerMetadata(NotAnnotatedController);
+    } catch (e) {
+      error = e;
+    }
+    error.should.be.not.null;
+  });
+
+
+  it('should throw exception when removing not existing route metadata', async () => {
+    let error = null;
+    try {
+      metadataStorage.removeRouteMetadata('unknown_route');
     } catch (e) {
       error = e;
     }
