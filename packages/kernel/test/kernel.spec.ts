@@ -1,12 +1,13 @@
 import 'reflect-metadata';
-import {KERNEL_PROVIDERS} from '../src/providers';
-import {ReflectiveInjector} from 'injection-js';
+import {Provider, ReflectiveInjector} from 'injection-js';
 import {Kernel} from '../src/kernel';
 import {STUB_PROVIDERS} from './stubs/providers';
 import {RouteDefinition} from '../src/interfaces';
 import {Request} from '../src/models/request';
 import {Response} from '../src/models/response';
 import {Exception, InternalServerErrorException} from '@rxstack/exceptions';
+import {AsyncEventDispatcher, asyncEventDispatcher} from '@rxstack/async-event-dispatcher';
+import {ConsoleLogger, Logger} from '@rxstack/logger';
 
 const findRouteDefinition = function (data: RouteDefinition[], routeName: string) {
   const def = data.find((routeDef: RouteDefinition) =>
@@ -19,6 +20,11 @@ const findRouteDefinition = function (data: RouteDefinition[], routeName: string
 describe('Kernel', () => {
 
   // Setup
+  const KERNEL_PROVIDERS: Provider[] = [
+    { provide: Kernel, useClass: Kernel },
+    { provide: AsyncEventDispatcher, useValue: asyncEventDispatcher },
+    { provide: Logger, useClass: ConsoleLogger },
+  ];
   const resolvedProviders = ReflectiveInjector.resolve(KERNEL_PROVIDERS.concat(STUB_PROVIDERS));
   const injector = ReflectiveInjector.fromResolvedProviders(resolvedProviders);
   const kernel = injector.get(Kernel);

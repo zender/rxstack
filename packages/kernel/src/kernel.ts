@@ -15,7 +15,6 @@ import {ExceptionEvent} from './events/exception-event';
 /**
  * The core of rxstack framework
  */
-@Injectable()
 export class Kernel {
   /**
    * DI Injector

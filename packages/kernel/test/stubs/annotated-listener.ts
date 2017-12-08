@@ -2,12 +2,10 @@ import {RequestEvent} from '../../src/events/request-event';
 import {Response} from '../../src/models/response';
 import {Observe} from '@rxstack/async-event-dispatcher';
 import {KernelEvents} from '../../src/kernel-events';
-import {Injectable} from 'injection-js';
 import {ResponseEvent} from '../../src/events/response-event';
 import {ExceptionEvent} from '../../src/events/exception-event';
 import {InternalServerErrorException} from '@rxstack/exceptions';
 
-@Injectable()
 export class AnnotatedListener {
   @Observe(KernelEvents.KERNEL_REQUEST)
   async onRequest(event: RequestEvent): Promise<void> {
