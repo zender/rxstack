@@ -1,3 +1,4 @@
 export * from './abstract-server';
 export * from './server-manager';
-export * from './server-registry-listener';
+export * from './server-events';
+export * from './server-configuration.event';

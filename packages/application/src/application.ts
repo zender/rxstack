@@ -5,20 +5,24 @@ import {AsyncEventDispatcher} from '@rxstack/async-event-dispatcher';
 import {configuration, Configuration} from '@rxstack/configuration';
 import {BootstrapEvent} from './bootstrap-event';
 import {ApplicationEvents} from './application-events';
-import {Module, ProviderDefinition} from './interfaces';
-import {MODULE_KEY, ModuleMetadata} from './decorators';
+import {MODULE_KEY, ModuleInterface, ModuleMetadata, ProviderDefinition} from './interfaces';
+import {ServerManager} from '@rxstack/server-commons';
+import {metadataStorage, ServiceRegistryMetadata} from '@rxstack/service-registry';
 
 export class Application {
   private providers: ProviderDefinition[] = [];
   private injector: Injector;
-  constructor(private module: Module) {}
+  constructor(private module: ModuleInterface) {}
 
   async start(): Promise<Injector> {
     this.resolveModule(this.module, configuration);
-    const injector = await this.bootstrap(this.providers);
-    await this.startServers();
+    this.injector = await this.bootstrap(this.providers);
+    await this.startServers(configuration);
+    return this.injector;
+  }
 
-    return injector;
+  async stop(): Promise<void> {
+    await this.stopServers();
   }
 
   private async bootstrap(providerDef: ProviderDefinition[]): Promise<Injector> {
@@ -39,20 +43,31 @@ export class Application {
     });
   }
 
-  private resolveModule(target: Module, config: Configuration): void {
+  private resolveModule(target: ModuleInterface, config: Configuration): void {
     const module: ModuleMetadata = Reflect.getMetadata(MODULE_KEY, target);
-
     if (Array.isArray(module.imports)) {
-      module.imports.forEach((m: Function) => this.resolveModule(m, config));
+      module.imports.forEach((m: ModuleInterface) => this.resolveModule(m, config));
     }
-
     module.providers.forEach((provider: ProviderDefinition) => this.providers.push(provider));
     if (module.configuration) {
       module.configuration(config);
     }
   }
 
-  private async startServers(): Promise<void> {
+  private async startServers(configuration: Configuration): Promise<void> {
+    const routeDefinitions = this.injector.get(Kernel).getRouteDefinitions();
+    const manager = this.injector.get(ServerManager);
+    metadataStorage.all(ServerManager.ns).forEach((metadata: ServiceRegistryMetadata) => {
+      const server = this.injector.get(metadata.target, false);
+      if (server) {
+        manager.servers.set(metadata.name, this.injector.get(metadata.target));
+      }
+    });
+    await manager.start(routeDefinitions);
+  }
 
+  async stopServers(): Promise<void> {
+    const manager = this.injector.get(ServerManager);
+    manager.stop();
   }
 }

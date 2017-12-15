@@ -1,18 +1,21 @@
 import {AbstractServer} from './abstract-server';
-import {Injectable} from 'injection-js';
+import {RouteDefinition} from '@rxstack/kernel';
 
-@Injectable()
 export class ServerManager {
   static ns = 'server';
   servers: Map<string, AbstractServer> = new Map();
 
-  async start(): Promise<void> {
-    Array.from(this.servers.values()).reduce((current: Promise<void>, server: AbstractServer): Promise<void> => {
-      return current.then(async () => {
-        await server.configure();
-        await server.start();
-
+  async start(routeDefinitions: RouteDefinition[]): Promise<void> {
+    Array.from(this.servers.values()).reduce(async (current: Promise<void>, server: AbstractServer): Promise<void> => {
+      current.then(async () => {
+        await server.start(routeDefinitions);
       });
     }, Promise.resolve(null));
+  }
+
+  async stop(): Promise<void> {
+    const promises: Promise<void>[] = [];
+    Array.from(this.servers.values()).forEach((server) => promises.push(server.stopEngine()));
+    await Promise.all(promises);
   }
 }

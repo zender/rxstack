@@ -7,8 +7,12 @@ import {ConsoleLogger, Logger} from '@rxstack/logger';
 import {Configuration} from '@rxstack/configuration';
 import {Test1Module} from './test1.module';
 import {ProviderDefinition} from '../../src/interfaces';
+import {ServerManager} from '@rxstack/server-commons';
+import {MockServer} from './mock.server';
 
 export const APP_PROVIDERS: ProviderDefinition[] = [
+  { provide: ServerManager, useClass: ServerManager },
+  { provide: MockServer, useClass: MockServer },
   { provide: MockController, useClass: MockController },
   { provide: MockService, useClass: MockService },
   { provide: Kernel, useClass: Kernel },

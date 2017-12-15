@@ -1,6 +1,6 @@
 {
   "name": "@rxstack/application",
-  "version": "0.0.1",
+  "version": "0.0.4",
   "description": "RxStack Application Component",
   "private": false,
   "author": "Nikolay Gergiev <symfonist@gmail.com>",
@@ -21,6 +21,8 @@
     "@rxstack/exceptions": "0.0.*",
     "@rxstack/kernel": "0.0.*",
     "@rxstack/logger": "0.0.*",
+    "@rxstack/server-commons": "0.0.4",
+    "@rxstack/service-registry": "0.0.*",
     "injection-js": "^2.1.0",
     "reflect-metadata": "^0.1.10"
   },
@@ -28,9 +30,9 @@
     "@types/chai": "^3.4.35",
     "@types/chai-as-promised": "0.0.30",
     "@types/gulp": "^4.0.2",
-    "@types/lodash": "^4.14.80",
+    "@types/lodash": "^4.14.91",
     "@types/mocha": "^2.2.40",
-    "@types/node": "^7.0.10",
+    "@types/node": "^7.0.50",
     "@types/sinon": "^1.16.36",
     "chai": "^3.4.1",
     "chai-as-promised": "^6.0.0",

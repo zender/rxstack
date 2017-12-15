@@ -1,0 +1,6 @@
+{
+  "express_server": {
+    "host": "localhost",
+    "port": 3200
+  }
+}

@@ -1,28 +1,55 @@
-import {Injectable, Injector} from 'injection-js';
 import { Server as HttpServer } from 'http';
+import {RouteDefinition} from '@rxstack/kernel';
+import {Injector} from 'injection-js';
 
+/**
+ * Base class for servers
+ */
 export abstract class AbstractServer {
 
+  /**
+   * Injector
+   */
   protected injector: Injector;
 
-  protected schema: 'http' | 'https';
-
-  /** Hostname eg `localhost`, `example.com` */
+  /**
+   * Hostname
+   */
   protected host: string;
-  /** Port number server is running on */
+
+  /**
+   * Port number server is running on
+   */
   protected port: number;
 
-  /** `require('http').Server` object from the base class */
+  /**
+   * Http Server
+   */
   protected httpServer: HttpServer;
 
+  /**
+   * Sets injector
+   *
+   * @param {Injector} injector
+   */
   setInjector(injector: Injector): void {
     this.injector = injector;
   }
 
   /**
+   * Gets injector
+   *
+   * @returns {Injector}
+   */
+  getInjector(): Injector {
+    return this.injector;
+  }
+
+  /**
    * Kicks off the server
    */
-  async start(): Promise<void> {
+  async start(routeDefinitions: RouteDefinition[]): Promise<void> {
+    await this.configure(routeDefinitions);
     await this.startEngine();
   }
 
@@ -39,13 +66,32 @@ export abstract class AbstractServer {
    * @returns {string}
    */
   getHost(): string {
-    return `${this.schema}://${this.host || '(localhost)'}:${this.port}`;
+    return `http://${this.host}:${this.port}`;
   }
 
-  abstract async configure(): Promise<this>;
+  /**
+   * Gets underlying engine
+   */
+  abstract getEngine(): any;
 
   /**
    * Kicks off the server using the specific underlying engine
    */
-  protected abstract async startEngine(): Promise<this>;
+  abstract async startEngine(): Promise<void>;
+
+  /**
+   * Stops underlying engine
+   *
+   * @returns {Promise<void>}
+   */
+  abstract async stopEngine(): Promise<void>;
+
+  /**
+   * Configures the server
+   *
+   * @param {RouteDefinition[]} routeDefinitions
+   * @returns {Promise<this>}
+   */
+  protected abstract async configure(routeDefinitions: RouteDefinition[]): Promise<void>;
+
 }
