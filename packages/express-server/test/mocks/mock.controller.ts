@@ -1,4 +1,4 @@
-import {Controller, Response, Route} from '@rxstack/kernel';
+import {Controller, Request, Response, Route} from '@rxstack/kernel';
 
 @Controller('/mock')
 export class MockController {
@@ -9,7 +9,14 @@ export class MockController {
   }
 
   @Route('GET', '/json', 'mock_json')
-  async jsonAction(): Promise<Response> {
+  async jsonAction(request: Request): Promise<Response> {
     return new Response({'id': 'json'});
+  }
+
+  @Route('POST', '/upload', 'mock_upload')
+  async uploadAction(request: Request): Promise<Response> {
+    // console.log(request.body);
+    console.log(request.files);
+    return new Response();
   }
 }

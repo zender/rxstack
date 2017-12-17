@@ -1,6 +1,9 @@
 import * as express from 'express';
 import * as http from 'http';
-import {Application as ExpressApplication, Request as ExpressRequest, Response as ExpressResponse} from 'express';
+import {
+  Application as ExpressApplication, NextFunction, Request as ExpressRequest, RequestHandler,
+  Response as ExpressResponse
+} from 'express';
 import * as bodyParser from 'body-parser';
 import {Request, Response, RouteDefinition} from '@rxstack/kernel';
 import {AbstractServer, ServerConfigurationEvent, ServerManager} from '@rxstack/server-commons';
@@ -11,6 +14,7 @@ import {AsyncEventDispatcher} from '@rxstack/async-event-dispatcher';
 import {ServerEvents} from '@rxstack/server-commons/server-events';
 import {Configuration} from '@rxstack/configuration';
 import {Logger} from '@rxstack/logger';
+const formidable = require('formidable');
 
 @ServiceRegistry(ServerManager.ns, 'server.express')
 export class ExpressServer extends AbstractServer {
@@ -41,11 +45,12 @@ export class ExpressServer extends AbstractServer {
     this.port = configuration.get('express_server.port');
 
     this.app = express();
-    this.app.use(compress());
     this.app.options('*', cors());
     this.app.use(cors());
+    this.app.use(compress());
     this.app.use(bodyParser.json());
     this.app.use(bodyParser.urlencoded({ extended: true }));
+    this.app.use(this.uploadHandler(configuration));
 
     await dispatcher.dispatch(ServerEvents.PRE_CONFIGURE, new ServerConfigurationEvent(this));
     // register routes
@@ -62,6 +67,7 @@ export class ExpressServer extends AbstractServer {
       request.headers.fromObject(req.headers);
       request.query.fromObject(req.query);
       request.params.fromObject(req.params);
+      request.files.fromObject(req['files'] || {});
       request.body = req.body;
 
       return routeDefinition.handler(request)
@@ -74,5 +80,24 @@ export class ExpressServer extends AbstractServer {
           res.status(status).send(err);
         });
     });
+  }
+
+  private uploadHandler(configuration: Configuration): RequestHandler {
+    return (req: ExpressRequest, res: ExpressResponse, next: NextFunction): void => {
+      if (!configuration.get('express_server.enable_uploads') || req.method.toLowerCase() !== 'post') {
+        return next();
+      }
+
+      const form = new formidable.IncomingForm();
+      form.uploadDir = configuration.get('express_server.upload_directory');
+      form.keepExtensions = true;
+      form.multiples = false;
+      form.hash = 'md5';
+      form.parse(req, function(err: any, fields: any, files: any) {
+        // todo create file objects
+        req['files'] = files;
+        next(err);
+      });
+    };
   }
 }

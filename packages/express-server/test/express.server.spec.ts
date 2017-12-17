@@ -5,6 +5,7 @@ import {AppModule} from './mocks/app.module';
 import {Injector} from 'injection-js';
 import {IncomingMessage} from 'http';
 const rp = require('request-promise');
+const fs = require('fs');
 
 describe('ExpressServer', () => {
   // Setup application
@@ -64,6 +65,47 @@ describe('ExpressServer', () => {
         headers['content-type'].should.be.equal('application/json; charset=utf-8');
         response['statusCode'].should.be.equal(200);
         JSON.stringify(response['body']).should.be.equal(JSON.stringify({ id: 'json' }));
+      })
+      .catch((err: any) => console.log(err))
+    ;
+  });
+
+  it('should call express middleware', async () => {
+    const options = {
+      uri: host + '/express-middleware',
+      qs: {},
+      headers: { },
+      resolveWithFullResponse: true,
+      json: true
+    };
+
+    await rp(options)
+      .then((response: IncomingMessage) => {
+        const headers = response.headers;
+        headers['x-powered-by'].should.be.equal('Express');
+        headers['content-type'].should.be.equal('application/json; charset=utf-8');
+        response['statusCode'].should.be.equal(200);
+        JSON.stringify(response['body']).should.be.equal(JSON.stringify({ id: 'express' }));
+      })
+      .catch((err: any) => console.log(err))
+    ;
+  });
+
+  it('should upload file', async () => {
+    const options = {
+      uri: host + '/mock/upload',
+      method: 'POST',
+      qs: {},
+      formData: {
+        file: fs.createReadStream('/home/zender/apps/rxstack/rxstack/packages/express-server/test/assets/image.jpg'),
+      },
+      resolveWithFullResponse: true,
+    };
+
+    await rp(options)
+      .then((response: IncomingMessage) => {
+        const headers = response.headers;
+        response['statusCode'].should.be.equal(200);
       })
       .catch((err: any) => console.log(err))
     ;

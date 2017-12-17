@@ -20,10 +20,19 @@ const PROVIDERS: ProviderDefinition[] = [
           required: true,
           type: 'integer'
         },
+        enable_uploads: {
+          required: true,
+          type: 'boolean'
+        },
+        upload_directory: {
+          required: true,
+          type: 'string'
+        },
       }
     }, {
       'host': 'localhost',
       'port': 3000,
+      'enable_uploads': false,
     });
   }
 })

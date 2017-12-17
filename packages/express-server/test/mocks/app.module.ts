@@ -7,6 +7,7 @@ import {Module, ProviderDefinition} from '@rxstack/application';
 import {ExpressServer} from '../../src/express.server';
 import {ExpressModule} from '../../src/express.module';
 import {Configuration, configuration} from '@rxstack/configuration';
+import {ConfiguratonListener} from './configuraton.listener';
 
 export const APP_PROVIDERS: ProviderDefinition[] = [
   { provide: ServerManager, useClass: ServerManager },
@@ -16,6 +17,7 @@ export const APP_PROVIDERS: ProviderDefinition[] = [
   { provide: AsyncEventDispatcher, useValue: asyncEventDispatcher },
   { provide: Logger, useClass: ConsoleLogger },
   { provide: Configuration, useValue: configuration },
+  { provide: ConfiguratonListener, useValue: ConfiguratonListener },
 ];
 
 @Module({
