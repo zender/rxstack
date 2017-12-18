@@ -12,6 +12,11 @@ export type HttpMethod = 'GET' | 'PUT' | 'PATCH' | 'POST' | 'DELETE';
 export type Transport = 'HTTP' | 'SOCKET';
 
 /**
+ * Available response types
+ */
+export type ResponseType = 'standard' | 'streamed' | 'downloadable';
+
+/**
  * Route Definition
  */
 export interface RouteDefinition {

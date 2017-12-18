@@ -6,6 +6,7 @@ import {Injector} from 'injection-js';
 import {IncomingMessage} from 'http';
 const rp = require('request-promise');
 const fs = require('fs');
+const assetsDir = process.mainModule['paths'][0].split('node_modules')[0].slice(0, -1) + '/test/assets';
 
 describe('ExpressServer', () => {
   // Setup application
@@ -97,7 +98,7 @@ describe('ExpressServer', () => {
       method: 'POST',
       qs: {},
       formData: {
-        file: fs.createReadStream('/home/zender/apps/rxstack/rxstack/packages/express-server/test/assets/image.jpg'),
+        file: fs.createReadStream(assetsDir + '/image.jpg'),
       },
       resolveWithFullResponse: true,
     };

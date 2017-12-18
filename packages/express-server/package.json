@@ -20,7 +20,7 @@
     "@rxstack/async-event-dispatcher": "0.0.*",
     "@rxstack/configuration": "0.0.*",
     "@rxstack/exceptions": "0.0.*",
-    "@rxstack/kernel": "0.0.*",
+    "@rxstack/kernel": "0.0.3",
     "@rxstack/logger": "0.0.*",
     "@rxstack/server-commons": "0.0.*",
     "@rxstack/service-registry": "0.0.*",
@@ -33,6 +33,7 @@
     "express": "^4.16.2",
     "formidable": "^1.1.1",
     "injection-js": "^2.1.0",
+    "mime": "^2.0.3",
     "reflect-metadata": "^0.1.10"
   },
   "devDependencies": {

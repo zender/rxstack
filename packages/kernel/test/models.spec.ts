@@ -6,6 +6,10 @@ import {FileBag} from '../src/models/file-bag';
 import {Response} from '../src/models/response';
 import {User} from '../src/models/user';
 import {Token} from '../src/models/token';
+import {StreamedResponse} from '../src/models/streamed-response';
+import {File} from '../src/models/file';
+import {DownloadableResponse} from '../src/models/downloadable-response';
+const rootPath = process.mainModule['paths'][0].split('node_modules')[0].slice(0, -1);
 
 describe('Models', () => {
   it('should initialize request', async () => {
@@ -20,9 +24,35 @@ describe('Models', () => {
 
   it('should initialize response', async () => {
     const response = new Response('content');
+    response.type.should.be.equal('standard');
     response.content.should.be.equal('content');
     response.statusCode.should.be.equal(200);
     response.headers.should.be.instanceOf(HeaderBag);
+  });
+
+  it('should initialize file download response', async () => {
+    const response = new DownloadableResponse('file_path', 'file.pdf');
+    response.type.should.be.equal('downloadable');
+    response.path.should.be.equal('file_path');
+    response.name.should.be.equal('file.pdf');
+    response.statusCode.should.be.equal(200);
+  });
+
+  it('should initialize streamed response with range', async () => {
+    const filePath = rootPath + '/test/assets/video.mp4';
+    const response = new StreamedResponse(filePath, {start: 1, end: 10});
+    response.type.should.be.equal('streamed');
+    response.size.should.be.equal(10);
+    (typeof response.fileReadStream !== 'undefined').should.be.true;
+    response.mimetype.should.be.equal('video/mp4');
+    response.statusCode.should.be.equal(206);
+  });
+
+  it('should initialize streamed response without range', async () => {
+    const filePath = rootPath + '/test/assets/video.mp4';
+    const response = new StreamedResponse(filePath);
+    response.size.should.be.equal(424925);
+    response.statusCode.should.be.equal(200);
   });
 
   it('should import and export values from ParameterBag', async () => {
@@ -38,6 +68,33 @@ describe('Models', () => {
     token.getRoles().length.should.be.equal(0);
   });
 
+  it('should initialize file', async () => {
+    const filebag = new FileBag();
+    filebag.fromObject({'file': {
+      'name': 'file.txt',
+      'size': 10,
+      'type': 'text/plain',
+      'path': 'path_to_file',
+      'hash': 'hash',
+    }});
+
+    const file = filebag.get('file');
+
+    file.name.should.be.equal('file.txt');
+    file.size.should.be.equal(10);
+    file.type.should.be.equal('text/plain');
+    file.path.should.be.equal('path_to_file');
+    file.hash.should.be.equal('hash');
+  });
+
+  it('should initialize file with no data', async () => {
+    const file = new File();
+    (file.name === null).should.be.true;
+    (file.size === null).should.be.true;
+    (file.type === null).should.be.true;
+    (file.path === null).should.be.true;
+    (file.hash === null).should.be.true;
+  });
 
   it('should initialize token with credentials and user', async () => {
     const user = new User('user', 'pass', ['ROLE_USER']);

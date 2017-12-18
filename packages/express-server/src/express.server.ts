@@ -94,7 +94,6 @@ export class ExpressServer extends AbstractServer {
       form.multiples = false;
       form.hash = 'md5';
       form.parse(req, function(err: any, fields: any, files: any) {
-        // todo create file objects
         req['files'] = files;
         next(err);
       });
