@@ -5,7 +5,7 @@ import {
   Response as ExpressResponse
 } from 'express';
 import * as bodyParser from 'body-parser';
-import {Request, Response, RouteDefinition} from '@rxstack/kernel';
+import {Request, ResponseObject, RouteDefinition, StreamableResponse} from '@rxstack/kernel';
 import {AbstractServer, ServerConfigurationEvent, ServerManager} from '@rxstack/server-commons';
 import * as compress from 'compression';
 import * as cors from 'cors';
@@ -15,6 +15,7 @@ import {ServerEvents} from '@rxstack/server-commons/server-events';
 import {Configuration} from '@rxstack/configuration';
 import {Logger} from '@rxstack/logger';
 const formidable = require('formidable');
+const fs = require('fs');
 
 @ServiceRegistry(ServerManager.ns, 'server.express')
 export class ExpressServer extends AbstractServer {
@@ -71,15 +72,26 @@ export class ExpressServer extends AbstractServer {
       request.body = req.body;
 
       return routeDefinition.handler(request)
-        .then((response: Response) => {
-          response.headers.forEach((value, key) => res.header(key, value));
-          res.status(response.statusCode);
-          res.send(response.content);
+        .then((response: ResponseObject) => {
+          this.responseHandler(response, res);
         }).catch(err => {
           let status = err.statusCode ? err.statusCode : 500;
-          res.status(status).send(err);
+          if (process.env.NODE_ENV === 'production' && status === 500)
+            res.status(status).send({message: 'Internal Server Error'});
+          else
+            res.status(status).send(err);
         });
     });
+  }
+
+  private responseHandler(response: ResponseObject, res: ExpressResponse): void {
+    response.headers.forEach((value, key) => res.header(key, value));
+    res.status(response.statusCode);
+
+     if (response instanceof StreamableResponse)
+      response.fileReadStream.pipe(res);
+    else
+      res.send(response.content);
   }
 
   private uploadHandler(configuration: Configuration): RequestHandler {
@@ -87,7 +99,6 @@ export class ExpressServer extends AbstractServer {
       if (!configuration.get('express_server.enable_uploads') || req.method.toLowerCase() !== 'post') {
         return next();
       }
-
       const form = new formidable.IncomingForm();
       form.uploadDir = configuration.get('express_server.upload_directory');
       form.keepExtensions = true;

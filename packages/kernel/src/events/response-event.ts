@@ -1,6 +1,6 @@
 import {KernelEvent} from './kernel-event';
 import {Request} from '../models/request';
-import {Response} from '../models/response';
+import {ResponseObject} from '../interfaces';
 
 /**
  * Allows to modify the response object
@@ -10,9 +10,9 @@ export class ResponseEvent extends KernelEvent {
    * Constructor
    *
    * @param {Request} request
-   * @param {Response} response
+   * @param {ResponseObject} response
    */
-  constructor(request: Request, response: Response) {
+  constructor(request: Request, response: ResponseObject) {
     super(request);
     this.setResponse(response);
   }

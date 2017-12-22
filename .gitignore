@@ -7,3 +7,4 @@ coverage.json
 package-lock.json
 *.iml
 .idea/
+packages/express-server/test/uploads/*

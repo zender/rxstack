@@ -96,10 +96,26 @@ describe('ExpressServer', () => {
     const options = {
       uri: host + '/mock/upload',
       method: 'POST',
-      qs: {},
       formData: {
         file: fs.createReadStream(assetsDir + '/image.jpg'),
       },
+      resolveWithFullResponse: true,
+      json: true
+    };
+
+    await rp(options)
+      .then((response: IncomingMessage) => {
+        response['body']['name'].should.be.equal('image.jpg');
+        response['statusCode'].should.be.equal(200);
+      })
+      .catch((err: any) => console.log(err))
+    ;
+  });
+
+  it('should download file', async () => {
+    const options = {
+      uri: host + '/mock/download',
+      method: 'GET',
       resolveWithFullResponse: true,
     };
 
@@ -107,8 +123,86 @@ describe('ExpressServer', () => {
       .then((response: IncomingMessage) => {
         const headers = response.headers;
         response['statusCode'].should.be.equal(200);
+        headers['content-disposition'].should.be.equal('attachment; filename="video.mp4"');
+        headers['content-type'].should.be.equal('video/mp4');
       })
       .catch((err: any) => console.log(err))
     ;
+  });
+
+  it('should stream video', async () => {
+    const options = {
+      uri: host + '/mock/stream',
+      headers: {
+        'Range': 'bytes=1-200'
+      },
+      method: 'GET',
+      resolveWithFullResponse: true,
+    };
+
+    await rp(options)
+      .then((response: IncomingMessage) => {
+        response['statusCode'].should.be.equal(206);
+        response['headers']['content-range'].should.be.equal('bytes 1-200/424925');
+        response['headers']['content-length'].should.be.equal('200');
+      })
+      .catch((err: any) => console.log(err))
+    ;
+  });
+
+  it('should throw an 404 exception', async () => {
+    const options = {
+      uri: host + '/mock/exception',
+      method: 'GET',
+      resolveWithFullResponse: true,
+      qs: {
+        'code': 404
+      },
+      json: true
+    };
+
+    await rp(options)
+      .catch((err: any) => {
+
+        err['statusCode'].should.be.equal(404);
+        err['response']['body']['message'].should.be.equal('Not Found');
+      })
+    ;
+  });
+
+  it('should throw an exception', async () => {
+    const options = {
+      uri: host + '/mock/exception',
+      method: 'GET',
+      resolveWithFullResponse: true,
+      json: true
+    };
+
+    await rp(options)
+      .catch((err: any) => {
+
+        err['statusCode'].should.be.equal(500);
+        err['response']['body']['message'].should.be.equal('something');
+      })
+    ;
+  });
+
+  it('should throw an exception in production', async () => {
+    process.env.NODE_ENV = 'production';
+    const options = {
+      uri: host + '/mock/exception',
+      method: 'GET',
+      resolveWithFullResponse: true,
+      json: true
+    };
+
+    await rp(options)
+      .catch((err: any) => {
+
+        err['statusCode'].should.be.equal(500);
+        err['response']['body']['message'].should.be.equal('Internal Server Error');
+      })
+    ;
+    process.env.NODE_ENV = 'testing';
   });
 });

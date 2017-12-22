@@ -1,8 +1,7 @@
-import {RouteDefinition} from './interfaces';
-import {Injectable, Injector} from 'injection-js';
+import {ResponseObject, RouteDefinition} from './interfaces';
+import {Injector} from 'injection-js';
 import {ControllerMetadata} from './metadata/metadata';
 import {metadataStorage} from './metadata/metadata-storage';
-import {Response} from './models/response';
 import {Request} from './models/request';
 import {AsyncEventDispatcher} from '@rxstack/async-event-dispatcher';
 import {Exception, transformToException} from '@rxstack/exceptions';
@@ -77,13 +76,13 @@ export class Kernel {
         path: path,
         routeName: routeMetadata.name,
         method: routeMetadata.httpMethod,
-        handler: async (request: Request): Promise<Response> => {
+        handler: async (request: Request): Promise<ResponseObject> => {
           request.method = routeMetadata.httpMethod;
           request.basePath = controllerMetadata.path;
           request.path = path;
           request.routeName = routeMetadata.name;
           request.controller = controller;
-          let response: Response;
+          let response: ResponseObject;
           try {
             const requestEvent = new RequestEvent(request);
             await this.injector.get(AsyncEventDispatcher).dispatch(KernelEvents.KERNEL_REQUEST, requestEvent);
@@ -120,11 +119,11 @@ export class Kernel {
   /**
    * Dispatched response event and returns response object or throws an exception
    *
-   * @param {Response} response
+   * @param {ResponseObject} response
    * @param {Request} request
-   * @returns {Promise<Response>}
+   * @returns {Promise<ResponseObject>}
    */
-  private async handleResponse(response: Response, request: Request): Promise<Response> {
+  private async handleResponse(response: ResponseObject, request: Request): Promise<ResponseObject> {
     try {
       const responseEvent = new ResponseEvent(request, response);
       await this.injector.get(AsyncEventDispatcher).dispatch(KernelEvents.KERNEL_RESPONSE, responseEvent);

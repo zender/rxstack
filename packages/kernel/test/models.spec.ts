@@ -6,9 +6,9 @@ import {FileBag} from '../src/models/file-bag';
 import {Response} from '../src/models/response';
 import {User} from '../src/models/user';
 import {Token} from '../src/models/token';
-import {StreamedResponse} from '../src/models/streamed-response';
 import {File} from '../src/models/file';
-import {DownloadableResponse} from '../src/models/downloadable-response';
+import {StreamableResponse} from '../src/models/streamable-response';
+import {RangeNotSatisfiableException} from '@rxstack/exceptions';
 const rootPath = process.mainModule['paths'][0].split('node_modules')[0].slice(0, -1);
 
 describe('Models', () => {
@@ -24,34 +24,54 @@ describe('Models', () => {
 
   it('should initialize response', async () => {
     const response = new Response('content');
-    response.type.should.be.equal('standard');
     response.content.should.be.equal('content');
     response.statusCode.should.be.equal(200);
     response.headers.should.be.instanceOf(HeaderBag);
   });
 
-  it('should initialize file download response', async () => {
-    const response = new DownloadableResponse('file_path', 'file.pdf');
-    response.type.should.be.equal('downloadable');
-    response.path.should.be.equal('file_path');
-    response.name.should.be.equal('file.pdf');
-    response.statusCode.should.be.equal(200);
-  });
-
-  it('should initialize streamed response with range', async () => {
+  it('should stream response with first 1024 bytes', async () => {
     const filePath = rootPath + '/test/assets/video.mp4';
-    const response = new StreamedResponse(filePath, {start: 1, end: 10});
-    response.type.should.be.equal('streamed');
-    response.size.should.be.equal(10);
+    const response = new StreamableResponse(filePath, 'bytes=0-1023');
+    response.headers.get('Content-Range').should.be.equal('bytes 0-1023/424925');
+    response.headers.get('Content-Length').should.be.equal(1024);
     (typeof response.fileReadStream !== 'undefined').should.be.true;
     response.mimetype.should.be.equal('video/mp4');
     response.statusCode.should.be.equal(206);
   });
 
+  it('should stream response without end position', async () => {
+    const filePath = rootPath + '/test/assets/video.mp4';
+    const response = new StreamableResponse(filePath, 'bytes=1024-');
+    response.headers.get('Content-Range').should.be.equal('bytes 1024-424924/424925');
+    response.headers.get('Content-Length').should.be.equal(423901);
+    (typeof response.fileReadStream !== 'undefined').should.be.true;
+    response.mimetype.should.be.equal('video/mp4');
+    response.statusCode.should.be.equal(206);
+  });
+
+  it('should stream response with last requested 512 bytes', async () => {
+    const filePath = rootPath + '/test/assets/video.mp4';
+    const response = new StreamableResponse(filePath, 'bytes=-512');
+    response.headers.get('Content-Range').should.be.equal('bytes 424413-424924/424925');
+    response.headers.get('Content-Length').should.be.equal(512);
+    (typeof response.fileReadStream !== 'undefined').should.be.true;
+    response.mimetype.should.be.equal('video/mp4');
+    response.statusCode.should.be.equal(206);
+  });
+
+  it('should stream not response with unavailable range', async () => {
+    const filePath = rootPath + '/test/assets/video.mp4';
+    const f = () => {
+      new StreamableResponse(filePath, 'bytes=1000-100000000000');
+    };
+    f.should.throw(RangeNotSatisfiableException);
+  });
+
+
   it('should initialize streamed response without range', async () => {
     const filePath = rootPath + '/test/assets/video.mp4';
-    const response = new StreamedResponse(filePath);
-    response.size.should.be.equal(424925);
+    const response = new StreamableResponse(filePath);
+    response.headers.get('Content-Length').should.be.equal(424925);
     response.statusCode.should.be.equal(200);
   });
 
