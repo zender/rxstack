@@ -1,6 +1,6 @@
 {
   "name": "@rxstack/application",
-  "version": "0.0.14",
+  "version": "0.0.15",
   "description": "RxStack Application Component",
   "private": false,
   "author": "Nikolay Gergiev <symfonist@gmail.com>",
@@ -13,7 +13,7 @@
   "scripts": {
     "test": "gulp tests",
     "watch": "gulp watch",
-    "publish-package": "gulp publishPackage"
+    "publish": "gulp publishPackage"
   },
   "dependencies": {
     "@rxstack/async-event-dispatcher": "^0.0.14",

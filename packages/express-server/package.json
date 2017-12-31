@@ -1,6 +1,6 @@
 {
   "name": "@rxstack/express-server",
-  "version": "0.0.14",
+  "version": "0.0.15",
   "description": "RxStack Express Server Component",
   "private": false,
   "author": "Nikolay Gergiev <symfonist@gmail.com>",
@@ -16,7 +16,7 @@
     "publish-package": "gulp publishPackage"
   },
   "dependencies": {
-    "@rxstack/application": "^0.0.14",
+    "@rxstack/application": "^0.0.15",
     "@rxstack/async-event-dispatcher": "^0.0.14",
     "@rxstack/configuration": "^0.0.14",
     "@rxstack/exceptions": "^0.0.14",
