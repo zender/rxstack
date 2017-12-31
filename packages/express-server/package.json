@@ -1,6 +1,6 @@
 {
   "name": "@rxstack/express-server",
-  "version": "0.0.15",
+  "version": "0.0.16",
   "description": "RxStack Express Server Component",
   "private": false,
   "author": "Nikolay Gergiev <symfonist@gmail.com>",
