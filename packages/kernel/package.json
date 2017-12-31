@@ -1,6 +1,6 @@
 {
   "name": "@rxstack/kernel",
-  "version": "0.0.9",
+  "version": "0.0.11",
   "description": "RxStack Kernel Component",
   "private": false,
   "author": "Nikolay Gergiev <symfonist@gmail.com>",
@@ -57,8 +57,8 @@
   },
   "dependencies": {
     "@rxstack/async-event-dispatcher": "0.0.6",
-    "@rxstack/exceptions": "0.0.2",
-    "@rxstack/logger": "0.0.1",
+    "@rxstack/exceptions": "^0.0.11",
+    "@rxstack/logger": "^0.0.11",
     "injection-js": "^2.1.0",
     "mime": "^2.0.3",
     "reflect-metadata": "^0.1.10"
