@@ -5,8 +5,8 @@ import {ConsoleLogger, Logger} from '@rxstack/logger';
 import {ServerManager} from '@rxstack/server-commons';
 import {Module, ProviderDefinition} from '@rxstack/application';
 import {ExpressModule} from '../../src/express.module';
-import {Configuration, configuration} from '@rxstack/configuration';
 import {ConfiguratonListener} from './configuraton.listener';
+import {Configuration, configuration} from '@rxstack/configuration';
 
 export const APP_PROVIDERS: ProviderDefinition[] = [
   { provide: ServerManager, useClass: ServerManager },
@@ -14,12 +14,12 @@ export const APP_PROVIDERS: ProviderDefinition[] = [
   { provide: Kernel, useClass: Kernel },
   { provide: AsyncEventDispatcher, useValue: asyncEventDispatcher },
   { provide: Logger, useClass: ConsoleLogger },
+  { provide: ConfiguratonListener, useClass: ConfiguratonListener },
   { provide: Configuration, useValue: configuration },
-  { provide: ConfiguratonListener, useValue: ConfiguratonListener },
 ];
 
 @Module({
   imports: [ExpressModule],
-  providers: APP_PROVIDERS,
+  providers: APP_PROVIDERS
 })
 export class AppModule {}

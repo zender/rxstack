@@ -4,6 +4,7 @@ import {Application} from '@rxstack/application';
 import {AppModule} from './mocks/app.module';
 import {Injector} from 'injection-js';
 import {IncomingMessage} from 'http';
+import {Configuration} from '@rxstack/configuration';
 const rp = require('request-promise');
 const fs = require('fs');
 const assetsDir = process.mainModule['paths'][0].split('node_modules')[0].slice(0, -1) + '/test/assets';

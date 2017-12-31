@@ -4,5 +4,13 @@
   },
   "sample_path": {
     "required_value": "my required value"
+  },
+  "express_server": {
+    "prefix": "new-prefix",
+    "uploads": {
+      "enabled": true,
+      "directory": "./uploads",
+      "hash": "sha256"
+    }
   }
 }

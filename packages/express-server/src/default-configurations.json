@@ -1,0 +1,9 @@
+{
+  "host": "host",
+  "port": 3000,
+  "uploads": {
+    "enabled": false,
+    "hash": "md5",
+    "multiples": false
+  }
+}

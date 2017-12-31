@@ -1,6 +1,6 @@
 {
   "name": "@rxstack/kernel",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "description": "RxStack Kernel Component",
   "private": false,
   "author": "Nikolay Gergiev <symfonist@gmail.com>",

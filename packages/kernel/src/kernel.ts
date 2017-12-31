@@ -4,7 +4,7 @@ import {ControllerMetadata} from './metadata/metadata';
 import {metadataStorage} from './metadata/metadata-storage';
 import {Request} from './models/request';
 import {AsyncEventDispatcher} from '@rxstack/async-event-dispatcher';
-import {Exception, transformToException} from '@rxstack/exceptions';
+import {transformToException} from '@rxstack/exceptions';
 import {Logger} from '@rxstack/logger';
 import {KernelEvents} from './kernel-events';
 import {RequestEvent} from './events/request-event';
@@ -28,12 +28,10 @@ export class Kernel {
   private routeDefinitions: RouteDefinition[] = [];
 
   /**
-   *  Kernel state
+   * Sets the injector
    *
-   * @type {boolean}
+   * @param {Injector} injector
    */
-  private initialized = false;
-
   setInjector(injector: Injector): void {
     this.injector = injector;
   }
@@ -42,9 +40,7 @@ export class Kernel {
    * Initializes the kernel and registers route definitions.
    */
   initialize(): void {
-    if (this.initialized)
-      throw new Exception('Kernel is already initialized.');
-    this.initialized = true;
+    this.routeDefinitions = [];
     metadataStorage.getControllerMetadataCollection().forEach((metadata: ControllerMetadata) => {
       this.registerDefinition(metadata);
     });

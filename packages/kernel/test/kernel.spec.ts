@@ -31,18 +31,6 @@ describe('Kernel', () => {
   kernel.setInjector(injector);
   kernel.initialize();
 
-  it('should throw an exception if kernel is initialized again', async () => {
-    let exception: Exception;
-    try {
-      kernel.initialize();
-    } catch (e) {
-      exception = e;
-    }
-
-    exception.should.be.instanceof(Exception);
-    exception.message.should.be.equal('Kernel is already initialized.');
-  });
-
   it('should call controller index action', async () => {
     const def = findRouteDefinition(kernel.getRouteDefinitions(), 'annotated_index');
     const request = new Request('HTTP');

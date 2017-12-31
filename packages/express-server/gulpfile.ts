@@ -44,6 +44,11 @@ export class Gulpfile {
       .pipe(shell(['tsc']));
   }
 
+  @Task()
+  moveJsonFile() {
+    return gulp.src('./src/*.json')
+      .pipe(gulp.dest('./build/compiled/src'));
+  }
 
   /**
   * Runs typescript file watcher.
@@ -222,6 +227,6 @@ export class Gulpfile {
    */
   @SequenceTask()
   tests() {
-    return ['clean', 'compile', 'tslint', 'coveragePost', 'coverageRemap'];
+    return ['clean', 'moveJsonFile', 'compile', 'tslint', 'coveragePost', 'coverageRemap'];
   }
 }

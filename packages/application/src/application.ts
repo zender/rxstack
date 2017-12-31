@@ -10,11 +10,12 @@ import {ServerManager} from '@rxstack/server-commons';
 import {metadataStorage, ServiceRegistryMetadata} from '@rxstack/service-registry';
 
 export class Application {
-  private providers: ProviderDefinition[] = [];
+  private providers: ProviderDefinition[];
   private injector: Injector;
   constructor(private module: ModuleInterface) {}
 
   async start(): Promise<Injector> {
+    this.providers = [];
     this.resolveModule(this.module, configuration);
     this.injector = await this.bootstrap(this.providers);
     await this.startServers(configuration);
@@ -35,7 +36,6 @@ export class Application {
           service.setInjector(injector);
         }
       });
-      configuration.lock();
       injector.get(Kernel).initialize();
       const bootstrapEvent = new BootstrapEvent(injector, configuration, resolvedProviders);
       await injector.get(AsyncEventDispatcher).dispatch(ApplicationEvents.BOOTSTRAP, bootstrapEvent);
@@ -66,8 +66,8 @@ export class Application {
     await manager.start(routeDefinitions);
   }
 
-  async stopServers(): Promise<void> {
+  private async stopServers(): Promise<void> {
     const manager = this.injector.get(ServerManager);
-    manager.stop();
+    await manager.stop();
   }
 }

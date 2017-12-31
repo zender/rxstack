@@ -75,7 +75,8 @@ export class ExpressServer extends AbstractServer {
         .then((response: ResponseObject) => {
           this.responseHandler(response, res);
         }).catch(err => {
-          let status = err.statusCode ? err.statusCode : 500;
+          const status = err.statusCode ? err.statusCode : 500;
+          this.log(status, err);
           if (process.env.NODE_ENV === 'production' && status === 500)
             res.status(status).send({message: 'Internal Server Error'});
           else
@@ -87,8 +88,7 @@ export class ExpressServer extends AbstractServer {
   private responseHandler(response: ResponseObject, res: ExpressResponse): void {
     response.headers.forEach((value, key) => res.header(key, value));
     res.status(response.statusCode);
-
-     if (response instanceof StreamableResponse)
+    if (response instanceof StreamableResponse)
       response.fileReadStream.pipe(res);
     else
       res.send(response.content);
@@ -96,18 +96,33 @@ export class ExpressServer extends AbstractServer {
 
   private uploadHandler(configuration: Configuration): RequestHandler {
     return (req: ExpressRequest, res: ExpressResponse, next: NextFunction): void => {
-      if (!configuration.get('express_server.enable_uploads') || req.method.toLowerCase() !== 'post') {
+      const configs = configuration.get('express_server');
+      if (!configs['uploads']['enabled'] || req.method.toLowerCase() !== 'post') {
         return next();
       }
+
+      const directory = configs['uploads']['directory'];
+      if (!fs.existsSync(directory)) {
+        throw new Error('Directory does not exist');
+      }
+
       const form = new formidable.IncomingForm();
-      form.uploadDir = configuration.get('express_server.upload_directory');
+      form.uploadDir = configuration.get('express_server.uploads.directory');
       form.keepExtensions = true;
-      form.multiples = false;
-      form.hash = 'md5';
+      form.multiples = configs['uploads']['multiples'];
+      form.hash = configs['uploads']['hash'];
       form.parse(req, function(err: any, fields: any, files: any) {
         req['files'] = files;
         next(err);
       });
     };
+  }
+
+  private log(status: number, content: any): void {
+    if (status >= 500) {
+      this.getLogger().error(content);
+    } else {
+      this.getLogger().info(content);
+    }
   }
 }

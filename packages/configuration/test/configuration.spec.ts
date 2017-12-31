@@ -18,7 +18,6 @@ describe('Configuration', () => {
       }
     });
 
-    configuration.lock();
     configuration.get('sample_path.required_value').should.be.equal('my required value');
   });
 
@@ -27,13 +26,12 @@ describe('Configuration', () => {
       type: 'object',
       properties: {
         default_value: {
-          required: true,
+          required: false,
           type: 'string'
         },
       }
     }, {'default_value': 'my default value'});
 
-    configuration.lock();
     configuration.get('sample_path.default_value').should.be.equal('my default value');
   });
 
@@ -46,7 +44,7 @@ describe('Configuration', () => {
           required: true,
           properties: {
             prop1: {
-              required: true,
+              required: false,
               type: 'boolean'
             },
             prop2: {
@@ -60,7 +58,6 @@ describe('Configuration', () => {
       'nested_object': {'prop1': true}
     });
 
-    configuration.lock();
     configuration.get('sample_path.nested_object.prop1').should.be.true;
   });
 
@@ -69,17 +66,16 @@ describe('Configuration', () => {
       type: 'object',
       properties: {
         file_path_1: {
-          required: true,
+          required: false,
           type: 'string'
         },
         file_path_2: {
-          required: true,
+          required: false,
           type: 'string'
         },
       }
     }, {'file_path_1': './my-file1.txt', 'file_path_2': '../my-file2.txt'});
 
-    configuration.lock();
     configuration.get('sample_path.file_path_1').should.have.string('/my-file1.txt');
     configuration.get('sample_path.file_path_2').should.have.string('/my-file2.txt');
   });
@@ -92,47 +88,13 @@ describe('Configuration', () => {
       type: 'object',
       properties: {
         env_var: {
-          required: true,
+          required: false,
           type: 'string'
         }
       }
     }, {'env_var': 'MY_VALUE'});
 
-    configuration.lock();
     configuration.get('sample_path.env_var').should.have.equal('my env value');
-  });
-
-
-  it('should throw an error if locked', () => {
-    configuration.register('sample_path', {
-      type: 'object',
-      properties: {
-        env_var: {
-          required: true,
-          type: 'string'
-        }
-      }
-    }, {'env_var': 'MY_VALUE'});
-
-    configuration.lock();
-
-    let error;
-
-    try {
-      configuration.register('another_sample_path', {
-        type: 'object',
-        properties: {
-          another_var: {
-            required: true,
-            type: 'string'
-          }
-        }
-      }, {'env_var': 'MY_VALUE'});
-    } catch (err) {
-      error = err.message;
-    }
-
-    error.should.be.equal('Configuration is already locked.');
   });
 
   it('should throw an error if path already exists', () => {
@@ -146,9 +108,7 @@ describe('Configuration', () => {
       }
     }, {'env_var': 'MY_VALUE'});
 
-    let error;
-
-    try {
+    const fn = () =>  {
       configuration.register('sample_path', {
         type: 'object',
         properties: {
@@ -158,31 +118,22 @@ describe('Configuration', () => {
           }
         }
       }, {'env_var': 'my var'});
-    } catch (err) {
-      error = err.message;
-    }
+    };
 
-    error.should.be.equal('Path sample_path already exists.');
+    fn.should.throw('Path sample_path already exists.');
   });
 
   it('should throw an error if root path is not an object', () => {
-    let error;
-
-    try {
+    const fn = () =>  {
       configuration.register('sample_path', {
         type: 'string',
         required: true
       });
-    } catch (err) {
-      error = err.message;
-    }
-
-    error.should.be.equal('Root path should be of type Object.');
+    };
+    fn.should.throw('Root path should be of type Object.');
   });
 
   it('should throw an error if path does not exist', () => {
-    let error;
-
     configuration.register('sample_path', {
       type: 'object',
       properties: {
@@ -193,22 +144,16 @@ describe('Configuration', () => {
       }
     }, {'my_var': 'my var'});
 
-    configuration.lock();
-
-    try {
+    const fn = () => {
       configuration.get('sample_path.unknown');
-    } catch (err) {
-      error = err.message;
-    }
+    };
 
-    error.should.have.equal('Path sample_path.unknown does not exist.');
+    fn.should.throw('Path sample_path.unknown does not exist.');
   });
 
 
   it('should throw an error if schema is not valid', () => {
-    let error;
-
-    try {
+    const fn = () =>  {
       configuration.register('sample_path', {
         type: 'object',
         properties: {
@@ -219,11 +164,68 @@ describe('Configuration', () => {
         }
       }, {'my_var': 'my var'});
 
-      configuration.lock();
-    } catch (err) {
-      error = err.message;
-    }
+    };
 
-    error.should.not.be.undefined;
+    fn.should.throw();
+  });
+
+  it('should register express server', () => {
+
+    configuration.register('express_server', {
+        type: 'object',
+        properties: {
+          host: {
+            required: false,
+            type: 'string'
+          },
+          port: {
+            required: false,
+            type: 'integer'
+          },
+          prefix: {
+            required: false,
+            type: 'string'
+          },
+          uploads: {
+            type: 'object',
+            properties: {
+              enabled: {
+                required: false,
+                type: 'boolean'
+              },
+              directory: {
+                required: false,
+                type: 'string'
+              },
+              multiples: {
+                required: false,
+                type: 'boolean'
+              },
+              hash: {
+                required: false,
+                type: 'string'
+              },
+            }
+          }
+        }
+      }, {
+        'host': 'localhost',
+        'port': 3000,
+        'prefix': 'api',
+        'uploads': {
+          'enabled': false,
+          'multiples': false,
+          'hash': 'md5'
+        },
+      });
+
+    const expressConfig = configuration.get('express_server');
+    expressConfig.host.should.be.equal('localhost');
+    expressConfig.port.should.be.equal(3000);
+    expressConfig.prefix.should.be.equal('new-prefix');
+    expressConfig.uploads.enabled.should.be.true;
+    expressConfig.uploads.multiples.should.be.false;
+    expressConfig.uploads.hash.should.be.equal('sha256');
+    expressConfig.uploads.directory.should.be.not.undefined;
   });
 });
