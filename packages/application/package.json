@@ -1,6 +1,6 @@
 {
   "name": "@rxstack/application",
-  "version": "0.0.12",
+  "version": "0.0.14",
   "description": "RxStack Application Component",
   "private": false,
   "author": "Nikolay Gergiev <symfonist@gmail.com>",
@@ -16,13 +16,13 @@
     "publish-package": "gulp publishPackage"
   },
   "dependencies": {
-    "@rxstack/async-event-dispatcher": "^0.0.11",
-    "@rxstack/configuration": "^0.0.12",
-    "@rxstack/exceptions": "^0.0.11",
-    "@rxstack/kernel": "^0.0.11",
-    "@rxstack/logger": "^0.0.11",
-    "@rxstack/server-commons": "^0.0.12",
-    "@rxstack/service-registry": "^0.0.11",
+    "@rxstack/async-event-dispatcher": "^0.0.14",
+    "@rxstack/configuration": "^0.0.14",
+    "@rxstack/exceptions": "^0.0.14",
+    "@rxstack/kernel": "^0.0.14",
+    "@rxstack/logger": "^0.0.14",
+    "@rxstack/server-commons": "^0.0.14",
+    "@rxstack/service-registry": "^0.0.14",
     "injection-js": "^2.1.0",
     "reflect-metadata": "^0.1.10"
   },
