@@ -77,7 +77,7 @@ export class ExpressServer extends AbstractServer {
         }).catch(err => {
           const status = err.statusCode ? err.statusCode : 500;
           this.log(status, err);
-          if (process.env.NODE_ENV === 'production' && status === 500)
+          if (process.env.NODE_ENV === 'production' && status >= 500)
             res.status(status).send({message: 'Internal Server Error'});
           else
             res.status(status).send(err);
