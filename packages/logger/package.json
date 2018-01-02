@@ -1,8 +1,8 @@
 {
   "name": "@rxstack/logger",
-  "version": "0.0.14",
+  "version": "0.0.30",
   "description": "RxStack Logger Component",
-  "private": false,
+  "private": true,
   "author": "Nikolay Gergiev <symfonist@gmail.com>",
   "license": "MIT",
   "repository": {

@@ -40,9 +40,13 @@ export class Gulpfile {
    */
   @Task()
   compile() {
+    gulp.src('./src/*.json')
+      .pipe(gulp.dest('./build/compiled/src'));
+
     return gulp.src('*.ts', { read: false })
       .pipe(shell(['tsc']));
   }
+
 
 
   /**
@@ -147,7 +151,7 @@ export class Gulpfile {
    * Creates a package and publishes it to npm.
    */
   @SequenceTask()
-  publish() {
+  publishPackage() {
     return ['package', 'npmPublish'];
   }
 
