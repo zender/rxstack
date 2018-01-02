@@ -1,6 +1,6 @@
 {
   "name": "@rxstack/async-event-dispatcher",
-  "version": "0.0.22",
+  "version": "0.0.23",
   "description": "RxStack AsyncEventDispatcher Component",
   "private": true,
   "author": "Nikolay Gergiev <symfonist@gmail.com>",

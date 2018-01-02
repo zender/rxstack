@@ -1,6 +1,6 @@
 {
   "name": "@rxstack/logger",
-  "version": "0.0.30",
+  "version": "0.0.31",
   "description": "RxStack Logger Component",
   "private": true,
   "author": "Nikolay Gergiev <symfonist@gmail.com>",
