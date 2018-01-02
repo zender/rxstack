@@ -6,12 +6,11 @@ import {
 } from 'express';
 import * as bodyParser from 'body-parser';
 import {Request, ResponseObject, RouteDefinition, StreamableResponse} from '@rxstack/kernel';
-import {AbstractServer, ServerConfigurationEvent, ServerManager} from '@rxstack/server-commons';
+import {AbstractServer, ServerConfigurationEvent, ServerManager, ServerEvents} from '@rxstack/server-commons';
 import * as compress from 'compression';
 import * as cors from 'cors';
 import {ServiceRegistry} from '@rxstack/service-registry';
 import {AsyncEventDispatcher} from '@rxstack/async-event-dispatcher';
-import {ServerEvents} from '@rxstack/server-commons/server-events';
 import {Configuration} from '@rxstack/configuration';
 import {Logger} from '@rxstack/logger';
 const formidable = require('formidable');

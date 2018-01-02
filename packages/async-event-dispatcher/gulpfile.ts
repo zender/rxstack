@@ -151,7 +151,7 @@ export class Gulpfile {
    * Creates a package and publishes it to npm.
    */
   @SequenceTask()
-  publishPackage() {
+  publish() {
     return ['package', 'npmPublish'];
   }
 

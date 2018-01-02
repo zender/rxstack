@@ -40,15 +40,14 @@ export class Gulpfile {
    */
   @Task()
   compile() {
+    gulp.src('./src/*.json')
+      .pipe(gulp.dest('./build/compiled/src'));
+
     return gulp.src('*.ts', { read: false })
       .pipe(shell(['tsc']));
   }
 
-  @Task()
-  moveJsonFile() {
-    return gulp.src('./src/*.json')
-      .pipe(gulp.dest('./build/compiled/src'));
-  }
+
 
   /**
   * Runs typescript file watcher.
@@ -152,7 +151,7 @@ export class Gulpfile {
    * Creates a package and publishes it to npm.
    */
   @SequenceTask()
-  publishPackage() {
+  publish() {
     return ['package', 'npmPublish'];
   }
 
@@ -227,6 +226,6 @@ export class Gulpfile {
    */
   @SequenceTask()
   tests() {
-    return ['clean', 'moveJsonFile', 'compile', 'tslint', 'coveragePost', 'coverageRemap'];
+    return ['clean', 'compile', 'tslint', 'coveragePost', 'coverageRemap'];
   }
 }
