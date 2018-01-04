@@ -8,6 +8,7 @@ import {ApplicationEvents} from './application-events';
 import {MODULE_KEY, ModuleInterface, ModuleMetadata, ProviderDefinition} from './interfaces';
 import {ServerManager} from '@rxstack/server-commons';
 import {metadataStorage, ServiceRegistryMetadata} from '@rxstack/service-registry';
+import {CORE_PROVIDERS} from './CORE_PROVIDERS';
 
 export class Application {
   private providers: ProviderDefinition[];
@@ -28,7 +29,7 @@ export class Application {
 
   private async bootstrap(providerDef: ProviderDefinition[]): Promise<Injector> {
     return Promise.all(providerDef).then(async (providers) => {
-      const resolvedProviders = ReflectiveInjector.resolve(providers);
+      const resolvedProviders = ReflectiveInjector.resolve(CORE_PROVIDERS.concat(providers));
       const injector = ReflectiveInjector.fromResolvedProviders(resolvedProviders);
       resolvedProviders.forEach((provider: ResolvedReflectiveProvider) => {
         const service = injector.get(provider.key.token);

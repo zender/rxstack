@@ -1,5 +1,5 @@
 {
-  "host": "host",
+  "host": "localhost",
   "port": 3000,
   "uploads": {
     "enabled": false,

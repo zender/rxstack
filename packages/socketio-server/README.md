@@ -1,11 +1,11 @@
-# @rxstack/express-server
+# @rxstack/socketio-server
 
-> The ExpressServer component.
+> The SecketIO component.
 
 ## Installation
 
 ```
-npm install @rxstack/express-server --save
+npm install @rxstack/socketio-server --save
 ```
 
 ## Documentation

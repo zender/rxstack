@@ -33,8 +33,6 @@ describe('ExpressServer', () => {
   it('should call mock_text', async () => {
     const options = {
       uri: host + '/mock/text',
-      qs: {},
-      headers: { },
       resolveWithFullResponse: true,
       json: true
     };
@@ -54,8 +52,6 @@ describe('ExpressServer', () => {
   it('should call mock_json', async () => {
     const options = {
       uri: host + '/mock/json',
-      qs: {},
-      headers: { },
       resolveWithFullResponse: true,
       json: true
     };
@@ -63,7 +59,6 @@ describe('ExpressServer', () => {
     await rp(options)
       .then((response: IncomingMessage) => {
         const headers = response.headers;
-        headers['x-powered-by'].should.be.equal('Express');
         headers['content-type'].should.be.equal('application/json; charset=utf-8');
         response['statusCode'].should.be.equal(200);
         JSON.stringify(response['body']).should.be.equal(JSON.stringify({ id: 'json' }));
@@ -75,8 +70,6 @@ describe('ExpressServer', () => {
   it('should call express middleware', async () => {
     const options = {
       uri: host + '/express-middleware',
-      qs: {},
-      headers: { },
       resolveWithFullResponse: true,
       json: true
     };
