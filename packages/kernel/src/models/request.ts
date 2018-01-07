@@ -16,11 +16,6 @@ export class Request {
   headers: HeaderBag;
 
   /**
-   * Query params
-   */
-  query: ParameterBag;
-
-  /**
    * Parameters
    */
   params: ParameterBag;
@@ -77,7 +72,6 @@ export class Request {
    */
   constructor(public readonly transport: Transport) {
     this.headers = new HeaderBag();
-    this.query = new ParameterBag();
     this.params = new ParameterBag();
     this.attributes = new AttributeBag();
     this.files = new FileBag();

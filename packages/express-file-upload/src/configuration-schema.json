@@ -1,0 +1,18 @@
+{
+  "type": "object",
+  "required": ["enabled", "directory", "multiples", "hash"],
+  "properties": {
+    "enabled": {
+      "type": "boolean"
+    },
+    "directory": {
+      "type": "string"
+    },
+    "multiples": {
+      "type": "boolean"
+    },
+    "hash": {
+      "type": "string"
+    }
+  }
+}

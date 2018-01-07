@@ -1,8 +1,8 @@
 {
   "name": "@rxstack/async-event-dispatcher",
-  "version": "0.0.23",
+  "version": "0.0.24",
   "description": "RxStack AsyncEventDispatcher Component",
-  "private": true,
+  "private": false,
   "author": "Nikolay Gergiev <symfonist@gmail.com>",
   "license": "MIT",
   "repository": {
@@ -58,5 +58,8 @@
   "main": "index.js",
   "directories": {
     "test": "test"
+  },
+  "dependencies": {
+    "reflect-metadata": "^0.1.10"
   }
 }

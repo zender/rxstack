@@ -1,6 +1,7 @@
 import { Server as HttpServer } from 'http';
 import {RouteDefinition} from '@rxstack/kernel';
 import {Injector} from 'injection-js';
+import {Logger} from '@rxstack/logger';
 
 /**
  * Base class for servers
@@ -11,6 +12,11 @@ export abstract class AbstractServer {
    * Injector
    */
   protected injector: Injector;
+
+  /**
+   * Server engine
+   */
+  protected engine: any;
 
   /**
    * Hostname
@@ -54,11 +60,37 @@ export abstract class AbstractServer {
   }
 
   /**
-   * Retrieve the base instance of require('http').Server
+   * Retrieve the base instance of Server
    * @returns {HttpServer}
    */
   getHttpServer(): HttpServer {
     return this.httpServer;
+  }
+
+  /**
+   * Retrieve underlying engine
+   *
+   * @returns {any}
+   */
+  getEngine(): any {
+    return this.engine;
+  }
+
+  /**
+   * Kicks off the server using the specific underlying engine
+   */
+  async startEngine(): Promise<void> {
+    this.getHttpServer()
+      .listen(this.port, this.host, () => this.getLogger().debug(`Starting ${this.getHost()}`));
+  }
+
+  /**
+   * Stops underlying engine
+   *
+   * @returns {Promise<void>}
+   */
+  async stopEngine(): Promise<void> {
+    this.getHttpServer().close(() => this.getLogger().debug(`Stopping ${this.getHost()}`));
   }
 
   /**
@@ -70,28 +102,19 @@ export abstract class AbstractServer {
   }
 
   /**
-   * Gets underlying engine
-   */
-  abstract getEngine(): any;
-
-  /**
-   * Kicks off the server using the specific underlying engine
-   */
-  abstract async startEngine(): Promise<void>;
-
-  /**
-   * Stops underlying engine
+   * Logger
    *
-   * @returns {Promise<void>}
+   * @returns {Logger}
    */
-  abstract async stopEngine(): Promise<void>;
+  protected getLogger(): Logger {
+    return this.getInjector().get(Logger).source(this.constructor.name);
+  }
 
   /**
    * Configures the server
    *
    * @param {RouteDefinition[]} routeDefinitions
-   * @returns {Promise<this>}
+   * @returns {Promise<void>}
    */
   protected abstract async configure(routeDefinitions: RouteDefinition[]): Promise<void>;
-
 }

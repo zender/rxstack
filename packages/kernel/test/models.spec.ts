@@ -16,7 +16,6 @@ describe('Models', () => {
     const request = new Request('HTTP');
     request.transport.should.be.equal('HTTP');
     request.headers.should.be.instanceOf(HeaderBag);
-    request.query.should.be.instanceOf(ParameterBag);
     request.params.should.be.instanceOf(ParameterBag);
     request.attributes.should.be.instanceOf(AttributeBag);
     request.files.should.be.instanceOf(FileBag);

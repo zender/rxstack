@@ -1,0 +1,10 @@
+{
+  "express_server": {
+    "host": "localhost",
+    "port": 3200
+  },
+  "express_file_upload": {
+    "enabled": true,
+    "directory": "./../test/uploads"
+  }
+}

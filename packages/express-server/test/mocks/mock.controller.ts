@@ -37,7 +37,7 @@ export class MockController {
 
   @Route('GET', '/exception', 'mock_exception')
   async exceptionAction(request: Request): Promise<StreamableResponse> {
-    if (parseInt(request.query.get('code')) === 404) {
+    if (parseInt(request.params.get('code')) === 404) {
       throw new NotFoundException();
     }
     throw new Error('something');

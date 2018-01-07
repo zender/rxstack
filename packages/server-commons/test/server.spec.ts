@@ -4,8 +4,7 @@ import {metadataStorage, ServiceRegistryMetadata} from '@rxstack/service-registr
 import {ServerManager} from '../src/server-manager';
 import {MockServer} from './mocks/mock.server';
 import {AsyncEventDispatcher, asyncEventDispatcher} from '@rxstack/async-event-dispatcher';
-import {SinonSpy} from 'sinon';
-import {AbstractServer} from '../src/abstract-server';
+import {Logger, ConsoleLogger} from '@rxstack/logger';
 const sinon = require('sinon');
 
 describe('Server', () => {
@@ -13,6 +12,7 @@ describe('Server', () => {
   const providers: Provider[] = [
     { provide: AsyncEventDispatcher, useValue: asyncEventDispatcher },
     { provide: ServerManager, useClass: ServerManager },
+    { provide: Logger, useClass: ConsoleLogger },
     { provide: MockServer, useClass: MockServer }
   ];
   const resolvedProviders = ReflectiveInjector.resolve(providers);
@@ -20,7 +20,7 @@ describe('Server', () => {
 
   resolvedProviders.forEach((provider: ResolvedReflectiveProvider) => {
     const service = injector.get(provider.key.token);
-    if (service['setInjector']) {
+    if (typeof service['setInjector'] !== 'undefined') {
       service.setInjector(injector);
     }
   });
@@ -36,24 +36,23 @@ describe('Server', () => {
     await manager.start();
   });
 
-  it('should start mock server', async () => {
-    server.started.should.be.true;
+  after(async() =>  {
+    await manager.stop();
   });
 
   it('should get host and port', async () => {
-    server.getHost().should.be.equal('http://example.com:8080');
+    server.getHost().should.be.equal('http://localhost:4242');
   });
 
   it('should get http server', async () => {
-    (typeof server.getHttpServer() === 'undefined').should.be.true;
+    (typeof server.getHttpServer() !== 'undefined').should.be.true;
+  });
+
+  it('should get engine', async () => {
+    (typeof server.getEngine() !== 'undefined').should.be.true;
   });
 
   it('should get injector', async () => {
     (typeof server.getInjector() !== 'undefined').should.be.true;
-  });
-
-  it('should stop mock server', async () => {
-    await manager.stop();
-    server.started.should.be.false;
   });
 });

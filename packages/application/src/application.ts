@@ -33,8 +33,8 @@ export class Application {
       const injector = ReflectiveInjector.fromResolvedProviders(resolvedProviders);
       resolvedProviders.forEach((provider: ResolvedReflectiveProvider) => {
         const service = injector.get(provider.key.token);
-        if (service['setInjector']) {
-          service.setInjector(injector);
+        if (typeof service['setInjector'] !== 'undefined') {
+          service.injector = injector;
         }
       });
       injector.get(Kernel).initialize();

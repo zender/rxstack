@@ -1,7 +1,7 @@
 import * as express from 'express';
 import * as http from 'http';
 import {
-  Application as ExpressApplication, NextFunction, Request as ExpressRequest, RequestHandler,
+  NextFunction, Request as ExpressRequest, RequestHandler,
   Response as ExpressResponse
 } from 'express';
 import * as bodyParser from 'body-parser';
@@ -12,31 +12,13 @@ import * as cors from 'cors';
 import {ServiceRegistry} from '@rxstack/service-registry';
 import {AsyncEventDispatcher} from '@rxstack/async-event-dispatcher';
 import {Configuration} from '@rxstack/configuration';
-import {Logger} from '@rxstack/logger';
 const formidable = require('formidable');
 const fs = require('fs');
 
-@ServiceRegistry(ServerManager.ns, 'server.express')
+@ServiceRegistry(ServerManager.ns, ExpressServer.serverName)
 export class ExpressServer extends AbstractServer {
 
-  protected app: ExpressApplication;
-
-  getEngine(): any {
-    return this.app;
-  }
-
-  async startEngine(): Promise<void> {
-    this.getHttpServer()
-      .listen(this.port, this.host, () => this.getLogger().debug(`Starting ${this.getHost()}`));
-  }
-
-  async stopEngine(): Promise<void> {
-    this.getHttpServer().close(() => this.getLogger().debug(`Stopping ${this.getHost()}`));
-  }
-
-  protected getLogger(): Logger {
-    return this.getInjector().get(Logger).source(this.constructor.name);
-  }
+  static serverName = 'server.express';
 
   protected async configure(routeDefinition: RouteDefinition[]): Promise<void> {
     const configuration = this.injector.get(Configuration);
@@ -44,43 +26,46 @@ export class ExpressServer extends AbstractServer {
     this.host = configuration.get('express_server.host');
     this.port = configuration.get('express_server.port');
 
-    this.app = express();
-    this.app.options('*', cors());
-    this.app.use(cors());
-    this.app.use(compress());
-    this.app.use(bodyParser.json());
-    this.app.use(bodyParser.urlencoded({ extended: true }));
-    this.app.use(this.uploadHandler(configuration));
+    this.engine = express();
+    this.engine.options('*', cors());
+    this.engine.use(cors());
+    this.engine.use(compress());
+    this.engine.use(bodyParser.json());
+    this.engine.use(bodyParser.urlencoded({ extended: true }));
+    this.engine.use(this.uploadHandler(configuration));
 
-    await dispatcher.dispatch(ServerEvents.PRE_CONFIGURE, new ServerConfigurationEvent(this));
+    await dispatcher
+      .dispatch(ServerEvents.CONFIGURE, new ServerConfigurationEvent(this.engine, ExpressServer.serverName));
     // register routes
     routeDefinition.forEach(routeDefinition => this.registerRoute(routeDefinition));
-    await dispatcher.dispatch(ServerEvents.POST_CONFIGURE, new ServerConfigurationEvent(this));
-    this.httpServer = http.createServer(<any>(this.app));
+    this.httpServer = http.createServer(<any>(this.engine));
+  }
+
+  private createRequest(req: ExpressRequest, routeDefinition: RouteDefinition): Request {
+    const request = new Request('HTTP');
+    request.path = routeDefinition.path;
+    request.headers.fromObject(req.headers);
+    request.params.fromObject(Object.assign({}, req.query, req.params));
+    request.files.fromObject(req['files'] || {});
+    request.body = req.body;
+
+    return request;
   }
 
   private async registerRoute(routeDefinition: RouteDefinition): Promise<void> {
-    return this.app[routeDefinition.method.toLowerCase()](routeDefinition.path,
+    return this.engine[routeDefinition.method.toLowerCase()](routeDefinition.path,
       async (req: ExpressRequest, res: ExpressResponse): Promise<void> => {
-      const request = new Request('HTTP');
-      request.path = routeDefinition.path;
-      request.headers.fromObject(req.headers);
-      request.query.fromObject(req.query);
-      request.params.fromObject(req.params);
-      request.files.fromObject(req['files'] || {});
-      request.body = req.body;
-
-      return routeDefinition.handler(request)
-        .then((response: ResponseObject) => {
-          this.responseHandler(response, res);
-        }).catch(err => {
-          const status = err.statusCode ? err.statusCode : 500;
-          this.log(status, err);
-          if (process.env.NODE_ENV === 'production' && status >= 500)
-            res.status(status).send({message: 'Internal Server Error'});
-          else
-            res.status(status).send(err);
-        });
+        return routeDefinition.handler(this.createRequest(req, routeDefinition))
+          .then((response: ResponseObject) => {
+            this.responseHandler(response, res);
+          }).catch(err => {
+            const status = err.statusCode ? err.statusCode : 500;
+            if (process.env.NODE_ENV === 'production' && status >= 500)
+              res.status(status).send({message: 'Internal Server Error'});
+            else
+              res.status(status).send(err);
+          })
+        ;
     });
   }
 
@@ -115,13 +100,5 @@ export class ExpressServer extends AbstractServer {
         next(err);
       });
     };
-  }
-
-  private log(status: number, content: any): void {
-    if (status >= 500) {
-      this.getLogger().error(content);
-    } else {
-      this.getLogger().info(content);
-    }
   }
 }
