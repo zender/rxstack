@@ -6,8 +6,12 @@ import {RouteDefinition} from '../src/interfaces';
 import {Request} from '../src/models/request';
 import {Response} from '../src/models/response';
 import {Exception, InternalServerErrorException} from '@rxstack/exceptions';
-import {AsyncEventDispatcher, asyncEventDispatcher} from '@rxstack/async-event-dispatcher';
+import {
+  AsyncEventDispatcher, EVENT_LISTENER_KEY,
+  EventListenerMetadata, ObserverMetadata
+} from '@rxstack/async-event-dispatcher';
 import {ConsoleLogger, Logger} from '@rxstack/logger';
+import {AnnotatedListener} from './stubs/annotated-listener';
 
 const findRouteDefinition = function (data: RouteDefinition[], routeName: string) {
   const def = data.find((routeDef: RouteDefinition) =>
@@ -22,11 +26,27 @@ describe('Kernel', () => {
   // Setup
   const KERNEL_PROVIDERS: Provider[] = [
     { provide: Kernel, useClass: Kernel },
-    { provide: AsyncEventDispatcher, useValue: asyncEventDispatcher },
+    { provide: AsyncEventDispatcher, useClass: AsyncEventDispatcher },
     { provide: Logger, useClass: ConsoleLogger },
   ];
   const resolvedProviders = ReflectiveInjector.resolve(KERNEL_PROVIDERS.concat(STUB_PROVIDERS));
   const injector = ReflectiveInjector.fromResolvedProviders(resolvedProviders);
+  const dispatcher = injector.get(AsyncEventDispatcher);
+
+  resolvedProviders.forEach((provider) => {
+    const service = injector.get(provider.key);
+    if (Reflect.hasMetadata(EVENT_LISTENER_KEY, service.constructor)) {
+      const metadata: EventListenerMetadata = Reflect.getMetadata(EVENT_LISTENER_KEY, service.constructor);
+      metadata.observers.forEach((observer: ObserverMetadata) => {
+        dispatcher.addListener(
+          observer.eventName,
+          service[observer.propertyKey].bind(service),
+          observer.priority
+        );
+      });
+    }
+  });
+
   const kernel = injector.get(Kernel);
   kernel.setInjector(injector);
   kernel.initialize();

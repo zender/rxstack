@@ -5,7 +5,9 @@ import {KernelEvents} from '../../src/kernel-events';
 import {ResponseEvent} from '../../src/events/response-event';
 import {ExceptionEvent} from '../../src/events/exception-event';
 import {InternalServerErrorException} from '@rxstack/exceptions';
+import {Injectable} from 'injection-js';
 
+@Injectable()
 export class AnnotatedListener {
   @Observe(KernelEvents.KERNEL_REQUEST)
   async onRequest(event: RequestEvent): Promise<void> {

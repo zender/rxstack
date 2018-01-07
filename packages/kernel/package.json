@@ -56,7 +56,7 @@
     "test": "test"
   },
   "dependencies": {
-    "@rxstack/async-event-dispatcher": "^0.0",
+    "@rxstack/async-event-dispatcher": "0.0.24",
     "@rxstack/exceptions": "^0.0",
     "@rxstack/logger": "^0.0",
     "injection-js": "^2.2.1",
