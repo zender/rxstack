@@ -1,6 +1,6 @@
 {
   "type": "object",
-  "required": ["host", "port", "uploads"],
+  "required": ["host", "port"],
   "properties": {
     "host": {
       "type": "string"
@@ -8,18 +8,8 @@
     "port": {
       "type": "integer"
     },
-    "uploads": {
-      "type": "object",
-      "required": ["enabled", "multiples", "hash"],
-      "enabled": {
-        "type": "boolean"
-      },
-      "multiples": {
-        "type": "boolean"
-      },
-      "hash": {
-        "type": "string"
-      }
+    "prefix": {
+      "type": "string"
     }
   }
 }

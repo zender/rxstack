@@ -11,7 +11,6 @@ import {
   EventListenerMetadata, ObserverMetadata
 } from '@rxstack/async-event-dispatcher';
 import {ConsoleLogger, Logger} from '@rxstack/logger';
-import {AnnotatedListener} from './stubs/annotated-listener';
 
 const findRouteDefinition = function (data: RouteDefinition[], routeName: string) {
   const def = data.find((routeDef: RouteDefinition) =>

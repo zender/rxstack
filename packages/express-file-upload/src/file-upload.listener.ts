@@ -19,21 +19,19 @@ export class FileUploadListener {
     if (event.name !== ExpressServer.serverName) {
       return;
     }
-    console.log(this.configuration);
-    // event.engine.use(this.uploadHandler(this.configuration));
+    event.engine.use(this.uploadHandler());
   }
 
-  private uploadHandler(configuration: Configuration): RequestHandler {
+  private uploadHandler(): RequestHandler {
     return (req: ExpressRequest, res: ExpressResponse, next: NextFunction): void => {
-      const configs = configuration.get('express_file_upload');
+      const configs = this.configuration.get('express_file_upload');
       if (!configs['enabled'] || req.method.toLowerCase() !== 'post') {
         return next();
       }
 
       const directory = configs['directory'];
-      if (!fs.existsSync(directory)) {
-        throw new Error('Directory does not exist');
-      }
+      if (!fs.existsSync(directory))
+        return next(new Error('Directory does not exist'));
 
       const form = new formidable.IncomingForm();
       form.uploadDir = configs['directory'];

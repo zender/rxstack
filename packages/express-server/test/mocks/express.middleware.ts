@@ -1,4 +1,7 @@
-import { Request as ExpressRequest, Response as ExpressResponse, NextFunction, RequestHandler } from 'express';
+import {
+  Request as ExpressRequest, Response as ExpressResponse,
+  NextFunction, RequestHandler
+} from 'express';
 import {Injector} from 'injection-js';
 
 export function expressMiddleware(injector: Injector): RequestHandler {

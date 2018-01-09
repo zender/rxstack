@@ -5,7 +5,7 @@ import {Injectable, Injector} from 'injection-js';
 import {ExpressServer} from '../../src/express.server';
 
 @Injectable()
-export class ConfiguratonListener {
+export class ConfigurationListener {
 
   private injector: Injector;
 
@@ -14,13 +14,14 @@ export class ConfiguratonListener {
   }
 
   @Observe(ServerEvents.CONFIGURE)
-  async onPreConfigure(event: ServerConfigurationEvent): Promise<void> {
+  async onConfigure(event: ServerConfigurationEvent): Promise<void> {
     if (event.name !== ExpressServer.serverName) {
       return;
     }
+
     event.engine
-      .use('/express-middleware', expressMiddleware(this.injector))
-      .use('/mock/json', requestModifierMiddleware(this.injector))
+      .get('/api/express-middleware', expressMiddleware(this.injector))
+      .get('/api/mock/json', requestModifierMiddleware(this.injector))
     ;
   }
 }

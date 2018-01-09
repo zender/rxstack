@@ -7,4 +7,9 @@ export class MockController {
   async uploadAction(request: Request): Promise<Response> {
     return new Response(request.files.get('file'));
   }
+
+  @Route('GET', '/upload', 'mock_upload_dummy')
+  async dummyAction(request: Request): Promise<Response> {
+    return new Response('dummy');
+  }
 }

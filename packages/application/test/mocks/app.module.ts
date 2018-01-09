@@ -5,8 +5,10 @@ import {Configuration} from '@rxstack/configuration';
 import {Test1Module} from './test1.module';
 import {ProviderDefinition} from '../../src/interfaces';
 import {MockServer} from './mock.server';
+import {BootstrapListener} from './bootstrap-listener';
 
 export const APP_PROVIDERS: ProviderDefinition[] = [
+  { provide: BootstrapListener, useClass: BootstrapListener },
   { provide: MockServer, useClass: MockServer },
   { provide: MockController, useClass: MockController },
   { provide: MockService, useClass: MockService },

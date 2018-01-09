@@ -1,7 +1,10 @@
 import 'reflect-metadata';
 import {Injector, ReflectiveInjector, ResolvedReflectiveProvider} from 'injection-js';
 import {Kernel} from '@rxstack/kernel';
-import {AsyncEventDispatcher} from '@rxstack/async-event-dispatcher';
+import {
+  AsyncEventDispatcher, EVENT_LISTENER_KEY, EventListenerMetadata,
+  ObserverMetadata
+} from '@rxstack/async-event-dispatcher';
 import {configuration, Configuration} from '@rxstack/configuration';
 import {BootstrapEvent} from './bootstrap-event';
 import {ApplicationEvents} from './application-events';
@@ -31,15 +34,15 @@ export class Application {
     return Promise.all(providerDef).then(async (providers) => {
       const resolvedProviders = ReflectiveInjector.resolve(CORE_PROVIDERS.concat(providers));
       const injector = ReflectiveInjector.fromResolvedProviders(resolvedProviders);
+      const dispatcher = injector.get(AsyncEventDispatcher);
       resolvedProviders.forEach((provider: ResolvedReflectiveProvider) => {
         const service = injector.get(provider.key.token);
-        if (typeof service['setInjector'] !== 'undefined') {
-          service.injector = injector;
-        }
+        this.resolveKernelAwareService(service, injector);
+        this.resolveEventListeners(service, dispatcher);
       });
       injector.get(Kernel).initialize();
       const bootstrapEvent = new BootstrapEvent(injector, configuration, resolvedProviders);
-      await injector.get(AsyncEventDispatcher).dispatch(ApplicationEvents.BOOTSTRAP, bootstrapEvent);
+      await dispatcher.dispatch(ApplicationEvents.BOOTSTRAP, bootstrapEvent);
       return injector;
     });
   }
@@ -52,6 +55,25 @@ export class Application {
     module.providers.forEach((provider: ProviderDefinition) => this.providers.push(provider));
     if (module.configuration) {
       module.configuration(config);
+    }
+  }
+
+  private resolveKernelAwareService(service: Object, injector: Injector): void {
+    if (typeof service['setInjector'] !== 'undefined') {
+      service['injector'] = injector;
+    }
+  }
+
+  private resolveEventListeners(service: Object, dispatcher: AsyncEventDispatcher): void {
+    if (Reflect.hasMetadata(EVENT_LISTENER_KEY, service.constructor)) {
+      const metadata: EventListenerMetadata = Reflect.getMetadata(EVENT_LISTENER_KEY, service.constructor);
+      metadata.observers.forEach((observer: ObserverMetadata) => {
+        dispatcher.addListener(
+          observer.eventName,
+          service[observer.propertyKey].bind(service),
+          observer.priority
+        );
+      });
     }
   }
 

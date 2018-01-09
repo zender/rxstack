@@ -8,3 +8,4 @@ package-lock.json
 *.iml
 .idea/
 packages/express-server/test/uploads/*
+packages/express-file-upload/test/uploads/*

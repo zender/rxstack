@@ -1,11 +1,11 @@
-# @rxstack/file-upload
+# @rxstack/express-file-upload
 
-> The FileUpload component.
+> The ExpressFileUpload component.
 
 ## Installation
 
 ```
-npm install @rxstack/file-upload --save
+npm install @rxstack/express-file-upload --save
 ```
 
 ## Documentation

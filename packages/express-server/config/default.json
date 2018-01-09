@@ -2,9 +2,6 @@
   "express_server": {
     "host": "localhost",
     "port": 3200,
-    "uploads": {
-      "enabled": true,
-      "directory": "/home/zender/apps/rxstack/rxstack/packages/express-server/test/uploads"
-    }
+    "prefix": "/api"
   }
 }

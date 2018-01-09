@@ -47,19 +47,6 @@ export class Gulpfile {
       .pipe(shell(['tsc']));
   }
 
-
-
-  /**
-  * Runs typescript file watcher.
-  */
-  @Task()
-  watch() {
-    return gulp.watch([__dirname + '/*.ts'], () => {
-      console.log('compiling..');
-      this.compile();
-    });
-  }
-
   // -------------------------------------------------------------------------
   // Packaging and Publishing tasks
   // -------------------------------------------------------------------------

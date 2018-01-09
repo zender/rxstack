@@ -4,9 +4,8 @@ import {Application} from '@rxstack/application';
 import {AppModule} from './mocks/app.module';
 import {Injector} from 'injection-js';
 import {IncomingMessage} from 'http';
-import {Configuration} from '@rxstack/configuration';
 const rp = require('request-promise');
-const fs = require('fs');
+const fs = require('fs-extra');
 const assetsDir = process.mainModule['paths'][0].split('node_modules')[0].slice(0, -1) + '/test/assets';
 
 describe('ExpressServer', () => {
@@ -17,12 +16,14 @@ describe('ExpressServer', () => {
   let expressServer: ExpressServer;
 
   before(async() =>  {
+    fs.mkdirsSync(assetsDir + '/../uploads');
     injector = await app.start();
     expressServer = injector.get(ExpressServer);
-    host = expressServer.getHost();
+    host = 'http://localhost:3200/api';
   });
 
   after(async() =>  {
+    fs.removeSync(assetsDir + '/../uploads');
     await app.stop();
   });
 
@@ -86,26 +87,6 @@ describe('ExpressServer', () => {
     ;
   });
 
-  it('should upload file', async () => {
-    const options = {
-      uri: host + '/mock/upload',
-      method: 'POST',
-      formData: {
-        file: fs.createReadStream(assetsDir + '/image.jpg'),
-      },
-      resolveWithFullResponse: true,
-      json: true
-    };
-
-    await rp(options)
-      .then((response: IncomingMessage) => {
-        response['body']['name'].should.be.equal('image.jpg');
-        response['statusCode'].should.be.equal(200);
-      })
-      .catch((err: any) => console.log(err))
-    ;
-  });
-
   it('should download file', async () => {
     const options = {
       uri: host + '/mock/download',
@@ -157,7 +138,6 @@ describe('ExpressServer', () => {
 
     await rp(options)
       .catch((err: any) => {
-
         err['statusCode'].should.be.equal(404);
         err['response']['body']['message'].should.be.equal('Not Found');
       })
@@ -192,7 +172,6 @@ describe('ExpressServer', () => {
 
     await rp(options)
       .catch((err: any) => {
-
         err['statusCode'].should.be.equal(500);
         err['response']['body']['message'].should.be.equal('Internal Server Error');
       })

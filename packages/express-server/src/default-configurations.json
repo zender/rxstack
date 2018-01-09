@@ -1,9 +1,4 @@
 {
   "host": "localhost",
-  "port": 3000,
-  "uploads": {
-    "enabled": false,
-    "hash": "md5",
-    "multiples": false
-  }
+  "port": 3000
 }
