@@ -5,26 +5,20 @@ const assetsDir = process.mainModule['paths'][0].split('node_modules')[0].slice(
 @Controller('/mock')
 export class MockController {
 
-  @Route('GET', '/text', 'mock_text')
-  async textAction(request: Request): Promise<Response> {
-    return new Response(request.token);
-  }
-
   @Route('GET', '/json', 'mock_json')
   async jsonAction(request: Request): Promise<Response> {
     return new Response({'id': 'json'});
   }
 
-  @Route('GET', '/json', 'mock_null')
+  @Route('GET', '/null', 'mock_null')
   async nullAction(request: Request): Promise<Response> {
     const response =  new Response();
-    response.headers.set('content-type', 'text/plain');
     return response;
   }
 
   @Route('GET', '/exception', 'mock_exception')
   async exceptionAction(request: Request): Promise<Response> {
-    if (parseInt(request.query.get('code')) === 404) {
+    if (parseInt(request.params.get('code')) === 404) {
       throw new NotFoundException();
     }
     throw new Error('something');

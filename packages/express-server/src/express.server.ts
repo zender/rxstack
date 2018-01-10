@@ -60,11 +60,8 @@ export class ExpressServer extends AbstractServer {
     return this.engine[routeDefinition.method.toLowerCase()](path,
       async (req: ExpressRequest, res: ExpressResponse, next: NextFunction): Promise<void> => {
         return routeDefinition.handler(this.createRequest(req, routeDefinition))
-          .then((response: ResponseObject) => {
-            this.responseHandler(response, res);
-          }).catch(err => {
-            this.errorHandler()(err, req, res, next);
-          })
+          .then((response: ResponseObject) => this.responseHandler(response, res))
+          .catch(err => this.errorHandler()(err, req, res, next))
         ;
     });
   }

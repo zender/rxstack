@@ -22,6 +22,7 @@ describe('SocketIOServer', () => {
   });
 
   after(async() =>  {
+    client.close();
     await app.stop();
   });
 
@@ -29,20 +30,9 @@ describe('SocketIOServer', () => {
     (typeof server.getEngine()).should.not.be.undefined;
   });
 
-  it('should call mock_text', (done: Function) => {
-    client.emit('mock_text', null, function (response: any) {
-      const headers = response['headers'];
-      headers['content-type'].should.be.equal('text/plain');
-      response['statusCode'].should.be.equal(200);
-      response['content'].should.be.equal('user token');
-      done();
-    });
-  });
 
   it('should call mock_json', (done: Function) => {
     client.emit('mock_json', null, function (response: any) {
-      const headers = response['headers'];
-      headers['content-type'].should.be.equal('application/json');
       response['statusCode'].should.be.equal(200);
       JSON.stringify(response['content']).should.be.equal(JSON.stringify({ id: 'json' }));
       done();
@@ -51,8 +41,6 @@ describe('SocketIOServer', () => {
 
   it('should call mock_null', (done: Function) => {
     client.emit('mock_null', null, function (response: any) {
-      const headers = response['headers'];
-      headers['content-type'].should.be.equal('text/plain');
       response['statusCode'].should.be.equal(200);
       (null === response['content']).should.be.true;
       done();
@@ -61,7 +49,7 @@ describe('SocketIOServer', () => {
 
   it('should throw an 404 exception', (done: Function) => {
     const args = {
-      'query': {
+      'params': {
         'code': 404
       }
     };
@@ -75,7 +63,7 @@ describe('SocketIOServer', () => {
 
   it('should throw an 500 exception', (done: Function) => {
     const args = {
-      'query': {
+      'params': {
         'code': 500
       }
     };
@@ -89,7 +77,7 @@ describe('SocketIOServer', () => {
 
   it('should throw an 500 exception in production', (done: Function) => {
     const args = {
-      'query': {
+      'params': {
         'code': 500
       }
     };
