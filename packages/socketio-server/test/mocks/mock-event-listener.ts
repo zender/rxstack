@@ -6,11 +6,11 @@ import {SocketIOServer} from '../../src/socketio.server';
 import Socket = SocketIO.Socket;
 
 @Injectable()
-export class ConfiguratonListener {
+export class MockEventListener {
 
+  connectedUsers: Socket[] = [];
+  
   private injector: Injector;
-
-  private connectedUsers: Socket[] = [];
 
   setInjector(injector: Injector): void {
     this.injector = injector;
@@ -31,7 +31,6 @@ export class ConfiguratonListener {
     if (event.name !== SocketIOServer.serverName) {
       return;
     }
-
     this.connectedUsers.push(event.socket);
   }
 
@@ -40,7 +39,8 @@ export class ConfiguratonListener {
     if (event.name !== SocketIOServer.serverName) {
       return;
     }
-
-    // do something
+    let idx = this.connectedUsers.findIndex((current) => current === event.socket);
+    if (idx !== -1)
+      this.connectedUsers.splice(idx, 1);
   }
 }

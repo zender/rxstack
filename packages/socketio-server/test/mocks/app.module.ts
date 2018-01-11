@@ -1,11 +1,11 @@
 import {MockController} from './mock.controller';
 import {Module, ProviderDefinition} from '@rxstack/application';
-import {ConfiguratonListener} from './configuraton.listener';
 import {SocketIOModule} from '../../src/socketio.module';
+import {MockEventListener} from './mock-event-listener';
 
 export const APP_PROVIDERS: ProviderDefinition[] = [
   { provide: MockController, useClass: MockController },
-  { provide: ConfiguratonListener, useClass: ConfiguratonListener },
+  { provide: MockEventListener, useClass: MockEventListener },
 ];
 
 @Module({

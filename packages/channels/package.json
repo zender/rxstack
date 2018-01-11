@@ -1,7 +1,7 @@
 {
-  "name": "@rxstack/socketio-server",
-  "version": "0.0.2",
-  "description": "RxStack SocketIO Server Component",
+  "name": "@rxstack/channels",
+  "version": "0.0.1",
+  "description": "RxStack Channels Component",
   "private": false,
   "author": "Nikolay Gergiev <symfonist@gmail.com>",
   "license": "MIT",
@@ -15,17 +15,7 @@
     "publish-package": "gulp publish"
   },
   "dependencies": {
-    "@rxstack/application": "^0.0",
-    "@rxstack/async-event-dispatcher": "^0.0",
-    "@rxstack/configuration": "^0.0",
-    "@rxstack/exceptions": "^0.0",
-    "@rxstack/kernel": "^0.0",
-    "@rxstack/logger": "^0.0",
-    "@rxstack/server-commons": "^0.0",
-    "@rxstack/service-registry": "^0.0",
-    "injection-js": "^2.1.0",
-    "reflect-metadata": "^0.1.10",
-    "socket.io": "^2.0.4"
+    "lodash": "^4.17.4"
   },
   "devDependencies": {
     "@types/chai": "^3.4.35",

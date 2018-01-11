@@ -3,6 +3,7 @@ import {Application} from '@rxstack/application';
 import {AppModule} from './mocks/app.module';
 import {Injector} from 'injection-js';
 import {SocketIOServer} from '../src/socketio.server';
+import {MockEventListener} from './mocks/mock-event-listener';
 const io = require('socket.io-client');
 
 
@@ -96,6 +97,16 @@ describe('SocketIOServer', () => {
     client.emit('mock_stream', null, function (response: any) {
       response['statusCode'].should.be.equal(500);
       response['message'].should.be.equal('StreamableResponse is not supported.');
+      done();
+    });
+  });
+
+
+  it('should add connected users', (done: Function) => {
+    const client2 = io(host, {transports: ['websocket']});
+    client2.on('connect', () => {
+      injector.get(MockEventListener).connectedUsers.length.should.be.equal(2);
+      client2.close();
       done();
     });
   });
