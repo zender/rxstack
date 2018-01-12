@@ -12,38 +12,53 @@ export class Channel {
     return this.connections.length;
   }
 
-  merge(channel: Channel): this {
-    if (this.children.indexOf(channel) === -1) {
-      this.children.push(channel);
-      this.join(...channel.connections);
-    }
+  merge(...channels: Channel[]): this {
+    channels.forEach((channel) => {
+      if (this.children.indexOf(channel) === -1) {
+        this.children.push(channel);
+      }
+    });
+    this.refresh();
+    return this;
+  }
+
+  refresh(): this {
+    this.connections = [];
+    this.children.forEach((child) => this.connections.push(...child.connections));
     return this;
   }
 
   join(...connections: Connection[]): this {
+    this.children.forEach((child) => child.join(...connections));
     connections.forEach(connection => {
       if (this.connections.indexOf(connection) === -1) {
         this.connections.push(connection);
       }
     });
-    this.children.forEach((current) => current.join(...connections));
     return this;
   }
 
   leave(...connections: Connection[]): this {
-    connections.forEach(current => {
-      const index = this.connections.indexOf(current);
+    this.children.forEach((child) => child.leave(...connections));
+    connections.forEach(connection => {
+      const index = this.connections.indexOf(connection);
       if (index !== -1) {
         this.connections.splice(index, 1);
       }
     });
-    this.children.forEach((current) => current.leave(...connections));
     return this;
   }
 
-  send(data: any, fn?: FilterFn): this {
+  reset(): this {
+    this.children.forEach((child) => child.reset());
+    this.connections = [];
+    this.children = [];
+    return this;
+  }
+
+  send(eventName: string, data: any, fn?: FilterFn): this {
     let connections = fn ? this.connections.filter(fn) : this.connections;
-    connections.forEach((current: Connection) => current.emit(data));
+    connections.forEach((current: Connection) => current.emit(eventName, data));
     return this;
   }
 }

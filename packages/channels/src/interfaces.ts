@@ -2,4 +2,4 @@ import {EventEmitter} from 'events';
 
 export interface Connection extends EventEmitter {}
 
-export type FilterFn = (connection: Connection) => true;
+export type FilterFn = (connection: Connection) => boolean;
