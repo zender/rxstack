@@ -16,25 +16,23 @@ export class Channel {
     channels.forEach((channel) => {
       if (this.children.indexOf(channel) === -1) {
         this.children.push(channel);
+        this.push(...channel.connections);
       }
     });
-    this.refresh();
     return this;
   }
 
   refresh(): this {
-    this.connections = [];
-    this.children.forEach((child) => this.connections.push(...child.connections));
+    if (this.children.length) {
+      this.connections = [];
+      this.children.forEach((child) => this.push(...child.connections));
+    }
     return this;
   }
 
   join(...connections: Connection[]): this {
     this.children.forEach((child) => child.join(...connections));
-    connections.forEach(connection => {
-      if (this.connections.indexOf(connection) === -1) {
-        this.connections.push(connection);
-      }
-    });
+    connections.forEach(connection => this.push(connection));
     return this;
   }
 
@@ -60,5 +58,13 @@ export class Channel {
     let connections = fn ? this.connections.filter(fn) : this.connections;
     connections.forEach((current: Connection) => current.emit(eventName, data));
     return this;
+  }
+
+  private push(...connections: Connection[]): void {
+    connections.forEach((connection) => {
+      if (this.connections.indexOf(connection) === -1) {
+        this.connections.push(connection);
+      }
+    });
   }
 }

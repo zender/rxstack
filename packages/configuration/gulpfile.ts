@@ -40,9 +40,6 @@ export class Gulpfile {
    */
   @Task()
   compile() {
-    gulp.src('./src/*.json')
-      .pipe(gulp.dest('./build/compiled/src'));
-
     return gulp.src('*.ts', { read: false })
       .pipe(shell(['tsc']));
   }

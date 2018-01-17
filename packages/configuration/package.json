@@ -1,8 +1,8 @@
 {
   "name": "@rxstack/configuration",
-  "version": "0.0.23",
+  "version": "0.0.25",
   "description": "RxStack Configuration Component",
-  "private": true,
+  "private": false,
   "author": "Nikolay Gergiev <symfonist@gmail.com>",
   "license": "MIT",
   "repository": {
@@ -14,7 +14,6 @@
   },
   "scripts": {
     "test": "gulp tests",
-    "watch": "gulp watch",
     "publish-package": "gulp publish"
   },
   "devDependencies": {
@@ -48,8 +47,6 @@
     "typescript": "^2.5.3"
   },
   "dependencies": {
-    "config": "^1.27.0",
-    "is-my-json-valid": "^2.16.1",
     "lodash": "^4.17.4"
   },
   "bugs": {

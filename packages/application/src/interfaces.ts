@@ -1,4 +1,4 @@
-import {Provider} from 'injection-js';
+import {Injector, Provider} from 'injection-js';
 import {Configuration} from '@rxstack/configuration';
 
 export const MODULE_KEY = '__module__';
@@ -15,4 +15,8 @@ export interface ModuleMetadata {
 
 export interface ConfigurationFunction {
   (config: Configuration): void;
+}
+
+export interface InjectorAwareInterface {
+  setInjector(injector: Injector): void;
 }

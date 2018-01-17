@@ -13,6 +13,9 @@ const APP_PROVIDERS: Provider[] = [
 @Module({
   imports: [Test2Module],
   providers: APP_PROVIDERS,
-  configuration: (config: Configuration) => {}
 })
-export class Test1Module {}
+export class Test1Module {
+  static configure(config: any): void {
+
+  }
+}

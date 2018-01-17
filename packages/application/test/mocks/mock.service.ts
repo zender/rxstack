@@ -1,7 +1,8 @@
 import {Injectable, Injector} from 'injection-js';
+import {InjectorAwareInterface} from '../../src/interfaces';
 
 @Injectable()
-export class MockService {
+export class MockService implements InjectorAwareInterface {
   injector: Injector;
   modifiedByBootstrapEvent = false;
 

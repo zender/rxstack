@@ -6,6 +6,8 @@ import {AppModule} from './mocks/app.module';
 import {MOCK_SERVICE_1} from './mocks/test1.module';
 import {MOCK_SERVICE_2} from './mocks/test2.module';
 import {ServerManager} from '@rxstack/server-commons';
+import * as _ from 'lodash';
+import {environment} from './environments/environment';
 
 describe('Application', () => {
   // Setup application
@@ -18,6 +20,12 @@ describe('Application', () => {
 
   it('should create the injector', async () => {
     injector.should.not.be.undefined;
+  });
+
+  it('should test env', async () => {
+    _.merge(require('./environments/environment'), require('./environments/environment.test'));
+
+    console.log(environment);
   });
 
   it('should start the servers', async () => {

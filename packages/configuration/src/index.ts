@@ -1,6 +1,5 @@
-const config = require('config');
-const schemaValidator = require('is-my-json-valid');
 const path = require('path');
+const fs = require('fs');
 const _ = require('lodash');
 
 /**
@@ -8,47 +7,39 @@ const _ = require('lodash');
  */
 export class Configuration {
 
-  private items: Map<string, Object> = new Map();
-
-  register(path: string, schema: Object, defaultValue = {}): void {
-    if (this.items.has(path))
-      throw new Error(`Path ${path} already exists.`);
-
-    if (schema['type'] !== 'object')
-      throw new Error('Root path should be of type Object.');
-
-    let data = _.merge(defaultValue, config.get(path));
-    data = this.normalize(data);
-    this.validate(path, schema, data);
-    this.items.set(path, data);
+  static initialize(dir: string, filename = 'environment'): void {
+    Configuration.initAppDirectory();
+    const basePath = dir + path.sep + filename;
+    const envPath = dir + path.sep + filename + '.' + Configuration.getEnvironment();
+    if (!fs.existsSync(basePath + '.js')) {
+      throw new Error(`Base environment file ${basePath} does not exist.`);
+    }
+    if (!fs.existsSync(envPath + '.js')) {
+      throw new Error(`Environment file ${basePath} does not exist.`);
+    }
+    const baseFile: Object = require(dir + path.sep + filename);
+    const envFile: Object = require(dir + path.sep + filename + '.' + Configuration.getEnvironment());
+    _.merge(baseFile, envFile);
+    Configuration.normalize(baseFile);
   }
 
-  get(path: string): any {
-    const rootPath = path.split('.').shift();
-    const obj = this.items.get(rootPath);
-    const value = path.split('.').reduce((v, idx) => v[idx], {[rootPath]: obj});
-    if (!value)
-      throw new Error(`Path ${path} does not exist.`);
-
-    return value;
-  }
-
-  private validate(path: string, schema: Object, data: Object): void {
-    const validate = schemaValidator(schema, {verbose: true, greedy: true});
-
-    if (!validate(data)) {
-      const message = ('Configuration is not valid: ' + JSON.stringify(validate.errors))
-        .replace('data.', path + '.');
-      throw new Error(message);
+  static initAppDirectory(): void {
+    if (!process.env.APP_DIR) {
+      process.env.APP_DIR = process.mainModule['paths'][0].split('node_modules')[0].slice(0, -1);
     }
   }
 
-  private normalize(data: Object): Object {
+  static getEnvironment(): string {
+    let env: string = process.env.NODE_ENV ? process.env.NODE_ENV : 'development';
+    return env.toLowerCase();
+  }
+
+  static normalize(data: Object): Object {
     Object.keys(data).forEach(name => {
       let value = data[name];
 
       if (typeof value === 'object') {
-        data[name] = this.normalize(value);
+        data[name] = Configuration.normalize(value);
       }
 
       if (typeof value === 'string') {
@@ -56,7 +47,7 @@ export class Configuration {
           value = process.env[value];
         } else if (value.indexOf('.') === 0 || value.indexOf('..') === 0) {
           value = path.resolve(
-            path.join(config.util.getEnv('NODE_CONFIG_DIR')),
+            path.join(process.env.APP_DIR),
             value.replace(/\//g, path.sep)
           );
         }
@@ -66,10 +57,3 @@ export class Configuration {
     return data;
   }
 }
-
-/**
- * Exports single instance of Configuration
- *
- * @type {Configuration}
- */
-export const configuration = new Configuration();
