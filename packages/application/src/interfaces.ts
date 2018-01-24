@@ -1,20 +1,20 @@
 import {Injector, Provider} from 'injection-js';
-import {Configuration} from '@rxstack/configuration';
 
-export const MODULE_KEY = '__module__';
+export const MODULE_KEY = '__RX_STACK_MODULE__';
 
 export type ProviderDefinition = Provider | Promise<Provider>;
+
+export type ModuleType = ModuleInterface | ModuleWithProviders;
 
 export interface ModuleInterface {}
 
 export interface ModuleMetadata {
-  imports?: ModuleInterface[];
+  imports?: ModuleType[];
   providers?: ProviderDefinition[];
-  configuration?: ConfigurationFunction;
 }
 
-export interface ConfigurationFunction {
-  (config: Configuration): void;
+export interface ModuleWithProviders extends ModuleMetadata {
+  module: ModuleInterface;
 }
 
 export interface InjectorAwareInterface {

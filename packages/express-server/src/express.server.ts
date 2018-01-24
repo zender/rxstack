@@ -13,7 +13,7 @@ import * as compress from 'compression';
 import * as cors from 'cors';
 import {ServiceRegistry} from '@rxstack/service-registry';
 import {AsyncEventDispatcher} from '@rxstack/async-event-dispatcher';
-import {Configuration} from '@rxstack/configuration';
+import {ExpressServerConfiguration} from './express-server-configuration';
 
 @ServiceRegistry(ServerManager.ns, ExpressServer.serverName)
 export class ExpressServer extends AbstractServer {
@@ -21,10 +21,8 @@ export class ExpressServer extends AbstractServer {
   static serverName = 'server.express';
 
   protected async configure(routeDefinition: RouteDefinition[]): Promise<void> {
-    const configuration = this.injector.get(Configuration);
+    const configuration = this.injector.get(ExpressServerConfiguration);
     const dispatcher = this.injector.get(AsyncEventDispatcher);
-    this.host = configuration.get('express_server.host');
-    this.port = configuration.get('express_server.port');
 
     this.engine = express();
     this.engine.options('*', cors());
@@ -53,8 +51,8 @@ export class ExpressServer extends AbstractServer {
     return request;
   }
 
-  private async registerRoute(routeDefinition: RouteDefinition, configuration: Configuration): Promise<void> {
-    const prefix: string = configuration.get('express_server')['prefix'];
+  private async registerRoute(routeDefinition: RouteDefinition, configuration: ExpressServerConfiguration): Promise<void> {
+    const prefix: string = configuration.prefix;
     const path: string = prefix ? (prefix + routeDefinition.path) : routeDefinition.path;
 
     return this.engine[routeDefinition.method.toLowerCase()](path,

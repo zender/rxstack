@@ -1,11 +1,9 @@
 import {Module} from '../../src/decorators';
-import {InjectionToken, Provider} from 'injection-js';
+import {Provider} from 'injection-js';
 import {MockService} from './mock.service';
 
-export const MOCK_SERVICE_2 = new InjectionToken('mock.service2');
-
 const APP_PROVIDERS: Provider[] = [
-  { provide: MOCK_SERVICE_2, useClass: MockService },
+  { provide: 'mock.service2', useClass: MockService },
 ];
 
 @Module({

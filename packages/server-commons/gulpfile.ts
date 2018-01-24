@@ -40,24 +40,8 @@ export class Gulpfile {
    */
   @Task()
   compile() {
-    gulp.src('./src/*.json')
-      .pipe(gulp.dest('./build/compiled/src'));
-
     return gulp.src('*.ts', { read: false })
       .pipe(shell(['tsc']));
-  }
-
-
-
-  /**
-  * Runs typescript file watcher.
-  */
-  @Task()
-  watch() {
-    return gulp.watch([__dirname + '/*.ts'], () => {
-      console.log('compiling..');
-      this.compile();
-    });
   }
 
   // -------------------------------------------------------------------------

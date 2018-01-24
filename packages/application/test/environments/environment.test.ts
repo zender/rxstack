@@ -1,6 +1,3 @@
 export const environment = {
-  opt1: false,
-  opt2: {
-    opt2_2: false,
-  }
+  app_name: 'My Test App',
 };

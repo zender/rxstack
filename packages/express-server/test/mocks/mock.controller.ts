@@ -1,6 +1,6 @@
 import {Controller, Request, Response, Route, StreamableResponse} from '@rxstack/kernel';
 import {NotFoundException} from '@rxstack/exceptions';
-const assetsDir = process.mainModule['paths'][0].split('node_modules')[0].slice(0, -1) + '/test/assets';
+const assetsDir = process.env.APP_DIR + '/test/assets';
 
 @Controller('/mock')
 export class MockController {

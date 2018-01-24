@@ -1,21 +1,22 @@
 import {Module} from '../../src/decorators';
-import {InjectionToken, Provider} from 'injection-js';
 import {MockService} from './mock.service';
 import {Test2Module} from './test2.module';
-import {Configuration} from '@rxstack/configuration';
+import {ModuleWithProviders} from '../../src/interfaces';
 
-export const MOCK_SERVICE_1 = new InjectionToken('mock.service1');
+export interface Test1ModuleConfiguration {
+  name: string;
+}
 
-const APP_PROVIDERS: Provider[] = [
-  { provide: MOCK_SERVICE_1, useClass: MockService },
-];
-
-@Module({
-  imports: [Test2Module],
-  providers: APP_PROVIDERS,
-})
+@Module()
 export class Test1Module {
-  static configure(config: any): void {
-
+  static configure(config: Test1ModuleConfiguration): ModuleWithProviders {
+    return {
+      module: Test1Module,
+      imports: [Test2Module],
+      providers: [
+        { provide: 'test1.config', useValue: config },
+        { provide: MockService, useClass: MockService },
+      ]
+    };
   }
 }

@@ -4,9 +4,11 @@ import {Application} from '@rxstack/application';
 import {AppModule} from './mocks/app.module';
 import {Injector} from 'injection-js';
 import {IncomingMessage} from 'http';
+import {Configuration} from '@rxstack/configuration';
 const rp = require('request-promise');
 const fs = require('fs-extra');
-const assetsDir = process.mainModule['paths'][0].split('node_modules')[0].slice(0, -1) + '/test/assets';
+Configuration.initialize(__dirname + '/environments');
+const assetsDir = process.env.APP_DIR + '/test/assets';
 
 describe('ExpressServer', () => {
   // Setup application
@@ -17,7 +19,8 @@ describe('ExpressServer', () => {
 
   before(async() =>  {
     fs.mkdirsSync(assetsDir + '/../uploads');
-    injector = await app.start();
+    await app.start();
+    injector = app.getInjector();
     expressServer = injector.get(ExpressServer);
     host = 'http://localhost:3200/api';
   });

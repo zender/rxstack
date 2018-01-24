@@ -5,7 +5,6 @@ import {ServerManager} from '../src/server-manager';
 import {MockServer} from './mocks/mock.server';
 import {AsyncEventDispatcher, asyncEventDispatcher} from '@rxstack/async-event-dispatcher';
 import {Logger, ConsoleLogger} from '@rxstack/logger';
-const sinon = require('sinon');
 
 describe('Server', () => {
   // Setup

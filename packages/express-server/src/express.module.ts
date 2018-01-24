@@ -1,20 +1,22 @@
 import {ExpressServer} from './express.server';
-import {Module, ProviderDefinition} from '@rxstack/application';
-import {Configuration} from '@rxstack/configuration';
-const fs = require('fs');
+import {Module, ModuleWithProviders} from '@rxstack/application';
+import {ExpressServerConfiguration} from './express-server-configuration';
 
-const PROVIDERS: ProviderDefinition[] = [
-  { provide: ExpressServer, useClass: ExpressServer },
-];
-
-@Module({
-  providers: PROVIDERS,
-  configuration: (config: Configuration) => {
-    const schema =
-      JSON.parse(fs.readFileSync(__dirname + '/configuration-schema.json', 'utf8'));
-    const defaultConfigs =
-      JSON.parse(fs.readFileSync(__dirname + '/default-configurations.json', 'utf8'));
-    config.register('express_server', schema, defaultConfigs);
+@Module()
+export class ExpressModule {
+  static configure(configuration: ExpressServerConfiguration): ModuleWithProviders {
+    return {
+      module: ExpressModule,
+      providers: [
+        {
+          provide: ExpressServerConfiguration,
+          useFactory: () => {
+            return new ExpressServerConfiguration(configuration);
+          },
+          deps: []
+        },
+        { provide: ExpressServer, useClass: ExpressServer },
+      ],
+    };
   }
-})
-export class ExpressModule {}
+}

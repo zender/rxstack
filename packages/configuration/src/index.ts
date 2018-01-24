@@ -7,6 +7,7 @@ const _ = require('lodash');
  */
 export class Configuration {
 
+  static initialData?: Object;
   static initialize(dir: string, filename = 'environment'): void {
     Configuration.initAppDirectory();
     const basePath = dir + path.sep + filename;
@@ -14,12 +15,13 @@ export class Configuration {
     if (!fs.existsSync(basePath + '.js')) {
       throw new Error(`Base environment file ${basePath} does not exist.`);
     }
-    if (!fs.existsSync(envPath + '.js')) {
-      throw new Error(`Environment file ${basePath} does not exist.`);
-    }
     const baseFile: Object = require(dir + path.sep + filename);
-    const envFile: Object = require(dir + path.sep + filename + '.' + Configuration.getEnvironment());
-    _.merge(baseFile, envFile);
+
+    if (fs.existsSync(envPath + '.js')) {
+      const envFile: Object = require(dir + path.sep + filename + '.' + Configuration.getEnvironment());
+      _.merge(baseFile, envFile);
+    }
+
     Configuration.normalize(baseFile);
   }
 

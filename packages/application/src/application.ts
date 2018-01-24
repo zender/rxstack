@@ -5,62 +5,73 @@ import {
   AsyncEventDispatcher, EVENT_LISTENER_KEY, EventListenerMetadata,
   ObserverMetadata
 } from '@rxstack/async-event-dispatcher';
-import {configuration, Configuration} from '@rxstack/configuration';
 import {BootstrapEvent} from './bootstrap-event';
 import {ApplicationEvents} from './application-events';
-import {MODULE_KEY, ModuleInterface, ModuleMetadata, ProviderDefinition} from './interfaces';
+import {
+  MODULE_KEY, ModuleInterface, ModuleMetadata, ModuleType,
+  ProviderDefinition
+} from './interfaces';
 import {ServerManager} from '@rxstack/server-commons';
 import {metadataStorage, ServiceRegistryMetadata} from '@rxstack/service-registry';
 import {CORE_PROVIDERS} from './CORE_PROVIDERS';
 
 export class Application {
-  private providers: ProviderDefinition[];
-  private injector: Injector;
-  constructor(private module: ModuleInterface) {}
+  private providers: ProviderDefinition[] = [];
+  private injector?: Injector;
+  constructor(private module: ModuleInterface) {  }
 
-  async start(): Promise<Injector> {
-    this.providers = [];
-    this.resolveModule(this.module, configuration);
-    this.injector = await this.bootstrap(this.providers);
-    await this.startServers(configuration);
-    return this.injector;
+  async start(): Promise<void> {
+    this.resolveModule(this.module);
+    this.injector = await this.bootstrap();
+    await this.startServers();
   }
 
   async stop(): Promise<void> {
     await this.stopServers();
+    this.providers = null;
+    this.injector = null;
   }
 
-  private async bootstrap(providerDef: ProviderDefinition[]): Promise<Injector> {
-    return Promise.all(providerDef).then(async (providers) => {
+  getInjector(): Injector {
+    return this.injector;
+  }
+
+  private async bootstrap(): Promise<Injector> {
+    return Promise.all(this.providers).then(async (providers) => {
       const resolvedProviders = ReflectiveInjector.resolve(CORE_PROVIDERS.concat(providers));
       const injector = ReflectiveInjector.fromResolvedProviders(resolvedProviders);
       const dispatcher = injector.get(AsyncEventDispatcher);
       resolvedProviders.forEach((provider: ResolvedReflectiveProvider) => {
         const service = injector.get(provider.key.token);
-        this.resolveKernelAwareService(service, injector);
+        this.resolveInjectorAwareService(service, injector);
         this.resolveEventListeners(service, dispatcher);
       });
       injector.get(Kernel).initialize();
-      const bootstrapEvent = new BootstrapEvent(injector, configuration, resolvedProviders);
+      const bootstrapEvent = new BootstrapEvent(injector, resolvedProviders);
       await dispatcher.dispatch(ApplicationEvents.BOOTSTRAP, bootstrapEvent);
       return injector;
     });
   }
 
-  private resolveModule(target: ModuleInterface, config: Configuration): void {
-    const module: ModuleMetadata = Reflect.getMetadata(MODULE_KEY, target);
-    if (Array.isArray(module.imports)) {
-      module.imports.forEach((m: ModuleInterface) => this.resolveModule(m, config));
-    }
-    module.providers.forEach((provider: ProviderDefinition) => this.providers.push(provider));
-    if (module.configuration) {
-      module.configuration(config);
-    }
+  private resolveModule(target: ModuleType): void {
+    const moduleMetadata: ModuleMetadata = this.getModuleMetadata(target);
+    moduleMetadata.imports.forEach((m) => this.resolveModule(m));
+    moduleMetadata.providers.forEach((provider: ProviderDefinition) => this.providers.push(provider));
   }
 
-  private resolveKernelAwareService(service: Object, injector: Injector): void {
+  private getModuleMetadata(target: ModuleType): ModuleMetadata {
+
+    const moduleMetadata: ModuleMetadata =
+      Reflect.getMetadata(MODULE_KEY, target['module'] ? target['module'] : target);
+
+    Array.isArray(target['imports']) ? moduleMetadata.imports.push(...target['imports']) : null;
+    Array.isArray(target['providers']) ? moduleMetadata.providers.push(...target['providers']) : null;
+    return moduleMetadata;
+  }
+
+  private resolveInjectorAwareService(service: Object, injector: Injector): void {
     if (typeof service['setInjector'] !== 'undefined') {
-      service['injector'] = injector;
+      service['setInjector'](injector);
     }
   }
 
@@ -77,7 +88,7 @@ export class Application {
     }
   }
 
-  private async startServers(configuration: Configuration): Promise<void> {
+  private async startServers(): Promise<void> {
     const routeDefinitions = this.injector.get(Kernel).getRouteDefinitions();
     const manager = this.injector.get(ServerManager);
     metadataStorage.all(ServerManager.ns).forEach((metadata: ServiceRegistryMetadata) => {

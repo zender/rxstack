@@ -1,6 +1,6 @@
 {
   "name": "@rxstack/server-commons",
-  "version": "0.0.26",
+  "version": "0.0.27",
   "description": "RxStack Server Commons Component",
   "private": false,
   "author": "Nikolay Gergiev <symfonist@gmail.com>",
@@ -12,25 +12,23 @@
   "readmeFilename": "README.md",
   "scripts": {
     "test": "gulp tests",
-    "watch": "gulp watch",
     "publish-package": "gulp publish"
   },
   "dependencies": {
-    "@rxstack/async-event-dispatcher": "^0.0",
-    "@rxstack/configuration": "^0.0",
+    "@rxstack/async-event-dispatcher": "0.0.24",
     "@rxstack/exceptions": "^0.0",
     "@rxstack/kernel": "^0.0",
     "@rxstack/logger": "^0.0",
     "@rxstack/service-registry": "^0.0",
     "injection-js": "^2.1.0",
-    "reflect-metadata": "^0.1.10"
+    "reflect-metadata": "^0.1.12"
   },
   "devDependencies": {
     "@types/chai": "^3.4.35",
     "@types/chai-as-promised": "0.0.30",
     "@types/gulp": "^4.0.2",
-    "@types/lodash": "^4.14.92",
-    "@types/mocha": "^2.2.46",
+    "@types/lodash": "^4.14.95",
+    "@types/mocha": "^2.2.47",
     "@types/node": "^7.0.52",
     "@types/sinon": "^1.16.36",
     "chai": "^3.4.1",
@@ -43,12 +41,12 @@
     "gulp-mocha": "^3.0.1",
     "gulp-replace": "^0.5.4",
     "gulp-shell": "^0.6.5",
-    "gulp-sourcemaps": "^2.6.3",
+    "gulp-sourcemaps": "^2.6.4",
     "gulp-tslint": "^7.1.0",
-    "gulp-typescript": "^3.1.6",
+    "gulp-typescript": "^3.2.4",
     "gulpclass": "0.1.2",
     "mocha": "^3.2.0",
-    "remap-istanbul": "^0.9.1",
+    "remap-istanbul": "^0.9.6",
     "sinon": "^2.1.0",
     "sinon-chai": "^2.9.0",
     "ts-node": "^3.0.2",

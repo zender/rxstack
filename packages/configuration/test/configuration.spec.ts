@@ -3,7 +3,6 @@ import {environment} from './environments/environment';
 const path = require('path');
 
 describe('Configuration', () => {
-
   process.env.NODE_ENV = 'TESTING';
   process.env['MY_VALUE'] = 'my env value';
   Configuration.initialize(__dirname + '/environments');
@@ -14,16 +13,6 @@ describe('Configuration', () => {
     };
 
     fn.should.throw('Base environment file');
-  });
-
-  it('should throw exception if enironment file does not exist', () => {
-    const fn = () => {
-      delete process.env.NODE_ENV;
-      Configuration.initialize(__dirname + '/environments');
-    };
-
-    fn.should.throw('Environment file');
-    process.env.NODE_ENV = 'TESTING';
   });
 
   it('should set app dir', () => {

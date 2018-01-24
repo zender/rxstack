@@ -1,7 +1,0 @@
-{
-  "express_server": {
-    "host": "localhost",
-    "port": 3200,
-    "prefix": "/api"
-  }
-}
