@@ -1,6 +1,5 @@
 import {Controller, Request, Response, Route, StreamableResponse} from '@rxstack/kernel';
 import {NotFoundException} from '@rxstack/exceptions';
-const assetsDir = process.env.APP_DIR + '/test/assets';
 
 @Controller('/mock')
 export class MockController {
@@ -22,7 +21,7 @@ export class MockController {
 
   @Route('GET', '/download', 'mock_download')
   async downloadAction(request: Request): Promise<StreamableResponse> {
-    const path = assetsDir + '/video.mp4';
+    const path =  process.env.APP_DIR + '/test/assets/video.mp4';
     const response = new StreamableResponse(path);
     response.headers.set('Content-Disposition', `attachment; filename="${response.name}"`);
     response.headers.set('Cache-Control', 'public, max-age=0');
@@ -31,7 +30,7 @@ export class MockController {
 
   @Route('GET', '/stream', 'mock_stream')
   async streamAction(request: Request): Promise<StreamableResponse> {
-    const path = assetsDir + '/video.mp4';
+    const path = process.env.APP_DIR + '/test/assets/video.mp4';
     return new StreamableResponse(path, request.headers.get('range'));
   }
 

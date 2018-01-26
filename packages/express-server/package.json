@@ -1,6 +1,6 @@
 {
   "name": "@rxstack/express-server",
-  "version": "0.0.26",
+  "version": "0.0.27",
   "description": "RxStack Express Server Component",
   "private": false,
   "author": "Nikolay Gergiev <symfonist@gmail.com>",
@@ -23,11 +23,9 @@
     "@rxstack/server-commons": "0.0.27",
     "@rxstack/service-registry": "^0.0",
     "@types/body-parser": "^1.16.8",
-    "@types/cors": "^2.8.3",
     "@types/express": "^4.11.0",
     "body-parser": "^1.18.2",
     "compression": "^1.7.1",
-    "cors": "^2.8.4",
     "express": "^4.16.2",
     "injection-js": "^2.1.0",
     "reflect-metadata": "^0.1.12"
@@ -38,7 +36,7 @@
     "@types/chai-as-promised": "0.0.30",
     "@types/compression": "0.0.35",
     "@types/gulp": "^4.0.2",
-    "@types/lodash": "^4.14.95",
+    "@types/lodash": "^4.14.96",
     "@types/mocha": "^2.2.47",
     "@types/node": "^7.0.52",
     "@types/sinon": "^1.16.36",

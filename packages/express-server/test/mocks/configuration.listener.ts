@@ -3,6 +3,7 @@ import {ServerConfigurationEvent, ServerEvents} from '@rxstack/server-commons';
 import {expressMiddleware, requestModifierMiddleware} from './express.middleware';
 import {Injectable, Injector} from 'injection-js';
 import {ExpressServer} from '../../src/express.server';
+import {environment} from '../environments/environment';
 
 @Injectable()
 export class ConfigurationListener {
@@ -20,8 +21,8 @@ export class ConfigurationListener {
     }
 
     event.engine
-      .get('/api/express-middleware', expressMiddleware(this.injector))
-      .get('/api/mock/json', requestModifierMiddleware(this.injector))
+      .get(environment.express_server.prefix + '/express-middleware', expressMiddleware(this.injector))
+      .get(environment.express_server.prefix + '/mock/json', requestModifierMiddleware(this.injector))
     ;
   }
 }

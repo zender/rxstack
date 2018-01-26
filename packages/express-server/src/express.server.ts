@@ -10,7 +10,6 @@ import * as bodyParser from 'body-parser';
 import {Request, ResponseObject, RouteDefinition, StreamableResponse} from '@rxstack/kernel';
 import {AbstractServer, ServerConfigurationEvent, ServerManager, ServerEvents} from '@rxstack/server-commons';
 import * as compress from 'compression';
-import * as cors from 'cors';
 import {ServiceRegistry} from '@rxstack/service-registry';
 import {AsyncEventDispatcher} from '@rxstack/async-event-dispatcher';
 import {ExpressServerConfiguration} from './express-server-configuration';
@@ -20,13 +19,13 @@ export class ExpressServer extends AbstractServer {
 
   static serverName = 'server.express';
 
-  protected async configure(routeDefinition: RouteDefinition[]): Promise<void> {
+  protected async configure(routeDefinitions: RouteDefinition[]): Promise<void> {
     const configuration = this.injector.get(ExpressServerConfiguration);
     const dispatcher = this.injector.get(AsyncEventDispatcher);
+    this.host = configuration.host;
+    this.port = configuration.port;
 
     this.engine = express();
-    this.engine.options('*', cors());
-    this.engine.use(cors());
     this.engine.use(compress());
     this.engine.use(bodyParser.json());
     this.engine.use(bodyParser.urlencoded({ extended: true }));
@@ -36,7 +35,7 @@ export class ExpressServer extends AbstractServer {
     await dispatcher
       .dispatch(ServerEvents.CONFIGURE, new ServerConfigurationEvent(this.engine, ExpressServer.serverName));
     // register routes
-    routeDefinition.forEach(routeDefinition => this.registerRoute(routeDefinition, configuration));
+    routeDefinitions.forEach(routeDefinition => this.registerRoute(routeDefinition, configuration));
     this.httpServer = http.createServer(<any>(this.engine));
   }
 

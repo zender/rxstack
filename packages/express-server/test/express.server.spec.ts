@@ -1,24 +1,24 @@
 import 'reflect-metadata';
+import {Configuration} from '@rxstack/configuration';
+Configuration.initialize(__dirname + '/environments');
 import {ExpressServer} from '../src/express.server';
 import {Application} from '@rxstack/application';
 import {AppModule} from './mocks/app.module';
 import {Injector} from 'injection-js';
 import {IncomingMessage} from 'http';
-import {Configuration} from '@rxstack/configuration';
 const rp = require('request-promise');
 const fs = require('fs-extra');
-Configuration.initialize(__dirname + '/environments');
-const assetsDir = process.env.APP_DIR + '/test/assets';
 
 describe('ExpressServer', () => {
+
   // Setup application
+  const assetsDir = process.env.APP_DIR + '/test/assets';
   const app = new Application(AppModule);
   let injector: Injector;
   let host: string;
   let expressServer: ExpressServer;
 
   before(async() =>  {
-    fs.mkdirsSync(assetsDir + '/../uploads');
     await app.start();
     injector = app.getInjector();
     expressServer = injector.get(ExpressServer);
@@ -26,7 +26,6 @@ describe('ExpressServer', () => {
   });
 
   after(async() =>  {
-    fs.removeSync(assetsDir + '/../uploads');
     await app.stop();
   });
 
@@ -96,7 +95,6 @@ describe('ExpressServer', () => {
       method: 'GET',
       resolveWithFullResponse: true,
     };
-
     await rp(options)
       .then((response: IncomingMessage) => {
         const headers = response.headers;
