@@ -38,9 +38,6 @@ export class Gulpfile {
    */
   @Task()
   compile() {
-    gulp.src('./src/*.json')
-      .pipe(gulp.dest('./build/compiled/src'));
-
     return gulp.src('*.ts', { read: false })
       .pipe(shell(['tsc']));
   }
@@ -69,9 +66,6 @@ export class Gulpfile {
     const tsResult = gulp.src(['./src/**/*.ts'])
       .pipe(sourcemaps.init())
       .pipe(tsProject());
-
-    gulp.src('./src/*.json')
-      .pipe(gulp.dest('./build/package'));
 
     return [
       tsResult.dts.pipe(gulp.dest('./build/package')),

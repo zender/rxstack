@@ -1,6 +1,6 @@
 {
   "name": "@rxstack/express-file-upload",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "RxStack Express File Upload Component",
   "private": false,
   "author": "Nikolay Gergiev <symfonist@gmail.com>",
@@ -15,12 +15,10 @@
     "publish-package": "gulp publish"
   },
   "dependencies": {
-    "@rxstack/application": "^0.0.24",
-    "@rxstack/async-event-dispatcher": "0.0.24",
-    "@rxstack/configuration": "^0.0",
+    "@rxstack/application": "0.0.26",
+    "@rxstack/async-event-dispatcher": "^0.0",
     "@rxstack/exceptions": "^0.0",
-    "@rxstack/express-server": "0.0.25",
-    "@rxstack/kernel": "0.0.26",
+    "@rxstack/express-server": "0.0.27",
     "@rxstack/logger": "^0.0",
     "@rxstack/server-commons": "^0.0.26",
     "formidable": "^1.1.1",
@@ -28,13 +26,15 @@
     "mime": "^2.2.0"
   },
   "devDependencies": {
+    "@rxstack/kernel": "^0.0",
+    "@rxstack/configuration": "^0.0",
     "@rxstack/service-registry": "0.0.21",
     "@types/chai": "^3.4.35",
     "@types/chai-as-promised": "0.0.30",
     "@types/compression": "0.0.35",
     "@types/gulp": "^4.0.2",
-    "@types/lodash": "^4.14.92",
-    "@types/mocha": "^2.2.46",
+    "@types/lodash": "^4.14.96",
+    "@types/mocha": "^2.2.47",
     "@types/node": "^7.0.52",
     "@types/sinon": "^1.16.36",
     "chai": "^3.4.1",
@@ -48,12 +48,12 @@
     "gulp-mocha": "^3.0.1",
     "gulp-replace": "^0.5.4",
     "gulp-shell": "^0.6.5",
-    "gulp-sourcemaps": "^2.6.3",
+    "gulp-sourcemaps": "^2.6.4",
     "gulp-tslint": "^7.1.0",
-    "gulp-typescript": "^3.1.6",
+    "gulp-typescript": "^3.2.4",
     "gulpclass": "0.1.2",
     "mocha": "^3.2.0",
-    "remap-istanbul": "^0.9.1",
+    "remap-istanbul": "^0.9.6",
     "request": "^2.83.0",
     "request-promise": "^4.2.2",
     "sinon": "^2.1.0",
@@ -73,6 +73,7 @@
   },
   "keywords": [
     "rxstack",
+    "express",
     "file-upload"
   ]
 }

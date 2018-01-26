@@ -3,6 +3,7 @@ import {Module, ProviderDefinition} from '@rxstack/application';
 import {ExpressModule} from '@rxstack/express-server';
 import {ExpressFileUploadModule} from '../../src/express-file-upload.module';
 import {MockServer} from './mock.server';
+import {environment} from '../environments/environment';
 
 export const APP_PROVIDERS: ProviderDefinition[] = [
   { provide: MockController, useClass: MockController },
@@ -10,7 +11,10 @@ export const APP_PROVIDERS: ProviderDefinition[] = [
 ];
 
 @Module({
-  imports: [ExpressModule, ExpressFileUploadModule],
+  imports: [
+    ExpressModule.configure(environment.express_server),
+    ExpressFileUploadModule.configure(environment.express_file_upload)
+  ],
   providers: APP_PROVIDERS
 })
 export class AppModule {}

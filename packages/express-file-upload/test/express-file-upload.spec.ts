@@ -1,10 +1,12 @@
 import 'reflect-metadata';
+import {Configuration} from '@rxstack/configuration';
+Configuration.initialize(__dirname + '/environments');
 import {Application} from '@rxstack/application';
 import {AppModule} from './mocks/app.module';
 import {IncomingMessage} from 'http';
 const rp = require('request-promise');
 const fs = require('fs-extra');
-const assetsDir = process.mainModule['paths'][0].split('node_modules')[0].slice(0, -1) + '/test/assets';
+const assetsDir = process.env.APP_DIR + '/test/assets';
 
 describe('ExpressFileUpload', () => {
   // Setup application
@@ -60,7 +62,6 @@ describe('ExpressFileUpload', () => {
 
   it('should throw an exception', async () => {
     process.env.NODE_ENV = 'production';
-    fs.removeSync(assetsDir + '/../uploads');
     const options = {
       uri: host + '/mock/upload',
       method: 'POST',
