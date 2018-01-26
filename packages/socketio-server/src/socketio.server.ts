@@ -6,41 +6,42 @@ import {
 } from '@rxstack/server-commons';
 import {ServiceRegistry} from '@rxstack/service-registry';
 import {AsyncEventDispatcher} from '@rxstack/async-event-dispatcher';
-import {Configuration} from '@rxstack/configuration';
 import Socket = SocketIO.Socket;
 import * as socketIO from 'socket.io';
 import {Exception} from '@rxstack/exceptions';
+import {Injectable} from 'injection-js';
+import {SocketioServerConfiguration} from './socketio-server-configuration';
 
-@ServiceRegistry(ServerManager.ns, SocketIOServer.serverName)
-export class SocketIOServer extends AbstractServer {
+@Injectable()
+@ServiceRegistry(ServerManager.ns, SocketioServer.serverName)
+export class SocketioServer extends AbstractServer {
 
   static serverName = 'server.socketio';
 
   protected async configure(routeDefinition: RouteDefinition[]): Promise<void> {
-    const configuration = this.injector.get(Configuration);
+    const configuration = this.injector.get(SocketioServerConfiguration);
     const dispatcher = this.injector.get(AsyncEventDispatcher);
-    this.host = configuration.get('socketio_server.host');
-    this.port = configuration.get('socketio_server.port');
-    const maxListeners = configuration.get('socketio_server.maxListeners');
+    this.host = configuration.host;
+    this.port = configuration.port;
     this.httpServer = http.createServer();
     this.engine = socketIO(this.httpServer);
-    this.engine.sockets.setMaxListeners(maxListeners);
+    this.engine.sockets.setMaxListeners(configuration.maxListeners);
 
     await dispatcher.dispatch(
       ServerEvents.CONFIGURE,
-      new ServerConfigurationEvent(this.engine, SocketIOServer.serverName)
+      new ServerConfigurationEvent(this.engine, SocketioServer.serverName)
     );
 
     this.engine.sockets.on('connection', async (socket: Socket) => {
       this.setupSocket(socket, routeDefinition);
       await dispatcher.dispatch(
         ServerEvents.CONNECTED,
-        new SocketEvent(socket, SocketIOServer.serverName)
+        new SocketEvent(socket, SocketioServer.serverName)
       );
       socket.on('disconnect', async (reason: any) => {
         await dispatcher.dispatch(
           ServerEvents.DISCONNECTED,
-          new SocketEvent(socket, SocketIOServer.serverName)
+          new SocketEvent(socket, SocketioServer.serverName)
         );
       });
     });

@@ -1,8 +1,10 @@
 import 'reflect-metadata';
+import {Configuration} from '@rxstack/configuration';
+Configuration.initialize(__dirname + '/environments');
 import {Application} from '@rxstack/application';
 import {AppModule} from './mocks/app.module';
 import {Injector} from 'injection-js';
-import {SocketIOServer} from '../src/socketio.server';
+import {SocketioServer} from '../src/socketio.server';
 import {MockEventListener} from './mocks/mock-event-listener';
 const io = require('socket.io-client');
 
@@ -12,12 +14,13 @@ describe('SocketIOServer', () => {
   const app = new Application(AppModule);
   let injector: Injector;
   let host: string;
-  let server: SocketIOServer;
+  let server: SocketioServer;
   let client: any;
 
   before(async() =>  {
-    injector = await app.start();
-    server = injector.get(SocketIOServer);
+    await app.start();
+    injector = app.getInjector();
+    server = injector.get(SocketioServer);
     host = server.getHost();
     client = io(host, {transports: ['websocket']});
   });

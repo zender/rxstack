@@ -2,7 +2,7 @@ import {Observe} from '@rxstack/async-event-dispatcher';
 import {ServerConfigurationEvent, ServerEvents, SocketEvent} from '@rxstack/server-commons';
 import {Injectable, Injector} from 'injection-js';
 import {socketMiddleware} from './socketio.middleware';
-import {SocketIOServer} from '../../src/socketio.server';
+import {SocketioServer} from '../../src/socketio.server';
 import Socket = SocketIO.Socket;
 
 @Injectable()
@@ -18,7 +18,7 @@ export class MockEventListener {
 
   @Observe(ServerEvents.CONFIGURE)
   async onConfigure(event: ServerConfigurationEvent): Promise<void> {
-    if (event.name !== SocketIOServer.serverName) {
+    if (event.name !== SocketioServer.serverName) {
       return;
     }
     event.engine
@@ -28,7 +28,7 @@ export class MockEventListener {
 
   @Observe(ServerEvents.CONNECTED)
   async onConnect(event: SocketEvent): Promise<void> {
-    if (event.name !== SocketIOServer.serverName) {
+    if (event.name !== SocketioServer.serverName) {
       return;
     }
     this.connectedUsers.push(event.socket);
@@ -36,7 +36,7 @@ export class MockEventListener {
 
   @Observe(ServerEvents.DISCONNECTED)
   async onDisconnect(event: SocketEvent): Promise<void> {
-    if (event.name !== SocketIOServer.serverName) {
+    if (event.name !== SocketioServer.serverName) {
       return;
     }
     let idx = this.connectedUsers.findIndex((current) => current === event.socket);
