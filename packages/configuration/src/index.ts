@@ -7,7 +7,6 @@ const _ = require('lodash');
  */
 export class Configuration {
 
-  static initialData?: Object;
   static initialize(dir: string, filename = 'environment'): void {
     Configuration.initAppDirectory();
     const basePath = dir + path.sep + filename;
