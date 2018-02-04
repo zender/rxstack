@@ -1,8 +1,8 @@
 {
   "name": "@rxstack/logger",
-  "version": "0.0.31",
+  "version": "0.0.33",
   "description": "RxStack Logger Component",
-  "private": true,
+  "private": false,
   "author": "Nikolay Gergiev <symfonist@gmail.com>",
   "license": "MIT",
   "repository": {
@@ -22,6 +22,7 @@
     "@types/chai-as-promised": "0.0.30",
     "@types/chalk": "^2.2.0",
     "@types/gulp": "^4.0.2",
+    "@types/lodash": "^4.14.99",
     "@types/mocha": "^2.2.40",
     "@types/node": "^7.0.10",
     "@types/sinon": "^1.16.36",
@@ -39,6 +40,7 @@
     "gulp-tslint": "^7.1.0",
     "gulp-typescript": "^3.1.6",
     "gulpclass": "0.1.2",
+    "lodash": "^4.17.4",
     "mocha": "^3.2.0",
     "remap-istanbul": "^0.9.1",
     "sinon": "^2.1.0",

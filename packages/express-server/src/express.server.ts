@@ -77,9 +77,9 @@ export class ExpressServer extends AbstractServer {
       const status = err.statusCode ? err.statusCode : 500;
 
       if (status >= 500)
-        this.getLogger().error(err);
+        this.getLogger().error(err.message, err);
       else
-        this.getLogger().debug(err);
+        this.getLogger().debug(err.message, err);
 
       if (process.env.NODE_ENV === 'production' && status >= 500)
         res.status(status).send({

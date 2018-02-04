@@ -13,7 +13,7 @@ import {
 } from './interfaces';
 import {ServerManager} from '@rxstack/server-commons';
 import {metadataStorage, ServiceRegistryMetadata} from '@rxstack/service-registry';
-import {CORE_PROVIDERS} from './CORE_PROVIDERS';
+import {Logger, LOGGER_NS} from '@rxstack/logger';
 
 export class Application {
   private providers: ProviderDefinition[] = [];
@@ -38,9 +38,10 @@ export class Application {
 
   private async bootstrap(): Promise<Injector> {
     return Promise.all(this.providers).then(async (providers) => {
-      const resolvedProviders = ReflectiveInjector.resolve(CORE_PROVIDERS.concat(providers));
+      const resolvedProviders = ReflectiveInjector.resolve(providers);
       const injector = ReflectiveInjector.fromResolvedProviders(resolvedProviders);
       const dispatcher = injector.get(AsyncEventDispatcher);
+      this.registerLoggerTransports(injector);
       resolvedProviders.forEach((provider: ResolvedReflectiveProvider) => {
         const service = injector.get(provider.key.token);
         this.resolveInjectorAwareService(service, injector);
@@ -86,6 +87,15 @@ export class Application {
         );
       });
     }
+  }
+
+  private registerLoggerTransports(injector: Injector): void {
+    const logger = injector.get(Logger);
+    metadataStorage.all(LOGGER_NS).forEach((metadata: ServiceRegistryMetadata) => {
+      const transport = injector.get(metadata.target);
+      logger.registerTransport(transport);
+    });
+    logger.init();
   }
 
   private async startServers(): Promise<void> {

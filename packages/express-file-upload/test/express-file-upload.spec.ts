@@ -11,7 +11,7 @@ const assetsDir = process.env.APP_DIR + '/test/assets';
 describe('ExpressFileUpload', () => {
   // Setup application
   const app = new Application(AppModule);
-  let host = 'http://localhost:3200';
+  let host = 'http://localhost:3210';
 
   before(async() =>  {
     fs.mkdirsSync(assetsDir + '/../uploads');

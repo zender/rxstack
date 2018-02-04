@@ -6,6 +6,7 @@ import {AppModule} from './mocks/app.module';
 import {Injector} from 'injection-js';
 import {SocketioServer} from '../src/socketio.server';
 import {MockEventListener} from './mocks/mock-event-listener';
+import {Kernel} from '@rxstack/kernel';
 const io = require('socket.io-client');
 
 

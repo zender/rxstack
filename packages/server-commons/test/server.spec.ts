@@ -4,14 +4,20 @@ import {metadataStorage, ServiceRegistryMetadata} from '@rxstack/service-registr
 import {ServerManager} from '../src/server-manager';
 import {MockServer} from './mocks/mock.server';
 import {AsyncEventDispatcher, asyncEventDispatcher} from '@rxstack/async-event-dispatcher';
-import {Logger, ConsoleLogger} from '@rxstack/logger';
+import {Logger} from '@rxstack/logger';
 
 describe('Server', () => {
   // Setup
   const providers: Provider[] = [
     { provide: AsyncEventDispatcher, useValue: asyncEventDispatcher },
     { provide: ServerManager, useClass: ServerManager },
-    { provide: Logger, useClass: ConsoleLogger },
+    {
+      provide: Logger,
+      useFactory: () => {
+        return new Logger([]).init();
+      },
+      deps: []
+    },
     { provide: MockServer, useClass: MockServer }
   ];
   const resolvedProviders = ReflectiveInjector.resolve(providers);

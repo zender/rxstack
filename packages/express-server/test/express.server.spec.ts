@@ -6,6 +6,7 @@ import {Application} from '@rxstack/application';
 import {AppModule} from './mocks/app.module';
 import {Injector} from 'injection-js';
 import {IncomingMessage} from 'http';
+import {Kernel} from '@rxstack/kernel';
 const rp = require('request-promise');
 const fs = require('fs-extra');
 

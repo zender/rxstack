@@ -1,5 +1,5 @@
 import {MockController} from './mock.controller';
-import {Module, ProviderDefinition} from '@rxstack/application';
+import {BootstrapModule, Module, ProviderDefinition} from '@rxstack/application';
 import {ExpressModule} from '@rxstack/express-server';
 import {ExpressFileUploadModule} from '../../src/express-file-upload.module';
 import {MockServer} from './mock.server';
@@ -12,6 +12,7 @@ export const APP_PROVIDERS: ProviderDefinition[] = [
 
 @Module({
   imports: [
+    BootstrapModule.configure(environment),
     ExpressModule.configure(environment.express_server),
     ExpressFileUploadModule.configure(environment.express_file_upload)
   ],

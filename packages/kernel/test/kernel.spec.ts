@@ -10,7 +10,7 @@ import {
   AsyncEventDispatcher, EVENT_LISTENER_KEY,
   EventListenerMetadata, ObserverMetadata
 } from '@rxstack/async-event-dispatcher';
-import {ConsoleLogger, Logger} from '@rxstack/logger';
+import {Logger} from '@rxstack/logger';
 
 const findRouteDefinition = function (data: RouteDefinition[], routeName: string) {
   const def = data.find((routeDef: RouteDefinition) =>
@@ -26,7 +26,13 @@ describe('Kernel', () => {
   const KERNEL_PROVIDERS: Provider[] = [
     { provide: Kernel, useClass: Kernel },
     { provide: AsyncEventDispatcher, useClass: AsyncEventDispatcher },
-    { provide: Logger, useClass: ConsoleLogger },
+    {
+      provide: Logger,
+      useFactory: () => {
+        return new Logger([]).init();
+      },
+      deps: []
+    },
   ];
   const resolvedProviders = ReflectiveInjector.resolve(KERNEL_PROVIDERS.concat(STUB_PROVIDERS));
   const injector = ReflectiveInjector.fromResolvedProviders(resolvedProviders);

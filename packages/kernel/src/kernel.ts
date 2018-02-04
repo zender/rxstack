@@ -1,5 +1,5 @@
 import {ResponseObject, RouteDefinition} from './interfaces';
-import {Injector} from 'injection-js';
+import {Injectable, Injector} from 'injection-js';
 import {ControllerMetadata} from './metadata/metadata';
 import {metadataStorage} from './metadata/metadata-storage';
 import {Request} from './models/request';
@@ -14,6 +14,7 @@ import {ExceptionEvent} from './events/exception-event';
 /**
  * The core of rxstack framework
  */
+@Injectable()
 export class Kernel {
   /**
    * DI Injector

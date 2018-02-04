@@ -5,6 +5,7 @@ import {ProviderDefinition} from '../../src/interfaces';
 import {MockServer} from './mock.server';
 import {BootstrapListener} from './bootstrap-listener';
 import {environment} from '../environments/environment';
+import {BootstrapModule} from '../../src/bootstrap.module';
 
 export const APP_PROVIDERS: ProviderDefinition[] = [
   { provide: BootstrapListener, useClass: BootstrapListener },
@@ -13,7 +14,10 @@ export const APP_PROVIDERS: ProviderDefinition[] = [
 ];
 
 @Module({
-  imports: [Test1Module.configure(environment.test_module_1)],
+  imports: [
+    BootstrapModule.configure(environment),
+    Test1Module.configure(environment.test_module_1)
+  ],
   providers: APP_PROVIDERS,
 })
 export class AppModule {}

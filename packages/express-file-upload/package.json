@@ -1,6 +1,6 @@
 {
   "name": "@rxstack/express-file-upload",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "RxStack Express File Upload Component",
   "private": false,
   "author": "Nikolay Gergiev <symfonist@gmail.com>",
@@ -15,26 +15,27 @@
     "publish-package": "gulp publish"
   },
   "dependencies": {
-    "@rxstack/application": "0.0.26",
+    "@rxstack/application": "^0.0",
     "@rxstack/async-event-dispatcher": "^0.0",
     "@rxstack/exceptions": "^0.0",
-    "@rxstack/express-server": "0.0.27",
+    "@rxstack/express-server": "0.0.28",
+    "@rxstack/kernel": "0.0.26",
     "@rxstack/logger": "^0.0",
-    "@rxstack/server-commons": "^0.0.26",
+    "@rxstack/server-commons": "0.0.28",
     "formidable": "^1.1.1",
     "injection-js": "^2.2.1",
     "mime": "^2.2.0"
   },
   "devDependencies": {
-    "@rxstack/kernel": "^0.0",
-    "@rxstack/configuration": "^0.0",
+    "@rxstack/configuration": "0.0.27",
+    "@rxstack/kernel": "0.0.26",
     "@rxstack/service-registry": "0.0.21",
     "@types/chai": "^3.4.35",
     "@types/chai-as-promised": "0.0.30",
     "@types/compression": "0.0.35",
     "@types/gulp": "^4.0.2",
-    "@types/lodash": "^4.14.96",
-    "@types/mocha": "^2.2.47",
+    "@types/lodash": "^4.14.100",
+    "@types/mocha": "^2.2.48",
     "@types/node": "^7.0.52",
     "@types/sinon": "^1.16.36",
     "chai": "^3.4.1",
@@ -61,7 +62,7 @@
     "ts-node": "^3.0.2",
     "tslint": "^4.5.1",
     "tslint-stylish": "^2.1.0",
-    "typescript": "^2.5.3"
+    "typescript": "^2.7.1"
   },
   "bugs": {
     "url": "https://github.com/rxstack/rxstack/issues"
