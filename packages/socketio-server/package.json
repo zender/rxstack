@@ -15,10 +15,10 @@
     "publish-package": "gulp publish"
   },
   "dependencies": {
-    "@rxstack/application": "0.0.27",
+    "@rxstack/application": "0.0.29",
     "@rxstack/async-event-dispatcher": "^0.0",
     "@rxstack/exceptions": "^0.0",
-    "@rxstack/kernel": "0.0.26",
+    "@rxstack/kernel": "0.0.29",
     "@rxstack/logger": "^0.0",
     "@rxstack/server-commons": "^0.0",
     "@rxstack/service-registry": "^0.0",

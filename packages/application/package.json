@@ -1,6 +1,6 @@
 {
   "name": "@rxstack/application",
-  "version": "0.0.27",
+  "version": "0.0.29",
   "description": "RxStack Application Component",
   "private": false,
   "author": "Nikolay Gergiev <symfonist@gmail.com>",
@@ -18,12 +18,12 @@
     "@rxstack/async-event-dispatcher": "0.0.24",
     "@rxstack/channels": "0.0.2",
     "@rxstack/exceptions": "^0.0",
-    "@rxstack/kernel": "0.0.26",
+    "@rxstack/kernel": "0.0.29",
     "@rxstack/logger": "0.0.32",
     "@rxstack/server-commons": "0.0.26",
     "@rxstack/service-registry": "^0.0",
     "injection-js": "^2.1.0",
-    "lodash": "^4.17.4",
+    "lodash": "^4.17.5",
     "reflect-metadata": "^0.1.12"
   },
   "devDependencies": {

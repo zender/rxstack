@@ -4,6 +4,7 @@ import {HeaderBag} from './header-bag';
 import {AttributeBag} from './attribute-bag';
 import {HttpMethod, Transport} from '../interfaces';
 import {Token} from './token';
+import {EventEmitter} from 'events';
 
 /**
  * Container for request data
@@ -64,6 +65,11 @@ export class Request {
    * Security token
    */
   token: Token;
+
+  /**
+   * Socket connection
+   */
+  connection: EventEmitter;
 
   /**
    * Constructor
