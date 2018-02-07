@@ -1,24 +1,25 @@
-import {Injectable} from 'injection-js';
-import {User} from '@rxstack/kernel';
+import {forwardRef, Inject, Injectable} from 'injection-js';
 import {PasswordEncoderInterface} from '../interfaces';
+import {PASSWORD_ENCODER_REGISTRY} from '../security.module';
+import {User} from '@rxstack/kernel';
 
 @Injectable()
 export class EncoderFactory {
 
-  static readonly encoderNs = 'rxstack_password_encoder';
-  static readonly defaultEncoder = 'security.encoder.bcrypt';
+  static readonly defaultEncoder = 'bcrypt';
 
   private encoders: Map<string, PasswordEncoderInterface> = new Map();
 
-  register(name: string, encoder: PasswordEncoderInterface) {
-    if (this.encoders.has(name)) {
-      throw new Error(`Encoder ${name} already exists.`);
-    }
-    this.encoders.set(name, encoder);
+  constructor(@Inject(forwardRef(() => PASSWORD_ENCODER_REGISTRY)) registry: PasswordEncoderInterface[]) {
+    registry.forEach((encoder) => this.encoders.set(encoder.getEncoderName(), encoder));
+  }
+
+  getEncoderByName(name: string): PasswordEncoderInterface {
+    return this.encoders.get(name);
   }
 
   getEncoder(user: User): PasswordEncoderInterface {
-    if (typeof user['geEncoderName'] === 'function') {
+    if (typeof user['getEncoderName'] === 'function') {
       const encoderName = user['getEncoderName']();
       const encoder: PasswordEncoderInterface = this.encoders.get(encoderName);
       if (!encoder) {

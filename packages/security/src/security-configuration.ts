@@ -1,10 +1,16 @@
+export interface SecurityProviderOption {
+  name: string;
+  target: Function;
+}
+
 export class SecurityConfiguration {
-  providers: string;
-  encoders: string;
-  login: string;
-  logout: string;
+  authProviders?: string[];
+  userProviders?: string[];
+  login?: string;
+  logout?: string;
 
   constructor(obj?: any) {
-    this.host = obj && obj['host'] || 'localhost';
+    this.authProviders = obj && Array.isArray(obj.authProviders) ? obj.authProviders : [];
+    this.userProviders = obj && Array.isArray(obj.userProviders) ? obj.userProviders : [];
   }
 }

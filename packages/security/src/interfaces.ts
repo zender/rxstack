@@ -9,8 +9,9 @@ export interface UserProviderInterface {
 }
 
 export interface PasswordEncoderInterface {
-  encodePassword(raw: string, salt: string): Promise<string>;
+  encodePassword(raw: string): Promise<string>;
   isPasswordValid(encoded: string, raw: string): Promise<boolean>;
+  getEncoderName(): string;
 }
 
 export interface EncoderAwareInterface {
