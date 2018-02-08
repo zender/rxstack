@@ -4,6 +4,8 @@ import {InjectionToken} from 'injection-js';
 import {AuthenticationProviderInterface, PasswordEncoderInterface, UserProviderInterface} from './interfaces';
 import {BcryptPasswordEncoder} from './password-encoders/bcrypt.password-encoder';
 import {EncoderFactory} from './password-encoders/encoder-factory';
+import {UserProviderManager} from './user-providers/user-provider-manager';
+import {NoopUserProvider} from './user-providers/noop-user-provider';
 
 export const AUTH_PROVIDER_REGISTRY = new InjectionToken<AuthenticationProviderInterface[]>('AUTH_PROVIDER_REGISTRY');
 export const USER_PROVIDER_REGISTRY = new InjectionToken<UserProviderInterface[]>('USER_PROVIDER_REGISTRY');
@@ -29,6 +31,15 @@ export class SecurityModule {
         {
           provide: PASSWORD_ENCODER_REGISTRY,
           useClass: BcryptPasswordEncoder,
+          multi: true
+        },
+        {
+          provide: UserProviderManager,
+          useClass: UserProviderManager,
+        },
+        {
+          provide: USER_PROVIDER_REGISTRY,
+          useClass: NoopUserProvider,
           multi: true
         },
       ],

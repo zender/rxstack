@@ -123,6 +123,5 @@ describe('Models', () => {
     token.credentials.password.should.be.equal('pass');
     token.getRoles().length.should.be.equal(1);
     token.getUsername().should.be.equal('user');
-    user.hasRole('ROLE_USER').should.be.true;
   });
 });

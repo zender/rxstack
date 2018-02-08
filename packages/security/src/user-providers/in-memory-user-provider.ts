@@ -3,16 +3,11 @@ import {Injectable} from 'injection-js';
 import {UserProviderInterface} from '../interfaces';
 import {User} from '@rxstack/kernel';
 import {UserNotFoundException} from '../exceptions/index';
-import {ServiceRegistry} from '@rxstack/service-registry';
-import {UserProviderManager} from './user-provider-manager';
 
 @Injectable()
-@ServiceRegistry(UserProviderManager.userProviderNs, InMemoryUserProvider.userProviderName)
-export class InMemoryUserProvider implements UserProviderInterface {
+export class InMemoryUserProvider<T extends User> implements UserProviderInterface {
 
-  static readonly userProviderName = 'security.in_memory_user_provider';
-
-  constructor(public readonly users: User[]) { }
+  constructor(private readonly users: T[]) { }
 
   async loadUserByUsername(username: string): Promise<User> {
     const user = _.find<User>(this.users, {'username': username});
@@ -20,5 +15,9 @@ export class InMemoryUserProvider implements UserProviderInterface {
       throw new UserNotFoundException(username);
     }
     return user;
+  }
+
+  getUserProviderName(): string {
+    return 'in-memory';
   }
 }

@@ -6,6 +6,7 @@ export interface AuthenticationProviderInterface {
 
 export interface UserProviderInterface {
   loadUserByUsername(username: string, payload?: any): Promise<User>;
+  getUserProviderName(): string;
 }
 
 export interface PasswordEncoderInterface {

@@ -1,16 +1,11 @@
 import {Token} from '@rxstack/kernel';
+import {Exception} from '@rxstack/exceptions';
 
-export abstract class SecurityException extends Error {
-
-  protected data: any;
+export abstract class SecurityException extends Exception {
 
   constructor(public message: string) {
     super(message);
     this.name = 'SecurityException';
-  }
-
-  public getData(): any {
-    return this.data;
   }
 }
 
@@ -45,7 +40,7 @@ export class UnsupportedUserException extends AuthenticationServiceException {
 
 export class UserNotFoundException extends AuthenticationException {
   constructor(public readonly username: string) {
-    super();
+    super('UsernameNotFoundException');
     this.name = 'UsernameNotFoundException';
   }
 }
