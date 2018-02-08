@@ -9,9 +9,9 @@ import {Token, User} from '@rxstack/kernel';
 @Injectable()
 export class UserAuthenticationProvider implements AuthenticationProviderInterface {
 
-  constructor(protected userProvider: UserProviderManager,
-              protected dispatcher: AsyncEventDispatcher,
-              protected encoderFactory: EncoderFactory) {
+  constructor(private userProvider: UserProviderManager,
+              private dispatcher: AsyncEventDispatcher,
+              private encoderFactory: EncoderFactory) {
   }
 
   async authenticate(token: Token): Promise<Token> {

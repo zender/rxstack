@@ -1,6 +1,6 @@
 {
   "name": "@rxstack/kernel",
-  "version": "0.0.30",
+  "version": "0.0.32",
   "description": "RxStack Kernel Component",
   "private": false,
   "author": "Nikolay Gergiev <symfonist@gmail.com>",
@@ -14,7 +14,6 @@
   },
   "scripts": {
     "test": "gulp tests",
-    "watch": "gulp watch",
     "publish-package": "gulp publish"
   },
   "devDependencies": {
@@ -56,9 +55,9 @@
     "test": "test"
   },
   "dependencies": {
-    "@rxstack/async-event-dispatcher": "0.0.24",
-    "@rxstack/exceptions": "^0.0",
-    "@rxstack/logger": "0.0.32",
+    "@rxstack/async-event-dispatcher": "latest",
+    "@rxstack/exceptions": "latest",
+    "@rxstack/logger": "latest",
     "injection-js": "^2.2.1",
     "mime": "^2.1.0",
     "reflect-metadata": "^0.1.12"

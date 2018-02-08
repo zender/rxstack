@@ -1,6 +1,6 @@
 {
   "name": "@rxstack/server-commons",
-  "version": "0.0.28",
+  "version": "0.0.30",
   "description": "RxStack Server Commons Component",
   "private": false,
   "author": "Nikolay Gergiev <symfonist@gmail.com>",
@@ -15,11 +15,11 @@
     "publish-package": "gulp publish"
   },
   "dependencies": {
-    "@rxstack/async-event-dispatcher": "0.0.24",
-    "@rxstack/exceptions": "^0.0",
-    "@rxstack/kernel": "0.0.27",
-    "@rxstack/logger": "0.0.32",
-    "@rxstack/service-registry": "^0.0",
+    "@rxstack/async-event-dispatcher": "latest",
+    "@rxstack/exceptions": "latest",
+    "@rxstack/kernel": "latest",
+    "@rxstack/logger": "latest",
+    "@rxstack/service-registry": "latest",
     "injection-js": "^2.1.0",
     "reflect-metadata": "^0.1.12"
   },

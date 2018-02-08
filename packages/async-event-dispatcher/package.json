@@ -18,7 +18,6 @@
   ],
   "scripts": {
     "test": "gulp tests",
-    "watch": "gulp watch",
     "publish-package": "gulp publish"
   },
   "devDependencies": {
