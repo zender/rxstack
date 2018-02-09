@@ -27,10 +27,18 @@ export interface RouteDefinition {
   handler: (request: Request) => Promise<Response>;
 }
 
-/**
- *  Token credentials
- */
-export type Credentials =  {
-  username?: string;
+export interface UserInterface {
+  username: string;
   password?: string;
-};
+  roles: string[];
+}
+
+export interface TokenInterface {
+  getCredentials(): string;
+  getUsername(): string;
+  getRoles(): string[];
+  getUser(): UserInterface;
+  setUser(user: UserInterface): void;
+  setAuthenticated(authenticated: true): void;
+  isAuthenticated(): boolean;
+}

@@ -2,36 +2,35 @@ import {AuthenticationException, ProviderNotFoundException} from '../exceptions/
 import {AuthenticationEvent} from '../events/authentication-event';
 import {AuthenticationFailureEvent} from '../events/authentication-failure-event';
 import {AuthenticationEvents} from '../authentication-events';
-import {Injectable} from 'injection-js';
+import {forwardRef, Inject, Injectable} from 'injection-js';
 import {AuthenticationProviderInterface} from '../interfaces';
 import {AsyncEventDispatcher} from '@rxstack/async-event-dispatcher';
-import {Token} from '@rxstack/kernel';
+import {TokenInterface} from '@rxstack/kernel';
+import {AUTH_PROVIDER_REGISTRY} from '../security.module';
 
 @Injectable()
-export class AuthenticationProviderManager implements AuthenticationProviderInterface {
+export class AuthenticationProviderManager {
 
   private providers: Map<string, AuthenticationProviderInterface> = new Map();
 
-  constructor(private eventDispatcher: AsyncEventDispatcher) { }
-
-  register(name: string, provider: AuthenticationProviderInterface): void {
-    if (this.providers.has(name)) {
-      throw new Error(`Authentication provider ${name} already exists.`);
-    }
-    this.providers.set(name, provider);
+  constructor(@Inject(forwardRef(() => AUTH_PROVIDER_REGISTRY)) registry: AuthenticationProviderInterface[],
+              private eventDispatcher: AsyncEventDispatcher) {
+    registry.forEach((provider) => this.providers.set(provider.getProviderName(), provider));
   }
 
-  async authenticate(token: Token): Promise<Token> {
+  async authenticate(token: TokenInterface): Promise<TokenInterface> {
     let lastException: AuthenticationException = null;
-    let result: Token = null;
-    const promises: Promise<Token>[] = [];
+    let result: TokenInterface = null;
+    const promises: Promise<TokenInterface>[] = [];
 
     this.providers.forEach((provider): void => {
-      promises.push(provider.authenticate(token));
+      if (provider.support(token)) {
+        promises.push(provider.authenticate(token));
+      }
     });
 
     try {
-      result = await Promise.all(promises).then((data: Token[]) => data.length > 0 ? data.pop() : null);
+      result = await Promise.all(promises).then((data: TokenInterface[]) => data.length > 0 ? data.pop() : null);
     } catch (e) {
       if (e instanceof AuthenticationException) {
         lastException = e;
@@ -55,5 +54,9 @@ export class AuthenticationProviderManager implements AuthenticationProviderInte
     lastException.token = authenticationFailureEvent.authenticationToken;
 
     throw lastException;
+  }
+
+  getByName(name: string): AuthenticationProviderInterface {
+    return this.providers.get(name);
   }
 }

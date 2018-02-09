@@ -1,5 +1,5 @@
-import {Token} from '@rxstack/kernel';
 import {Exception} from '@rxstack/exceptions';
+import {TokenInterface} from '@rxstack/kernel';
 
 export abstract class SecurityException extends Exception {
 
@@ -10,7 +10,7 @@ export abstract class SecurityException extends Exception {
 }
 
 export class AuthenticationException extends SecurityException {
-  public token: Token;
+  public token: TokenInterface;
   constructor(message = 'Authentication Exception' ) {
     super(message);
     this.name = 'AuthenticationException';

@@ -12,10 +12,10 @@ export class AuthenticationTokenListener {
   @Observe(KernelEvents.KERNEL_REQUEST, -100)
   async onRequest(event: RequestEvent): Promise<void> {
     const request = event.getRequest();
-    if (request.token && false === request.token.isAuthenticated) {
+    if (request.token && false === request.token.isAuthenticated()) {
       try {
         let authToken = await this.authenticationManager.authenticate(request.token);
-        authToken.isAuthenticated = true;
+        authToken.setAuthenticated(true);
         request.token = authToken;
       } catch (e) {
         throw new UnauthorizedException();

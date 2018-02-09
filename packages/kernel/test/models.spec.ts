@@ -4,8 +4,6 @@ import {ParameterBag} from '../src/models/parameter-bag';
 import {AttributeBag} from '../src/models/attribute-bag';
 import {FileBag} from '../src/models/file-bag';
 import {Response} from '../src/models/response';
-import {User} from '../src/models/user';
-import {Token} from '../src/models/token';
 import {File} from '../src/models/file';
 import {StreamableResponse} from '../src/models/streamable-response';
 import {RangeNotSatisfiableException} from '@rxstack/exceptions';
@@ -79,14 +77,6 @@ describe('Models', () => {
     JSON.stringify(bag.toObject()).should.be.equal(JSON.stringify({'id': 1}));
   });
 
-  it('should initialize token', async () => {
-    const token = new Token();
-    (typeof token.credentials).should.be.equal('undefined');
-    (typeof token.user).should.be.equal('undefined');
-    (null === token.getUsername()).should.be.true;
-    token.getRoles().length.should.be.equal(0);
-  });
-
   it('should initialize file', async () => {
     const filebag = new FileBag();
     filebag.fromObject({'file': {
@@ -113,15 +103,5 @@ describe('Models', () => {
     (file.type === null).should.be.true;
     (file.path === null).should.be.true;
     (file.hash === null).should.be.true;
-  });
-
-  it('should initialize token with credentials and user', async () => {
-    const user = new User('user', 'pass', ['ROLE_USER']);
-    const token = new Token({'username': 'admin', 'password': 'pass'}, user);
-    token.user.should.be.instanceOf(User);
-    token.credentials.username.should.be.equal('admin');
-    token.credentials.password.should.be.equal('pass');
-    token.getRoles().length.should.be.equal(1);
-    token.getUsername().should.be.equal('user');
   });
 });

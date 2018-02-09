@@ -5,7 +5,7 @@ import {MockService} from './mock.service';
 import {PlainTextPasswordEncoder} from '../../src/password-encoders/plain-text.password-encoder';
 import {InMemoryUserProvider} from '../../src/user-providers/in-memory-user-provider';
 import {Noop2UserProvider} from './noop2-user-provider';
-import {User} from '@rxstack/kernel';
+import {User} from '../../src/models/user';
 
 export const APP_PROVIDERS: ProviderDefinition[] = [
   {

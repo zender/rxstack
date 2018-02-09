@@ -2,8 +2,7 @@ import {ParameterBag} from './parameter-bag';
 import {FileBag} from './file-bag';
 import {HeaderBag} from './header-bag';
 import {AttributeBag} from './attribute-bag';
-import {HttpMethod, Transport} from '../interfaces';
-import {Token} from './token';
+import {HttpMethod, TokenInterface, Transport} from '../interfaces';
 import {EventEmitter} from 'events';
 
 /**
@@ -64,7 +63,7 @@ export class Request {
   /**
    * Security token
    */
-  token: Token;
+  token: TokenInterface;
 
   /**
    * Socket connection

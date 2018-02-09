@@ -1,12 +1,12 @@
 import {Injectable} from 'injection-js';
 import {UserProviderInterface} from '../interfaces';
-import {User} from '@rxstack/kernel';
 import {UserNotFoundException} from '../exceptions/index';
+import {UserInterface} from '@rxstack/kernel';
 
 @Injectable()
 export class NoopUserProvider implements UserProviderInterface {
 
-  async loadUserByUsername(username: string): Promise<User> {
+  async loadUserByUsername(username: string): Promise<UserInterface> {
     throw new UserNotFoundException(username);
   }
 

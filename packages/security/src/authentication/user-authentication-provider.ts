@@ -3,28 +3,37 @@ import {BadCredentialsException} from '../exceptions/index';
 import {EncoderFactory} from '../password-encoders/encoder-factory';
 import {AuthenticationProviderInterface} from '../interfaces';
 import {UserProviderManager} from '../user-providers/user-provider-manager';
-import {AsyncEventDispatcher} from '@rxstack/async-event-dispatcher';
-import {Token, User} from '@rxstack/kernel';
+import {TokenInterface, UserInterface} from '@rxstack/kernel';
+import {UsernameAndPasswordToken} from '../models/username-and-password.token';
 
 @Injectable()
 export class UserAuthenticationProvider implements AuthenticationProviderInterface {
 
   constructor(private userProvider: UserProviderManager,
-              private dispatcher: AsyncEventDispatcher,
               private encoderFactory: EncoderFactory) {
   }
 
-  async authenticate(token: Token): Promise<Token> {
+  async authenticate(token: TokenInterface): Promise<TokenInterface> {
     const user = await this.userProvider.loadUserByUsername(token.getUsername());
-    // todo - why new???
-    let authToken = new Token({'username': user.username, 'password': user.password}, user);
-    this.checkAuthentication(user, authToken);
-    authToken.isAuthenticated = true;
-    return authToken;
+    this.checkAuthentication(user, token);
+    token.setUser(user);
+    token.setAuthenticated(true);
+    return token;
   }
 
-  protected checkAuthentication(user: User, token: Token): void {
-    let presentedPassword = token.credentials.password;
+  getProviderName(): string {
+    return 'user-password';
+  }
+
+  support(token: TokenInterface): boolean {
+    if (token instanceof UsernameAndPasswordToken)
+      return true;
+    else
+      return false;
+  }
+
+  protected checkAuthentication(user: UserInterface, token: TokenInterface): void {
+    let presentedPassword = token.getCredentials();
 
     if ('' === presentedPassword) {
       throw new BadCredentialsException('The presented password cannot be empty.');

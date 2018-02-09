@@ -6,9 +6,9 @@ import {AppModule} from './mocks/app.module';
 import {Injector} from 'injection-js';
 import {EncoderFactory} from '../src/password-encoders/encoder-factory';
 import {TestUserWithEncoder} from './mocks/test-user-with-encoder';
-import {User} from '@rxstack/kernel';
 import {PlainTextPasswordEncoder} from '../src/password-encoders/plain-text.password-encoder';
 import {BcryptPasswordEncoder} from '../src/password-encoders/bcrypt.password-encoder';
+import {User} from '../src/models/user';
 
 describe('Security:Encoder', () => {
   // Setup application

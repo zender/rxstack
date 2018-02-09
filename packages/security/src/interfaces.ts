@@ -1,11 +1,13 @@
-import {Token, User} from '@rxstack/kernel';
+import {TokenInterface, UserInterface} from '@rxstack/kernel';
 
 export interface AuthenticationProviderInterface {
-  authenticate(token: Token): Promise<Token>;
+  authenticate(token: TokenInterface): Promise<TokenInterface>;
+  getProviderName(): string;
+  support(token: TokenInterface): boolean;
 }
 
 export interface UserProviderInterface {
-  loadUserByUsername(username: string, payload?: any): Promise<User>;
+  loadUserByUsername(username: string, payload?: any): Promise<UserInterface>;
   getUserProviderName(): string;
 }
 

@@ -1,7 +1,7 @@
 import {forwardRef, Inject, Injectable} from 'injection-js';
 import {PasswordEncoderInterface} from '../interfaces';
 import {PASSWORD_ENCODER_REGISTRY} from '../security.module';
-import {User} from '@rxstack/kernel';
+import {User} from '../models/user';
 
 @Injectable()
 export class EncoderFactory {
