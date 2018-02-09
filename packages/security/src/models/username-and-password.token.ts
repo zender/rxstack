@@ -1,7 +1,7 @@
 import {AbstractToken} from './abstract-token';
 
 export class UsernameAndPasswordToken extends AbstractToken {
-  constructor(private username?: string, private password?: string) {
+  constructor(private username: string, private password: string) {
     super();
   }
 

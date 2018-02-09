@@ -32,9 +32,10 @@ export class AuthenticationProviderManager {
     try {
       result = await Promise.all(promises).then((data: TokenInterface[]) => data.length > 0 ? data.pop() : null);
     } catch (e) {
-      if (e instanceof AuthenticationException) {
+      if (e instanceof AuthenticationException)
         lastException = e;
-      }
+      else
+        throw e;
     }
 
     if (null !== result) {

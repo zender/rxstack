@@ -8,10 +8,6 @@ export abstract class AbstractToken implements TokenInterface {
 
   protected authenticated = false;
 
-  getRoles(): string[] {
-    return this.roles;
-  }
-
   getUser(): UserInterface {
     return this.user;
   }
@@ -26,6 +22,14 @@ export abstract class AbstractToken implements TokenInterface {
 
   isAuthenticated(): boolean {
     return this.authenticated;
+  }
+
+  getRoles(): string[] {
+    return this.user ? this.user.roles : [];
+  }
+
+  hasRole(role: string): boolean {
+    return !!this.getRoles().find((value: string) => value === role);
   }
 
   abstract getUsername(): string;

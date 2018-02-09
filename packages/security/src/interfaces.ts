@@ -1,5 +1,7 @@
 import {TokenInterface, UserInterface} from '@rxstack/kernel';
 
+export type UserFactoryFunc<T extends UserInterface> = (data: UserInterface) => T;
+
 export interface AuthenticationProviderInterface {
   authenticate(token: TokenInterface): Promise<TokenInterface>;
   getProviderName(): string;

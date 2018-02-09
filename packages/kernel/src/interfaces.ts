@@ -37,6 +37,7 @@ export interface TokenInterface {
   getCredentials(): string;
   getUsername(): string;
   getRoles(): string[];
+  hasRole(role: string): boolean;
   getUser(): UserInterface;
   setUser(user: UserInterface): void;
   setAuthenticated(authenticated: true): void;

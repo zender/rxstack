@@ -11,9 +11,8 @@ export class PlainTextPasswordEncoder implements PasswordEncoderInterface {
   }
 
   async isPasswordValid(encoded: string, raw: string): Promise<boolean> {
-    if (this.ignoreCase) {
+    if (this.ignoreCase)
       return raw.toLowerCase() === encoded.toLowerCase();
-    }
     return raw === encoded;
   }
 

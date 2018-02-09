@@ -7,7 +7,7 @@ import {TokenInterface, UserInterface} from '@rxstack/kernel';
 import {UsernameAndPasswordToken} from '../models/username-and-password.token';
 
 @Injectable()
-export class UserAuthenticationProvider implements AuthenticationProviderInterface {
+export class UserPasswordAuthenticationProvider implements AuthenticationProviderInterface {
 
   constructor(private userProvider: UserProviderManager,
               private encoderFactory: EncoderFactory) {
@@ -15,7 +15,7 @@ export class UserAuthenticationProvider implements AuthenticationProviderInterfa
 
   async authenticate(token: TokenInterface): Promise<TokenInterface> {
     const user = await this.userProvider.loadUserByUsername(token.getUsername());
-    this.checkAuthentication(user, token);
+    await this.checkAuthentication(user, token);
     token.setUser(user);
     token.setAuthenticated(true);
     return token;
@@ -32,14 +32,9 @@ export class UserAuthenticationProvider implements AuthenticationProviderInterfa
       return false;
   }
 
-  protected checkAuthentication(user: UserInterface, token: TokenInterface): void {
-    let presentedPassword = token.getCredentials();
-
-    if ('' === presentedPassword) {
-      throw new BadCredentialsException('The presented password cannot be empty.');
-    }
-
-    if (!this.encoderFactory.getEncoder(user).isPasswordValid(user.password, presentedPassword)) {
+  protected async checkAuthentication(user: UserInterface, token: TokenInterface): Promise<void> {
+    const isValid = await this.encoderFactory.getEncoder(user).isPasswordValid(user.password, token.getCredentials());
+    if (!isValid) {
       throw new BadCredentialsException('The presented password is invalid.');
     }
   }

@@ -10,7 +10,7 @@ export class BcryptPasswordEncoder implements PasswordEncoderInterface {
   }
 
   async isPasswordValid(encoded: string, raw: string): Promise<boolean> {
-    return bcrypt.compare(raw, encoded);
+    return await bcrypt.compare(raw, encoded);
   }
 
   getEncoderName(): string {
