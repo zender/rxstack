@@ -25,5 +25,11 @@ export const environment = {
       }
     ]
   },
-  security: {  }
+  security: {
+    token_extractors: {
+      query_parameter: {
+        enabled: true,
+      }
+    }
+  }
 };

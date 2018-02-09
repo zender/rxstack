@@ -8,4 +8,5 @@ export * from './event-listeners';
 export * from './events';
 export * from './exceptions';
 export * from './models';
+export * from './token-extractors';
 export * from './interfaces';

@@ -1,4 +1,4 @@
-import {TokenInterface, UserInterface} from '@rxstack/kernel';
+import {Request, TokenInterface, UserInterface} from '@rxstack/kernel';
 
 export type UserFactoryFunc<T extends UserInterface> = (data: UserInterface) => T;
 
@@ -21,4 +21,14 @@ export interface PasswordEncoderInterface {
 
 export interface EncoderAwareInterface {
   getEncoderName(): string;
+}
+
+export interface TokenManagerInterface {
+  encode(payload: Object): Promise<string>;
+  decode(token: string): Promise<Object>;
+}
+
+export interface TokenExtractorInterface {
+  extract(request: Request): string;
+  getName(): string;
 }

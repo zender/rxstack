@@ -1,16 +1,41 @@
-export interface SecurityProviderOption {
-  name: string;
-  target: Function;
+export class QueryParameterExtractorOptions {
+  name?: string;
+  enabled: boolean;
+
+  constructor(obj?: any) {
+    this.name = obj && obj.name || 'bearer';
+    this.enabled = obj && obj.enabled;
+  }
+}
+
+export class AuthorizationHeaderExtractorOptions {
+  name?: string;
+  prefix?: string;
+  enabled: boolean;
+
+  constructor(obj?: any) {
+    this.name = obj && obj.name || 'bearer';
+    this.prefix = obj && obj.prefix || 'authorization';
+    this.enabled = obj && obj.enabled || false;
+  }
+}
+
+export class TokenExtractorsOptons {
+  query_parameter?: QueryParameterExtractorOptions;
+  authorization_header?: AuthorizationHeaderExtractorOptions;
+
+  constructor(obj?: any) {
+    this.query_parameter = new QueryParameterExtractorOptions(obj.query_parameter);
+    this.authorization_header = new AuthorizationHeaderExtractorOptions(obj.authorization_header);
+  }
 }
 
 export class SecurityConfiguration {
-  authProviders?: string[];
-  userProviders?: string[];
+  token_extractors: TokenExtractorsOptons;
   login?: string;
   logout?: string;
 
   constructor(obj?: any) {
-    this.authProviders = obj && Array.isArray(obj.authProviders) ? obj.authProviders : [];
-    this.userProviders = obj && Array.isArray(obj.userProviders) ? obj.userProviders : [];
+    this.token_extractors = new TokenExtractorsOptons(obj.token_extractors);
   }
 }

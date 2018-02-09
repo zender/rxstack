@@ -1,7 +1,7 @@
 import {BootstrapModule, Module, ProviderDefinition} from '@rxstack/application';
 import {environment} from '../environments/environment';
 import {
-  AUTH_PROVIDER_REGISTRY, PASSWORD_ENCODER_REGISTRY, SecurityModule,
+  AUTH_PROVIDER_REGISTRY, PASSWORD_ENCODER_REGISTRY, SecurityModule, TOKEN_MANAGER,
   USER_PROVIDER_REGISTRY
 } from '../../src/security.module';
 import {MockService} from './mock.service';
@@ -11,11 +11,21 @@ import {Noop2UserProvider} from './noop2-user-provider';
 import {UserInterface} from '@rxstack/kernel';
 import {TestUserWithEncoder} from './test-user-with-encoder';
 import {TestAuthenticationProvider} from './test.authentication-provider';
+import {AuthListener} from './auth.listener';
+import {TestTokenManager} from './test.token-manager';
 
 export const APP_PROVIDERS: ProviderDefinition[] = [
   {
     provide: MockService,
     useClass: MockService
+  },
+  {
+    provide: TOKEN_MANAGER,
+    useClass: TestTokenManager
+  },
+  {
+    provide: AuthListener,
+    useClass: AuthListener
   },
   {
     provide: PASSWORD_ENCODER_REGISTRY,

@@ -11,6 +11,7 @@ import {BadCredentialsException, ProviderNotFoundException} from '../src/excepti
 import {TestToken} from './mocks/test-token';
 import {TestSupportedToken} from './mocks/test-supported-token';
 import {TestAuthenticationProviderException} from './mocks/test.authentication-provider';
+import {AuthListener} from './mocks/auth.listener';
 
 describe('Security:AuthenticationProviderManager', () => {
   // Setup application
@@ -38,6 +39,7 @@ describe('Security:AuthenticationProviderManager', () => {
     authToken.isAuthenticated().should.be.true;
     authToken.getUser().should.be.instanceOf(User);
     authToken.hasRole('ADMIN').should.be.true;
+    injector.get(AuthListener).successCalled.should.be.true;
   });
 
   it('should throw an exception is user pass is invalid', async () => {
@@ -50,6 +52,7 @@ describe('Security:AuthenticationProviderManager', () => {
       exception = e;
     }
     exception.should.be.instanceOf(BadCredentialsException);
+    injector.get(AuthListener).failureCalled.should.be.true;
   });
 
   it('should throw an exception if provider is not found', async () => {
