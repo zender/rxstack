@@ -6,6 +6,8 @@ import {Request} from '@rxstack/kernel';
 @Injectable()
 export class QueryParameterTokenExtractor implements TokenExtractorInterface {
 
+  static readonly EXTRACTOR_NAME = 'query_parameter';
+
   constructor(private config: SecurityConfiguration) { }
 
   extract(request: Request): string {
@@ -17,6 +19,6 @@ export class QueryParameterTokenExtractor implements TokenExtractorInterface {
   }
 
   getName(): string {
-    return 'query_parameter';
+    return QueryParameterTokenExtractor.EXTRACTOR_NAME;
   }
 }

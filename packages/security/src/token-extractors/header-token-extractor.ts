@@ -6,6 +6,8 @@ import {Request} from '@rxstack/kernel';
 @Injectable()
 export class HeaderTokenExtractor implements TokenExtractorInterface {
 
+  static readonly EXTRACTOR_NAME = 'header_extractor';
+
   constructor(private config: SecurityConfiguration) { }
 
   extract(request: Request): string {
@@ -18,7 +20,7 @@ export class HeaderTokenExtractor implements TokenExtractorInterface {
   }
 
   getName(): string {
-    return 'header_extractor';
+    return HeaderTokenExtractor.EXTRACTOR_NAME;
   }
 
   private _extract(header: string, prefix: string): string {

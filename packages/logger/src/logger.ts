@@ -56,6 +56,7 @@ export class Logger {
   }
 
   init(): this {
+    winstonLogger.clear();
     this.handlers.forEach((handler) => {
       if (!this.transports.has(handler.type)) {
         throw new Error(`Transport "${handler.type}" does not exist.`);

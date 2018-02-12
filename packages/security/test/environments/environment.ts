@@ -29,6 +29,9 @@ export const environment = {
     token_extractors: {
       query_parameter: {
         enabled: true,
+      },
+      authorization_header: {
+        enabled: true,
       }
     }
   }

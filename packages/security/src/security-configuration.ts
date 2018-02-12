@@ -14,9 +14,9 @@ export class AuthorizationHeaderExtractorOptions {
   enabled: boolean;
 
   constructor(obj?: any) {
-    this.name = obj && obj.name || 'bearer';
-    this.prefix = obj && obj.prefix || 'authorization';
-    this.enabled = obj && obj.enabled || false;
+    this.name = obj && obj.name || 'authorization';
+    this.prefix = obj && obj.prefix || 'Bearer';
+    this.enabled = obj && obj.enabled;
   }
 }
 

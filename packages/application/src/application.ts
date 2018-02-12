@@ -47,9 +47,9 @@ export class Application {
         this.resolveInjectorAwareService(service, injector);
         this.resolveEventListeners(service, dispatcher);
       });
-      injector.get(Kernel).initialize();
       const bootstrapEvent = new BootstrapEvent(injector, resolvedProviders);
       await dispatcher.dispatch(ApplicationEvents.BOOTSTRAP, bootstrapEvent);
+      injector.get(Kernel).initialize();
       return injector;
     });
   }

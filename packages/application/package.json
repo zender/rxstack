@@ -1,6 +1,6 @@
 {
   "name": "@rxstack/application",
-  "version": "0.0.31",
+  "version": "0.0.32",
   "description": "RxStack Application Component",
   "private": false,
   "author": "Nikolay Gergiev <symfonist@gmail.com>",
@@ -33,7 +33,7 @@
     "@types/gulp": "^4.0.2",
     "@types/lodash": "^4.14.102",
     "@types/mocha": "^2.2.48",
-    "@types/node": "^7.0.53",
+    "@types/node": "^7.0.54",
     "@types/sinon": "^1.16.36",
     "chai": "^3.4.1",
     "chai-as-promised": "^6.0.0",

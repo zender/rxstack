@@ -13,11 +13,22 @@ import {TestUserWithEncoder} from './test-user-with-encoder';
 import {TestAuthenticationProvider} from './test.authentication-provider';
 import {AuthListener} from './auth.listener';
 import {TestTokenManager} from './test.token-manager';
+import {TestController} from './test.controller';
+import {BootstrapListener} from './bootstrap.listener';
+import {TestJwtAuthenticationProvider} from './test-jwt.authentication-provider';
 
 export const APP_PROVIDERS: ProviderDefinition[] = [
   {
     provide: MockService,
     useClass: MockService
+  },
+  {
+    provide: BootstrapListener,
+    useClass: BootstrapListener
+  },
+  {
+    provide: TestController,
+    useClass: TestController
   },
   {
     provide: TOKEN_MANAGER,
@@ -54,6 +65,11 @@ export const APP_PROVIDERS: ProviderDefinition[] = [
   {
     provide: AUTH_PROVIDER_REGISTRY,
     useClass: TestAuthenticationProvider,
+    multi: true
+  },
+  {
+    provide: AUTH_PROVIDER_REGISTRY,
+    useClass: TestJwtAuthenticationProvider,
     multi: true
   },
 ];

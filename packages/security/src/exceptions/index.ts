@@ -24,20 +24,6 @@ export class BadCredentialsException extends AuthenticationException {
   }
 }
 
-export class AuthenticationServiceException extends AuthenticationException {
-  constructor() {
-    super();
-    this.name = 'AuthenticationServiceException';
-  }
-}
-
-export class UnsupportedUserException extends AuthenticationServiceException {
-  constructor() {
-    super();
-    this.name = 'UnsupportedUserException';
-  }
-}
-
 export class UserNotFoundException extends AuthenticationException {
   constructor(public readonly username: string) {
     super('UsernameNotFoundException');

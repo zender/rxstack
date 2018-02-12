@@ -1,4 +1,4 @@
-import {AbstractToken} from './abstract-token';
+import {AbstractToken} from '../../src/models/abstract-token';
 
 export class JwtToken extends AbstractToken {
   constructor(private raw: string) {

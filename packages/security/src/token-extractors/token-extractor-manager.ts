@@ -12,14 +12,18 @@ export class TokenExtractorManager {
     registry.forEach(extractor => this.extractors.set(extractor.getName(), extractor));
   }
 
+  getByName(name: string): TokenExtractorInterface {
+    return this.extractors.get(name);
+  }
+
   extract(request: Request): string {
     let token: string;
     this.extractors.forEach((extractor) => {
-      if (token = extractor.extract(request)) {
+      if (token) {
         return;
       }
+      token = extractor.extract(request);
     });
-
     return token;
   }
 }
