@@ -14,9 +14,7 @@ export class AuthenticationTokenListener {
     const request = event.getRequest();
     if (request.token && false === request.token.isAuthenticated()) {
       try {
-        const authToken = await this.authenticationManager.authenticate(request.token);
-        authToken.setAuthenticated(true);
-        request.token = authToken;
+        request.token = await this.authenticationManager.authenticate(request.token);
       } catch (e) {
         throw new UnauthorizedException();
       }

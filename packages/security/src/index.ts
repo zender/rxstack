@@ -9,4 +9,5 @@ export * from './events';
 export * from './exceptions';
 export * from './models';
 export * from './token-extractors';
+export * from './services';
 export * from './interfaces';

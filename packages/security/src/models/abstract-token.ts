@@ -32,6 +32,13 @@ export abstract class AbstractToken implements TokenInterface {
     return !!this.getRoles().find((value: string) => value === role);
   }
 
+  getPayload(): Object {
+    return {
+      username: this.getUsername(),
+      roles: this.getRoles()
+    };
+  }
+
   abstract getUsername(): string;
 
   abstract getCredentials(): string;

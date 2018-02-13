@@ -16,12 +16,14 @@ import {QueryParameterTokenExtractor} from './token-extractors/query-parameter-t
 import {HeaderTokenExtractor} from './token-extractors/header-token-extractor';
 import {TokenExtractorListener} from './event-listeners/token-extractor-listener';
 import {AuthenticationTokenListener} from './event-listeners/authentication-token-listener';
+import {InMemoryRefreshTokenManager} from './services/in-memory.refresh-token.manager';
 
 export const AUTH_PROVIDER_REGISTRY = new InjectionToken<AuthenticationProviderInterface[]>('AUTH_PROVIDER_REGISTRY');
 export const USER_PROVIDER_REGISTRY = new InjectionToken<UserProviderInterface[]>('USER_PROVIDER_REGISTRY');
 export const PASSWORD_ENCODER_REGISTRY = new InjectionToken<PasswordEncoderInterface[]>('PASSWORD_ENCODER_REGISTRY');
 export const TOKEN_EXTRACTOR_REGISTRY = new InjectionToken<TokenExtractorInterface[]>('TOKEN_EXTRACTOR_REGISTRY');
 export const TOKEN_MANAGER = new InjectionToken<TokenManagerInterface>('TOKEN_MANAGER');
+export const REFRESH_TOKEN_MANAGER = new InjectionToken<TokenManagerInterface>('REFRESH_TOKEN_MANAGER');
 
 @Module()
 export class SecurityModule {
@@ -39,6 +41,14 @@ export class SecurityModule {
         {
           provide: EncoderFactory,
           useClass: EncoderFactory,
+        },
+        {
+          provide: REFRESH_TOKEN_MANAGER,
+          useFactory: (tokenManager: TokenManagerInterface) => {
+            const ttl = (60 * 60 * 24);
+            return new InMemoryRefreshTokenManager(tokenManager, ttl);
+          },
+          deps: [TOKEN_MANAGER]
         },
         {
           provide: PASSWORD_ENCODER_REGISTRY,

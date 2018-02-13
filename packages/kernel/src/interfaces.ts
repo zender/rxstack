@@ -42,4 +42,5 @@ export interface TokenInterface {
   setUser(user: UserInterface): void;
   setAuthenticated(authenticated: true): void;
   isAuthenticated(): boolean;
+  getPayload(): Object;
 }

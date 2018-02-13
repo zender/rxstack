@@ -12,4 +12,8 @@ export class TestToken extends AbstractToken {
   getCredentials(): string {
     return this.test;
   }
+
+  getPayload(): Object {
+    return {};
+  }
 }
