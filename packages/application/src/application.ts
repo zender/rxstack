@@ -1,6 +1,6 @@
 import 'reflect-metadata';
 import {Injector, ReflectiveInjector, ResolvedReflectiveProvider} from 'injection-js';
-import {Kernel} from '@rxstack/kernel';
+import {Kernel, metadataStorage as kernelMedatastorage} from '@rxstack/kernel';
 import {
   AsyncEventDispatcher, EVENT_LISTENER_KEY, EventListenerMetadata,
   ObserverMetadata
@@ -28,6 +28,7 @@ export class Application {
 
   async stop(): Promise<void> {
     await this.stopServers();
+    kernelMedatastorage.reset();
     this.providers = null;
     this.injector = null;
   }

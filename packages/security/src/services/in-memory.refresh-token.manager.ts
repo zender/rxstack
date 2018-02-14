@@ -2,6 +2,7 @@ import {RefreshTokenInterface, RefreshTokenManagerInterface, TokenManagerInterfa
 import {RefreshToken} from '../models/refresh-token';
 import {Injectable} from 'injection-js';
 import {UnauthorizedException} from '@rxstack/exceptions';
+import {TokenInterface} from '@rxstack/kernel';
 const md5 = require('crypto-js/md5');
 const uuid = require('uuid/v4');
 
@@ -17,27 +18,28 @@ export class InMemoryRefreshTokenManager implements RefreshTokenManagerInterface
     return Array.from(this.tokens.values()).filter((token) => token.isValid()).length;
   }
 
-  async create(username: string, payload: Object): Promise<string> {
-    const token = new RefreshToken(this.generate(), username, payload, this.ttl);
+  async has(refreshToken: string): Promise<boolean> {
+    return this.tokens.has(refreshToken);
+  }
+
+  async get(refreshToken: string): Promise<RefreshTokenInterface> {
+    return this.tokens.get(refreshToken);
+  }
+
+  async create(authToken: TokenInterface): Promise<RefreshTokenInterface> {
+    const token = new RefreshToken(this.generate(), authToken.getUsername(), authToken.getPayload(), this.ttl);
     this.tokens.set(token.token, token);
-    return token.token;
+    return token;
   }
 
-  async disable(refreshToken: string, username: string): Promise<void> {
-    if (this.tokens.has(refreshToken)) {
-      this.tokens.get(refreshToken).invalidate(username);
-    }
+  async disable(refreshToken: RefreshTokenInterface): Promise<void> {
+    refreshToken.invalidate();
   }
 
-  async refresh(refreshToken: string, username: string): Promise<string> {
-    if (!this.tokens.has(refreshToken)) {
+  async refresh(refreshToken: RefreshTokenInterface): Promise<string> {
+    if (!refreshToken.isValid())
       throw new UnauthorizedException();
-    }
-    const token = this.tokens.get(refreshToken);
-    if (token.username !== username || !token.isValid()) {
-      throw new UnauthorizedException();
-    }
-    return this.tokenManager.encode(token.payload);
+    return this.tokenManager.encode(refreshToken.payload);
   }
 
   async clear(): Promise<void> {

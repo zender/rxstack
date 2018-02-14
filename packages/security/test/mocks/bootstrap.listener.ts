@@ -13,7 +13,6 @@ export class BootstrapListener {
     controllerMetadata.target = TestController;
     controllerMetadata.path = '/test';
 
-    metadataStorage.reset();
     metadataStorage.registerMetadata(controllerMetadata, [
       this.getIndexActionMetadata(),
       this.getAnonActionMetadata()

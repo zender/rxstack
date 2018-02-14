@@ -33,14 +33,17 @@ export interface RefreshTokenInterface {
   username: string;
   payload: Object;
   isValid(): boolean;
-  invalidate(username: string): void;
+  invalidate(): void;
+  toString(): string;
 }
 
 export interface RefreshTokenManagerInterface {
   count(): Promise<number>;
-  create(username: string, payload: Object): Promise<string>;
-  disable(refreshToken: string, username: string): Promise<void>;
-  refresh(refreshToken: string, username: string): Promise<string>;
+  create(authToken: TokenInterface): Promise<RefreshTokenInterface>;
+  has(refreshToken: string): Promise<boolean>;
+  get(refreshToken: string): Promise<RefreshTokenInterface>;
+  disable(refreshToken: RefreshTokenInterface): Promise<void>;
+  refresh(refreshToken: RefreshTokenInterface): Promise<string>;
   clear(): Promise<void>;
 }
 

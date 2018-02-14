@@ -1,5 +1,4 @@
 import {RefreshTokenInterface} from '../interfaces';
-import {UnauthorizedException} from '@rxstack/exceptions';
 
 export class RefreshToken implements RefreshTokenInterface {
 
@@ -13,10 +12,11 @@ export class RefreshToken implements RefreshTokenInterface {
     return this.validUntil > new Date().getTime();
   }
 
-  invalidate(username: string): void {
-    if (this.username !== username) {
-      throw new UnauthorizedException();
-    }
+  invalidate(): void {
     this.validUntil = 0;
+  }
+
+  toString(): string {
+    return this.token;
   }
 }

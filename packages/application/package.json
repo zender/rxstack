@@ -1,6 +1,6 @@
 {
   "name": "@rxstack/application",
-  "version": "0.0.32",
+  "version": "0.0.34",
   "description": "RxStack Application Component",
   "private": false,
   "author": "Nikolay Gergiev <symfonist@gmail.com>",

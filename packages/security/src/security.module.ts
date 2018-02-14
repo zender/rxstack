@@ -17,6 +17,8 @@ import {HeaderTokenExtractor} from './token-extractors/header-token-extractor';
 import {TokenExtractorListener} from './event-listeners/token-extractor-listener';
 import {AuthenticationTokenListener} from './event-listeners/authentication-token-listener';
 import {InMemoryRefreshTokenManager} from './services/in-memory.refresh-token.manager';
+import { BootstrapListener } from './event-listeners/bootstrap-listener';
+import {SecurityController} from './controllers/security-controller';
 
 export const AUTH_PROVIDER_REGISTRY = new InjectionToken<AuthenticationProviderInterface[]>('AUTH_PROVIDER_REGISTRY');
 export const USER_PROVIDER_REGISTRY = new InjectionToken<UserProviderInterface[]>('USER_PROVIDER_REGISTRY');
@@ -41,6 +43,14 @@ export class SecurityModule {
         {
           provide: EncoderFactory,
           useClass: EncoderFactory,
+        },
+        {
+          provide: BootstrapListener,
+          useClass: BootstrapListener,
+        },
+        {
+          provide: SecurityController,
+          useClass: SecurityController,
         },
         {
           provide: REFRESH_TOKEN_MANAGER,

@@ -10,4 +10,5 @@ export * from './exceptions';
 export * from './models';
 export * from './token-extractors';
 export * from './services';
+export * from './controllers';
 export * from './interfaces';
