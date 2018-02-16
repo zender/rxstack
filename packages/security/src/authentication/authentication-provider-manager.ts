@@ -39,7 +39,6 @@ export class AuthenticationProviderManager {
     }
 
     if (null !== result) {
-      result.setAuthenticated(true);
       const authenticationEvent = new AuthenticationEvent(result);
       await this.eventDispatcher.dispatch(AuthenticationEvents.AUTHENTICATION_SUCCESS, authenticationEvent);
       result = authenticationEvent.authenticationToken;

@@ -18,6 +18,7 @@ export class UserPasswordAuthenticationProvider implements AuthenticationProvide
     await this.checkAuthentication(user, token);
     token.setUser(user);
     token.setAuthenticated(true);
+    token.setFullyAuthenticated(true);
     return token;
   }
 

@@ -8,6 +8,8 @@ export abstract class AbstractToken implements TokenInterface {
 
   protected authenticated = false;
 
+  protected fullyAuthenticated = false;
+
   getUser(): UserInterface {
     return this.user;
   }
@@ -22,6 +24,14 @@ export abstract class AbstractToken implements TokenInterface {
 
   isAuthenticated(): boolean {
     return this.authenticated;
+  }
+
+  setFullyAuthenticated(fullyAuthenticated: boolean): void {
+    this.fullyAuthenticated = fullyAuthenticated;
+  }
+
+  isFullyAuthenticated(): boolean {
+    return this.fullyAuthenticated;
   }
 
   getRoles(): string[] {

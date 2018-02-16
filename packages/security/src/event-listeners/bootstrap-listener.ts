@@ -14,18 +14,40 @@ export class BootstrapListener {
     controllerMetadata.target = SecurityController;
     controllerMetadata.path = path;
 
-    metadataStorage.registerMetadata(controllerMetadata, [
-      this.getLoginActionMetadata(),
-    ]);
+    const metadata = [
+      {
+        path: '/login',
+        name: 'security_login',
+        action: 'loginAction'
+      },
+      {
+        path: '/refresh-token',
+        name: 'security_refresh_token',
+        action: 'refreshTokenAction'
+      },
+      {
+        path: '/logout',
+        name: 'security_logout',
+        action: 'logoutAction'
+      },
+      {
+        path: '/logout',
+        name: 'security_authenticate',
+        action: 'authenticateAction'
+      }
+    ];
+
+    const routes: RouteMetadata[] = [];
+    metadata.forEach(meta => routes.push(this.createActionMetadata(meta)));
+    metadataStorage.registerMetadata(controllerMetadata, routes);
   }
 
-  private getLoginActionMetadata(): RouteMetadata {
-    const path = '/login';
+  private createActionMetadata(meta: Object): RouteMetadata {
     const routeMetadata = new RouteMetadata();
     routeMetadata.target = SecurityController;
-    routeMetadata.path = path;
-    routeMetadata.name = 'security_login';
-    routeMetadata.propertyKey = 'loginAction';
+    routeMetadata.path = meta['path'];
+    routeMetadata.name = meta['name'];
+    routeMetadata.propertyKey = meta['action'];
     routeMetadata.httpMethod = 'POST';
     return routeMetadata;
   }

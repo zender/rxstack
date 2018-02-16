@@ -13,10 +13,14 @@ export class TokenExtractorListener {
   @Observe(KernelEvents.KERNEL_REQUEST, -150)
   async onRequest(event: RequestEvent): Promise<void> {
     const request = event.getRequest();
-    const rawToken = this.extractor.extract(request);
-    if (rawToken)
-      request.token = new Token(rawToken);
-    else
-      request.token = new AnonymousToken();
+    let token = new AnonymousToken();
+    if (request.transport === 'HTTP') {
+      const rawToken = this.extractor.extract(request);
+      if (rawToken)
+        token = new Token(rawToken);
+    } else if (request.transport === 'SOCKET') {
+      request.connection['token'] ? token = request.connection['token'] : request.connection['token'] = token;
+    }
+    request.token = token;
   }
 }

@@ -39,6 +39,7 @@ export class InMemoryRefreshTokenManager implements RefreshTokenManagerInterface
   async refresh(refreshToken: RefreshTokenInterface): Promise<string> {
     if (!refreshToken.isValid())
       throw new UnauthorizedException();
+    refreshToken.payload['refreshedAt'] = new Date().getTime();
     return this.tokenManager.encode(refreshToken.payload);
   }
 

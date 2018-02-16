@@ -2,7 +2,8 @@ import {Module, ModuleWithProviders} from '@rxstack/application';
 import {SecurityConfiguration} from './security-configuration';
 import {InjectionToken} from 'injection-js';
 import {
-  AuthenticationProviderInterface, PasswordEncoderInterface, TokenExtractorInterface, TokenManagerInterface,
+  AuthenticationProviderInterface, PasswordEncoderInterface, RefreshTokenManagerInterface, TokenExtractorInterface,
+  TokenManagerInterface,
   UserProviderInterface
 } from './interfaces';
 import {BcryptPasswordEncoder} from './password-encoders/bcrypt.password-encoder';
@@ -25,7 +26,7 @@ export const USER_PROVIDER_REGISTRY = new InjectionToken<UserProviderInterface[]
 export const PASSWORD_ENCODER_REGISTRY = new InjectionToken<PasswordEncoderInterface[]>('PASSWORD_ENCODER_REGISTRY');
 export const TOKEN_EXTRACTOR_REGISTRY = new InjectionToken<TokenExtractorInterface[]>('TOKEN_EXTRACTOR_REGISTRY');
 export const TOKEN_MANAGER = new InjectionToken<TokenManagerInterface>('TOKEN_MANAGER');
-export const REFRESH_TOKEN_MANAGER = new InjectionToken<TokenManagerInterface>('REFRESH_TOKEN_MANAGER');
+export const REFRESH_TOKEN_MANAGER = new InjectionToken<RefreshTokenManagerInterface>('REFRESH_TOKEN_MANAGER');
 
 @Module()
 export class SecurityModule {

@@ -13,6 +13,8 @@ export class TestJwtAuthenticationProvider implements AuthenticationProviderInte
       throw new BadCredentialsException('The presented password is invalid.');
     }
     token.setUser(new User('admin', 'admin', ['ADMIN']));
+    token.setAuthenticated(true);
+    token.setFullyAuthenticated(false);
     return token;
   }
 
