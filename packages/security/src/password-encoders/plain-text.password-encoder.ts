@@ -4,6 +4,8 @@ import {PasswordEncoderInterface} from '../interfaces';
 @Injectable()
 export class PlainTextPasswordEncoder implements PasswordEncoderInterface {
 
+  static readonly ENCODER_NAME = 'plain-text';
+
   constructor(private ignoreCase: boolean) {}
 
   async encodePassword(raw: string): Promise<string> {
@@ -16,7 +18,7 @@ export class PlainTextPasswordEncoder implements PasswordEncoderInterface {
     return raw === encoded;
   }
 
-  getEncoderName(): string {
-    return 'plain-text';
+  getName(): string {
+    return PlainTextPasswordEncoder.ENCODER_NAME;
   }
 }

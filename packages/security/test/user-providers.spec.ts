@@ -23,7 +23,7 @@ describe('Security:UserProvider', () => {
 
   it('should get provider by name', async () => {
     const provider = injector.get(UserProviderManager).getProviderByName('in-memory');
-    provider.getUserProviderName().should.be.equal('in-memory');
+    provider.getName().should.be.equal('in-memory');
   });
 
   it('should load the admin', async () => {

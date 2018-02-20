@@ -29,7 +29,7 @@ describe('Security:AuthenticationProviderManager', () => {
 
   it('should get provider by name', async () => {
     const provider = injector.get(AuthenticationProviderManager).getByName('user-password');
-    provider.getProviderName().should.be.equal('user-password');
+    provider.getName().should.be.equal('user-password');
   });
 
   it('should authenticate token', async () => {

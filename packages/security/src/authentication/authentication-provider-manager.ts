@@ -2,20 +2,18 @@ import {AuthenticationException, ProviderNotFoundException} from '../exceptions/
 import {AuthenticationEvent} from '../events/authentication-event';
 import {AuthenticationFailureEvent} from '../events/authentication-failure-event';
 import {AuthenticationEvents} from '../authentication-events';
-import {forwardRef, Inject, Injectable} from 'injection-js';
+import {Injectable} from 'injection-js';
 import {AuthenticationProviderInterface} from '../interfaces';
 import {AsyncEventDispatcher} from '@rxstack/async-event-dispatcher';
 import {TokenInterface} from '@rxstack/kernel';
-import {AUTH_PROVIDER_REGISTRY} from '../security.module';
 
 @Injectable()
 export class AuthenticationProviderManager {
 
   private providers: Map<string, AuthenticationProviderInterface> = new Map();
 
-  constructor(@Inject(forwardRef(() => AUTH_PROVIDER_REGISTRY)) registry: AuthenticationProviderInterface[],
-              private eventDispatcher: AsyncEventDispatcher) {
-    registry.forEach((provider) => this.providers.set(provider.getProviderName(), provider));
+  constructor(registry: AuthenticationProviderInterface[], private eventDispatcher: AsyncEventDispatcher) {
+    registry.forEach((provider) => this.providers.set(provider.getName(), provider));
   }
 
   async authenticate(token: TokenInterface): Promise<TokenInterface> {

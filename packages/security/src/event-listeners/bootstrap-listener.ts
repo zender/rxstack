@@ -3,9 +3,12 @@ import {Observe} from '@rxstack/async-event-dispatcher';
 import {ControllerMetadata, metadataStorage, RouteMetadata} from '@rxstack/kernel';
 import { ApplicationEvents, BootstrapEvent } from '@rxstack/application';
 import { SecurityController } from '../controllers/security-controller';
+import {SecurityConfiguration} from '../security-configuration';
 
 @Injectable()
 export class BootstrapListener {
+
+  constructor(private configuration: SecurityConfiguration) {}
 
   @Observe(ApplicationEvents.BOOTSTRAP)
   async onBootstrap(event: BootstrapEvent): Promise<void> {
@@ -14,7 +17,8 @@ export class BootstrapListener {
     controllerMetadata.target = SecurityController;
     controllerMetadata.path = path;
 
-    const metadata = [
+    const metadata: any[] = [];
+    const localAuthMetadata = [
       {
         path: '/login',
         name: 'security_login',
@@ -29,14 +33,19 @@ export class BootstrapListener {
         path: '/logout',
         name: 'security_logout',
         action: 'logoutAction'
-      },
-      {
-        path: '/logout',
-        name: 'security_authenticate',
-        action: 'authenticateAction'
       }
     ];
 
+    if (this.configuration.local_authentication) {
+      metadata.push(...localAuthMetadata);
+    }
+    if (this.configuration.socket_authentication) {
+      metadata.push({
+        path: '/authenticate',
+        name: 'security_authenticate',
+        action: 'authenticateAction'
+      });
+    }
     const routes: RouteMetadata[] = [];
     metadata.forEach(meta => routes.push(this.createActionMetadata(meta)));
     metadataStorage.registerMetadata(controllerMetadata, routes);

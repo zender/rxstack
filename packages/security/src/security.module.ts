@@ -20,6 +20,8 @@ import {AuthenticationTokenListener} from './event-listeners/authentication-toke
 import {InMemoryRefreshTokenManager} from './services/in-memory.refresh-token.manager';
 import { BootstrapListener } from './event-listeners/bootstrap-listener';
 import {SecurityController} from './controllers/security-controller';
+import {AsyncEventDispatcher} from '@rxstack/async-event-dispatcher';
+import {Logger} from '@rxstack/logger';
 
 export const AUTH_PROVIDER_REGISTRY = new InjectionToken<AuthenticationProviderInterface[]>('AUTH_PROVIDER_REGISTRY');
 export const USER_PROVIDER_REGISTRY = new InjectionToken<UserProviderInterface[]>('USER_PROVIDER_REGISTRY');
@@ -43,7 +45,10 @@ export class SecurityModule {
         },
         {
           provide: EncoderFactory,
-          useClass: EncoderFactory,
+          useFactory: (registry: PasswordEncoderInterface[]) => {
+            return new EncoderFactory(registry);
+          },
+          deps: [PASSWORD_ENCODER_REGISTRY]
         },
         {
           provide: BootstrapListener,
@@ -51,7 +56,13 @@ export class SecurityModule {
         },
         {
           provide: SecurityController,
-          useClass: SecurityController,
+          useFactory: (authManager: AuthenticationProviderManager,
+                       tokenManager: TokenManagerInterface,
+                       refreshTokenManager: RefreshTokenManagerInterface
+          ) => {
+            return new SecurityController(authManager, tokenManager, refreshTokenManager);
+          },
+          deps: [AuthenticationProviderManager, TOKEN_MANAGER, REFRESH_TOKEN_MANAGER]
         },
         {
           provide: REFRESH_TOKEN_MANAGER,
@@ -68,7 +79,10 @@ export class SecurityModule {
         },
         {
           provide: UserProviderManager,
-          useClass: UserProviderManager,
+          useFactory: (registry: UserProviderInterface[]) => {
+            return new UserProviderManager(registry);
+          },
+          deps: [USER_PROVIDER_REGISTRY]
         },
         {
           provide: USER_PROVIDER_REGISTRY,
@@ -77,7 +91,11 @@ export class SecurityModule {
         },
         {
           provide: AuthenticationProviderManager,
-          useClass: AuthenticationProviderManager,
+          useFactory: (registry: AuthenticationProviderInterface[],
+                       eventDispatcher: AsyncEventDispatcher) => {
+            return new AuthenticationProviderManager(registry, eventDispatcher);
+          },
+          deps: [AUTH_PROVIDER_REGISTRY, AsyncEventDispatcher]
         },
         {
           provide: AUTH_PROVIDER_REGISTRY,
@@ -86,7 +104,10 @@ export class SecurityModule {
         },
         {
           provide: TokenExtractorManager,
-          useClass: TokenExtractorManager,
+          useFactory: (registry: TokenExtractorInterface[]) => {
+            return new TokenExtractorManager(registry);
+          },
+          deps: [TOKEN_EXTRACTOR_REGISTRY]
         },
         {
           provide: TOKEN_EXTRACTOR_REGISTRY,

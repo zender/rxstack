@@ -5,6 +5,8 @@ const bcrypt = require('bcrypt');
 @Injectable()
 export class BcryptPasswordEncoder implements PasswordEncoderInterface {
 
+  static readonly ENCODER_NAME = 'bcrypt';
+
   async encodePassword(raw: string): Promise<string> {
     return bcrypt.hash(raw, 10);
   }
@@ -13,7 +15,7 @@ export class BcryptPasswordEncoder implements PasswordEncoderInterface {
     return await bcrypt.compare(raw, encoded);
   }
 
-  getEncoderName(): string {
-    return 'bcrypt';
+  getName(): string {
+    return BcryptPasswordEncoder.ENCODER_NAME;
   }
 }

@@ -32,10 +32,11 @@ export class TokenExtractorsOptons {
 
 export class SecurityConfiguration {
   token_extractors: TokenExtractorsOptons;
-  login?: string;
-  logout?: string;
-
+  local_authentication?: boolean;
+  socket_authentication?: boolean;
   constructor(obj?: any) {
     this.token_extractors = new TokenExtractorsOptons(obj.token_extractors);
+    this.local_authentication = obj.local_authentication || false;
+    this.socket_authentication = obj.socket_authentication || false;
   }
 }

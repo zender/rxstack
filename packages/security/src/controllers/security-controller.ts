@@ -1,29 +1,24 @@
-import {forwardRef, Inject, Injectable} from 'injection-js';
+import {Injectable} from 'injection-js';
 import {AuthenticationProviderManager} from '../authentication/authentication-provider-manager';
 import {RefreshTokenInterface, RefreshTokenManagerInterface, TokenManagerInterface} from '../interfaces';
-import {REFRESH_TOKEN_MANAGER, TOKEN_MANAGER} from '../security.module';
 import {Request, Response, Transport} from '@rxstack/kernel';
 import {UsernameAndPasswordToken} from '../models/username-and-password.token';
-import {
-  ForbiddenException, MethodNotAllowedException, NotFoundException,
-  UnauthorizedException
-} from '@rxstack/exceptions';
+import {MethodNotAllowedException, NotFoundException, UnauthorizedException} from '@rxstack/exceptions';
 import {Token} from '../models/token';
-import {AbstractToken, AnonymousToken} from '../models';
+import {AnonymousToken} from '../models';
 
 @Injectable()
 export class SecurityController {
   constructor(protected authManager: AuthenticationProviderManager,
-              @Inject(forwardRef(() => TOKEN_MANAGER)) protected tokenManager: TokenManagerInterface,
-              @Inject(forwardRef(() => REFRESH_TOKEN_MANAGER)) protected refreshTokenManager: RefreshTokenManagerInterface) { }
+              protected tokenManager: TokenManagerInterface,
+              protected refreshTokenManager: RefreshTokenManagerInterface) { }
 
   async loginAction(request: Request): Promise<Response> {
     this.throwMethodNotAllowed(request, 'SOCKET');
     const token = new UsernameAndPasswordToken(request.params.get('username'), request.params.get('password'));
-    const authToken = await this.authManager.authenticate(token);
-    const rawToken = await this.tokenManager.encode(authToken.getPayload());
-    const refreshToken = await this.refreshTokenManager.create(authToken);
-    request.token = token;
+    request.token = await this.authManager.authenticate(token);
+    const rawToken = await this.tokenManager.encode(request.token.getPayload());
+    const refreshToken = await this.refreshTokenManager.create(request.token);
     return new Response({'token': rawToken, 'refreshToken': refreshToken.toString()});
   }
 

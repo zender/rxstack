@@ -4,19 +4,19 @@ export type UserFactoryFunc<T extends UserInterface> = (data: UserInterface) => 
 
 export interface AuthenticationProviderInterface {
   authenticate(token: TokenInterface): Promise<TokenInterface>;
-  getProviderName(): string;
+  getName(): string;
   support(token: TokenInterface): boolean;
 }
 
 export interface UserProviderInterface {
   loadUserByUsername(username: string, payload?: any): Promise<UserInterface>;
-  getUserProviderName(): string;
+  getName(): string;
 }
 
 export interface PasswordEncoderInterface {
   encodePassword(raw: string): Promise<string>;
   isPasswordValid(encoded: string, raw: string): Promise<boolean>;
-  getEncoderName(): string;
+  getName(): string;
 }
 
 export interface EncoderAwareInterface {

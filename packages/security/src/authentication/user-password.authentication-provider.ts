@@ -9,6 +9,8 @@ import {UsernameAndPasswordToken} from '../models/username-and-password.token';
 @Injectable()
 export class UserPasswordAuthenticationProvider implements AuthenticationProviderInterface {
 
+  static readonly PROVIDER_NAME = 'user-password';
+
   constructor(private userProvider: UserProviderManager,
               private encoderFactory: EncoderFactory) {
   }
@@ -22,8 +24,8 @@ export class UserPasswordAuthenticationProvider implements AuthenticationProvide
     return token;
   }
 
-  getProviderName(): string {
-    return 'user-password';
+  getName(): string {
+    return UserPasswordAuthenticationProvider.PROVIDER_NAME;
   }
 
   support(token: TokenInterface): boolean {

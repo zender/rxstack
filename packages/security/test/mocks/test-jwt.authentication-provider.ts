@@ -18,7 +18,7 @@ export class TestJwtAuthenticationProvider implements AuthenticationProviderInte
     return token;
   }
 
-  getProviderName(): string {
+  getName(): string {
     return 'jwt_test';
   }
 

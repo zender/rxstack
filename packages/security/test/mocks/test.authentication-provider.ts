@@ -13,7 +13,7 @@ export class TestAuthenticationProvider implements AuthenticationProviderInterfa
     throw new TestAuthenticationProviderException('test');
   }
 
-  getProviderName(): string {
+  getName(): string {
     return 'test';
   }
 

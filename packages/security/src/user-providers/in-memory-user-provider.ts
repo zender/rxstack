@@ -7,7 +7,10 @@ import {UserInterface} from '@rxstack/kernel';
 @Injectable()
 export class InMemoryUserProvider<T extends UserInterface> implements UserProviderInterface {
 
+  static readonly PROVIDER_NAME = 'in-memory';
+
   private users: T[] = [];
+
   constructor(data: T[],  factory: UserFactoryFunc<T>) {
     data.forEach((item) => this.users.push(factory(item)));
   }
@@ -20,7 +23,7 @@ export class InMemoryUserProvider<T extends UserInterface> implements UserProvid
     return user;
   }
 
-  getUserProviderName(): string {
-    return 'in-memory';
+  getName(): string {
+    return InMemoryUserProvider.PROVIDER_NAME;
   }
 }

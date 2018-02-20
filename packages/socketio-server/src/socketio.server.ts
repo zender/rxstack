@@ -55,7 +55,6 @@ export class SocketioServer extends AbstractServer {
     request.params.fromObject(args.params || {});
     request.files.fromObject({}); // todo - implement file upload
     request.body = args.body || null;
-    request.token = socket['token'] ? socket['token'] : null;
     request.connection = socket;
 
     return request;

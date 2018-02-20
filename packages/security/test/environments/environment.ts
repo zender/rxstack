@@ -33,6 +33,8 @@ export const environment = {
       authorization_header: {
         enabled: true,
       }
-    }
+    },
+    local_authentication: true,
+    socket_authentication: true
   }
 };

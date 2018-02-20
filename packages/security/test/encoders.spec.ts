@@ -25,20 +25,20 @@ describe('Security:Encoder', () => {
   });
 
   it('should get encoder by name', async () => {
-    let encoder = injector.get(EncoderFactory).getEncoderByName('plain-text');
-    encoder.getEncoderName().should.be.equal('plain-text');
+    let encoder = injector.get(EncoderFactory).getByName('plain-text');
+    encoder.getName().should.be.equal('plain-text');
   });
 
   it('should get encoder from user with defined one', async () => {
     let user = new TestUserWithEncoder('admin', 'pass', ['ADMIN']);
     let encoder = injector.get(EncoderFactory).getEncoder(user);
-    encoder.getEncoderName().should.be.equal('plain-text');
+    encoder.getName().should.be.equal('plain-text');
   });
 
   it('should get encoder from user without defined one', async () => {
     let user = new User('admin', 'pass', ['ADMIN']);
     let encoder = injector.get(EncoderFactory).getEncoder(user);
-    encoder.getEncoderName().should.be.equal('bcrypt');
+    encoder.getName().should.be.equal('bcrypt');
   });
 
   it('should throw exception with non-existing encoder', async () => {

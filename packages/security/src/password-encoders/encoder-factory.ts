@@ -1,6 +1,5 @@
-import {forwardRef, Inject, Injectable} from 'injection-js';
+import {Injectable} from 'injection-js';
 import {PasswordEncoderInterface} from '../interfaces';
-import {PASSWORD_ENCODER_REGISTRY} from '../security.module';
 import {User} from '../models/user';
 
 @Injectable()
@@ -10,11 +9,11 @@ export class EncoderFactory {
 
   private encoders: Map<string, PasswordEncoderInterface> = new Map();
 
-  constructor(@Inject(forwardRef(() => PASSWORD_ENCODER_REGISTRY)) registry: PasswordEncoderInterface[]) {
-    registry.forEach((encoder) => this.encoders.set(encoder.getEncoderName(), encoder));
+  constructor(registry: PasswordEncoderInterface[]) {
+    registry.forEach((encoder) => this.encoders.set(encoder.getName(), encoder));
   }
 
-  getEncoderByName(name: string): PasswordEncoderInterface {
+  getByName(name: string): PasswordEncoderInterface {
     return this.encoders.get(name);
   }
 

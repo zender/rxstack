@@ -29,7 +29,7 @@ export class Application {
   async stop(): Promise<void> {
     await this.stopServers();
     kernelMedatastorage.reset();
-    this.providers = null;
+    this.providers = [];
     this.injector = null;
   }
 

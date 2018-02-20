@@ -44,4 +44,5 @@ describe('Application', () => {
     app.stop();
     injector.get(MockServer).started.should.be.false;
   });
+
 });

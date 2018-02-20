@@ -6,11 +6,13 @@ import {UserInterface} from '@rxstack/kernel';
 @Injectable()
 export class NoopUserProvider implements UserProviderInterface {
 
+  static readonly PROVIDER_NAME = 'noop';
+
   async loadUserByUsername(username: string): Promise<UserInterface> {
     throw new UserNotFoundException(username);
   }
 
-  getUserProviderName(): string {
-    return 'noop';
+  getName(): string {
+    return NoopUserProvider.PROVIDER_NAME;
   }
 }

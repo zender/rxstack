@@ -1,16 +1,15 @@
-import {forwardRef, Inject, Injectable} from 'injection-js';
+import {Injectable} from 'injection-js';
 import {UserProviderInterface} from '../interfaces';
 import {UserInterface} from '@rxstack/kernel';
 import {UserNotFoundException} from '../exceptions/index';
-import {USER_PROVIDER_REGISTRY} from '../security.module';
 
 @Injectable()
 export class UserProviderManager {
 
   private providers: Map<string, UserProviderInterface> = new Map();
 
-  constructor(@Inject(forwardRef(() => USER_PROVIDER_REGISTRY)) registry: UserProviderInterface[]) {
-    registry.forEach((provider) => this.providers.set(provider.getUserProviderName(), provider));
+  constructor(registry: UserProviderInterface[]) {
+    registry.forEach((provider) => this.providers.set(provider.getName(), provider));
   }
 
   getProviderByName(name: string): UserProviderInterface {

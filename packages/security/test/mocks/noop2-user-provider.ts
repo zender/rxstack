@@ -10,7 +10,7 @@ export class Noop2UserProvider implements UserProviderInterface {
     throw new UserNotFoundException(username);
   }
 
-  getUserProviderName(): string {
+  getName(): string {
     return 'noop2';
   }
 }
