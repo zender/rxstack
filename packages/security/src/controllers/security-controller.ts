@@ -17,6 +17,7 @@ export class SecurityController {
     this.throwMethodNotAllowed(request, 'SOCKET');
     const token = new UsernameAndPasswordToken(request.params.get('username'), request.params.get('password'));
     request.token = await this.authManager.authenticate(token);
+    // dispatch ???
     const rawToken = await this.tokenManager.encode(request.token.getPayload());
     const refreshToken = await this.refreshTokenManager.create(request.token);
     return new Response({'token': rawToken, 'refreshToken': refreshToken.toString()});
@@ -27,6 +28,7 @@ export class SecurityController {
     try {
       const refreshToken = await this.findRefreshTokenOr404(request.params.get('refreshToken'));
       await this.refreshTokenManager.disable(refreshToken);
+      // dispatch ???
     } catch (e) { }
 
     return new Response(null, 204);
@@ -36,6 +38,7 @@ export class SecurityController {
     this.throwMethodNotAllowed(request, 'SOCKET');
     const refreshToken = await this.findRefreshTokenOr404(request.params.get('refreshToken'));
     const token = await this.refreshTokenManager.refresh(refreshToken);
+    // dispatch ???
     return new Response({token});
   }
 
@@ -45,6 +48,7 @@ export class SecurityController {
       const token = new Token(request.params.get('bearer'));
       request.connection['token'] = await this.authManager.authenticate(token);
       request.token = request.connection['token'];
+      // dispatch ???
       return new Response(null, 204);
     } catch (e) {
       throw new UnauthorizedException();
