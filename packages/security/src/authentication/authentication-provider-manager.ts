@@ -17,45 +17,40 @@ export class AuthenticationProviderManager {
   }
 
   async authenticate(token: TokenInterface): Promise<TokenInterface> {
-    let lastException: AuthenticationException = null;
-    let result: TokenInterface = null;
-    const promises: Promise<TokenInterface>[] = [];
-
-    this.providers.forEach((provider): void => {
-      if (provider.support(token)) {
-        promises.push(provider.authenticate(token));
-      }
-    });
-
+    let authToken: TokenInterface;
     try {
-      result = await Promise.all(promises).then((data: TokenInterface[]) => data.length > 0 ? data.pop() : null);
+      authToken = await this.doAuthenticate(token);
     } catch (e) {
-      if (e instanceof AuthenticationException)
-        lastException = e;
-      else
-        throw e;
+      if (e instanceof AuthenticationException) {
+        const authenticationFailureEvent = new AuthenticationFailureEvent(token, e);
+        await this.eventDispatcher
+          .dispatch(AuthenticationEvents.AUTHENTICATION_FAILURE, authenticationFailureEvent);
+        throw authenticationFailureEvent.lastException;
+      }
+      throw e;
     }
-
-    if (null !== result) {
-      const authenticationEvent = new AuthenticationEvent(result);
-      await this.eventDispatcher.dispatch(AuthenticationEvents.AUTHENTICATION_SUCCESS, authenticationEvent);
-      result = authenticationEvent.authenticationToken;
-      return result;
+    if (authToken) {
+      const authenticationEvent = new AuthenticationEvent(authToken);
+      await this.eventDispatcher.dispatch(
+        AuthenticationEvents.AUTHENTICATION_SUCCESS, authenticationEvent
+      );
+      return authenticationEvent.authenticationToken;
     }
-
-    if (null === lastException) {
-      throw new ProviderNotFoundException();
-    }
-
-    const authenticationFailureEvent = new AuthenticationFailureEvent(token, lastException);
-    await this.eventDispatcher
-      .dispatch(AuthenticationEvents.AUTHENTICATION_FAILURE, authenticationFailureEvent);
-    lastException.token = authenticationFailureEvent.authenticationToken;
-
-    throw lastException;
+    throw new ProviderNotFoundException();
   }
 
   getByName(name: string): AuthenticationProviderInterface {
     return this.providers.get(name);
+  }
+
+  private async doAuthenticate(token: TokenInterface): Promise<TokenInterface> {
+    return Array.from(this.providers.values()).reduce(
+      async (current: Promise<TokenInterface>, provider): Promise<TokenInterface> => {
+        let authToken = await current;
+        if (authToken || !provider.support(token)) {
+          return authToken;
+        }
+        return await provider.authenticate(token);
+    }, Promise.resolve(null));
   }
 }

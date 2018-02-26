@@ -30,7 +30,6 @@ export class Application {
     await this.stopServers();
     kernelMedatastorage.reset();
     this.providers = [];
-    this.injector = null;
   }
 
   getInjector(): Injector {

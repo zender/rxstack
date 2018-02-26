@@ -29,10 +29,7 @@ export class UserPasswordAuthenticationProvider implements AuthenticationProvide
   }
 
   support(token: TokenInterface): boolean {
-    if (token instanceof UsernameAndPasswordToken)
-      return true;
-    else
-      return false;
+    return (token instanceof UsernameAndPasswordToken);
   }
 
   protected async checkAuthentication(user: UserInterface, token: TokenInterface): Promise<void> {

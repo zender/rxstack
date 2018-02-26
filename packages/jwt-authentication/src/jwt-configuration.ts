@@ -15,13 +15,11 @@ export class JwtConfiguration {
   signature_algorithm?: string;
   ttl?: number;
   issuer?: string;
-  user_identity_field?: string;
 
   constructor(obj: any) {
     this.secret = (typeof obj.secret === 'string') ? obj.secret : new Rsa(obj.secret);
     this.signature_algorithm = obj.signature_algorithm || 'RS512';
     this.ttl = obj.ttl || 5000;
     this.issuer = obj.issuer || 'rxstack';
-    this.user_identity_field = obj.user_identity_field || 'username';
   }
 }

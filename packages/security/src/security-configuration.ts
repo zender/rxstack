@@ -34,9 +34,11 @@ export class SecurityConfiguration {
   token_extractors: TokenExtractorsOptons;
   local_authentication?: boolean;
   socket_authentication?: boolean;
+  user_identity_field?: string;
   constructor(obj?: any) {
     this.token_extractors = new TokenExtractorsOptons(obj.token_extractors);
     this.local_authentication = obj.local_authentication || false;
     this.socket_authentication = obj.socket_authentication || false;
+    this.user_identity_field = obj.user_identity_field || 'username';
   }
 }

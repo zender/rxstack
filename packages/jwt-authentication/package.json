@@ -17,7 +17,6 @@
     "publish-package": "gulp publish"
   },
   "devDependencies": {
-    "@rxstack/configuration": "latest",
     "@types/chai": "^3.4.35",
     "@types/chai-as-promised": "0.0.30",
     "@types/gulp": "^4.0.2",

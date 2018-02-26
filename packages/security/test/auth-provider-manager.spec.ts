@@ -16,7 +16,7 @@ import {AuthListener} from './mocks/auth.listener';
 describe('Security:AuthenticationProviderManager', () => {
   // Setup application
   const app = new Application(AppModule);
-  let injector: Injector = null;
+  let injector: Injector;
 
   before(async() =>  {
     await app.start();
@@ -42,7 +42,7 @@ describe('Security:AuthenticationProviderManager', () => {
     injector.get(AuthListener).successCalled.should.be.true;
   });
 
-  it('should throw an exception is user pass is invalid', async () => {
+  it('should throw an exception if user pass is invalid', async () => {
     const token = new UsernameAndPasswordToken('admin', 'invalid');
     const manager = injector.get(AuthenticationProviderManager);
     let exception = null;
@@ -58,7 +58,7 @@ describe('Security:AuthenticationProviderManager', () => {
   it('should throw an exception if provider is not found', async () => {
     const token = new TestToken('test');
     const manager = injector.get(AuthenticationProviderManager);
-    let exception = null;
+    let exception;
     try {
       await manager.authenticate(token);
     } catch (e) {
@@ -70,7 +70,7 @@ describe('Security:AuthenticationProviderManager', () => {
   it('should throw an exception if provider exception is not caught', async () => {
     const token = new TestSupportedToken();
     const manager = injector.get(AuthenticationProviderManager);
-    let exception = null;
+    let exception;
     try {
       await manager.authenticate(token);
     } catch (e) {

@@ -16,6 +16,8 @@ import {TestTokenManager} from './test.token-manager';
 import {TestController} from './test.controller';
 import {BootstrapListener} from './bootstrap.listener';
 import {TestJwtAuthenticationProvider} from './test-jwt.authentication-provider';
+import {PayloadUserProvider} from '../../src/user-providers/payload-user-provider';
+import {User} from '../../src/models';
 
 export const APP_PROVIDERS: ProviderDefinition[] = [
   {

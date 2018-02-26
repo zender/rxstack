@@ -44,5 +44,6 @@ export interface TokenInterface {
   isAuthenticated(): boolean;
   setFullyAuthenticated(fullyAuthenticated: boolean): void;
   isFullyAuthenticated(): boolean;
+  setPayload(payload: Object): void;
   getPayload(): Object;
 }

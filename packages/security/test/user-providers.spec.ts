@@ -6,6 +6,9 @@ import {AppModule} from './mocks/app.module';
 import {Injector} from 'injection-js';
 import {UserProviderManager} from '../src/user-providers/user-provider-manager';
 import {UserNotFoundException} from '../src/exceptions/index';
+import {User} from '../src/models';
+import {PayloadUserProvider} from '../src/user-providers/payload-user-provider';
+import {UserInterface} from '@rxstack/kernel';
 
 describe('Security:UserProvider', () => {
   // Setup application
@@ -34,9 +37,36 @@ describe('Security:UserProvider', () => {
   it('should not load the admin', async () => {
     try {
       await injector.get(UserProviderManager).loadUserByUsername('none');
-      throw new Error('User found');
     } catch (e) {
       e.should.be.instanceOf(UserNotFoundException);
     }
   });
+
+  it('should load user from payload', async () => {
+    const provider = new PayloadUserProvider(
+      (data: UserInterface) => new User(data.username, null, data.roles)
+    );
+    provider.getName().should.be.equal('payload');
+    const user = await provider.loadUserByUsername('joe', {
+      'username': 'joe',
+      'roles': ['USER']
+    });
+    user.should.be.instanceOf(User);
+  });
+
+
+  it('should not load payload user', async () => {
+    const provider = new PayloadUserProvider(
+      (data: UserInterface) => null
+    );
+    try {
+      await provider.loadUserByUsername('joe', {
+        'username': 'joe',
+        'roles': ['USER']
+      });
+    } catch (e) {
+      e.should.be.instanceOf(UserNotFoundException);
+    }
+  });
+
 });

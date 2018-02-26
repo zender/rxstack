@@ -22,6 +22,7 @@ import { BootstrapListener } from './event-listeners/bootstrap-listener';
 import {SecurityController} from './controllers/security-controller';
 import {AsyncEventDispatcher} from '@rxstack/async-event-dispatcher';
 import {Logger} from '@rxstack/logger';
+import {TokenAuthenticationProvider} from './authentication/token.authentication-provider';
 
 export const AUTH_PROVIDER_REGISTRY = new InjectionToken<AuthenticationProviderInterface[]>('AUTH_PROVIDER_REGISTRY');
 export const USER_PROVIDER_REGISTRY = new InjectionToken<UserProviderInterface[]>('USER_PROVIDER_REGISTRY');
@@ -96,6 +97,16 @@ export class SecurityModule {
             return new AuthenticationProviderManager(registry, eventDispatcher);
           },
           deps: [AUTH_PROVIDER_REGISTRY, AsyncEventDispatcher]
+        },
+        {
+          provide: AUTH_PROVIDER_REGISTRY,
+          useFactory: (userProvider: UserProviderManager,
+                       tokenManager: TokenManagerInterface,
+                       config: SecurityConfiguration) => {
+            return new TokenAuthenticationProvider(userProvider, tokenManager, config);
+          },
+          deps: [UserProviderManager, TOKEN_MANAGER, SecurityConfiguration],
+          multi: true
         },
         {
           provide: AUTH_PROVIDER_REGISTRY,

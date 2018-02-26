@@ -13,7 +13,7 @@ import {User} from '../src/models/user';
 describe('Security:Encoder', () => {
   // Setup application
   const app = new Application(AppModule);
-  let injector: Injector = null;
+  let injector: Injector;
 
   before(async() =>  {
     await app.start();
