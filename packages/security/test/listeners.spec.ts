@@ -42,9 +42,9 @@ describe('Security:Listeners', () => {
     const kernel = injector.get(Kernel);
     const def = findRouteDefinition(kernel.getRouteDefinitions(), 'test_index');
     const request = new Request('HTTP');
-    let exception: UnauthorizedException = null;
+    let exception: UnauthorizedException;
     try {
-      let response: Response = await def.handler(request);
+      await def.handler(request);
     } catch (e) {
       if (e instanceof UnauthorizedException) {
         exception = e;
@@ -58,7 +58,7 @@ describe('Security:Listeners', () => {
     const def = findRouteDefinition(kernel.getRouteDefinitions(), 'test_index');
     const request = new Request('HTTP');
     request.params.set('bearer', 'invalid');
-    let exception: UnauthorizedException = null;
+    let exception: UnauthorizedException;
     try {
       await def.handler(request);
     } catch (e) {

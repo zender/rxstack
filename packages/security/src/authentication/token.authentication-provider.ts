@@ -44,7 +44,7 @@ export class TokenAuthenticationProvider implements AuthenticationProviderInterf
   }
 
   private async getUserFromPayload(payload: Object): Promise<UserInterface> {
-    if (!payload[this.config.user_identity_field]) {
+    if (!payload || !payload[this.config.user_identity_field]) {
       throw new BadCredentialsException('Identity field is not in the payload.');
     }
     return this.userProvider.loadUserByUsername(payload[this.config.user_identity_field], payload);

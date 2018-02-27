@@ -42,10 +42,10 @@ describe('Security:AuthenticationProviderManager', () => {
     injector.get(AuthListener).successCalled.should.be.true;
   });
 
-  it('should throw an exception if user pass is invalid', async () => {
+  it('should throw an exception if user password is invalid', async () => {
     const token = new UsernameAndPasswordToken('admin', 'invalid');
     const manager = injector.get(AuthenticationProviderManager);
-    let exception = null;
+    let exception;
     try {
       await manager.authenticate(token);
     } catch (e) {

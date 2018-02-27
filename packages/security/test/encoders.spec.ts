@@ -29,7 +29,7 @@ describe('Security:Encoder', () => {
     encoder.getName().should.be.equal('plain-text');
   });
 
-  it('should get encoder from user with defined one', async () => {
+  it('should get encoder from user with defined encoder', async () => {
     let user = new TestUserWithEncoder('admin', 'pass', ['ADMIN']);
     let encoder = injector.get(EncoderFactory).getEncoder(user);
     encoder.getName().should.be.equal('plain-text');

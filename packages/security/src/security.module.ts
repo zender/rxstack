@@ -59,11 +59,12 @@ export class SecurityModule {
           provide: SecurityController,
           useFactory: (authManager: AuthenticationProviderManager,
                        tokenManager: TokenManagerInterface,
-                       refreshTokenManager: RefreshTokenManagerInterface
+                       refreshTokenManager: RefreshTokenManagerInterface,
+                       dispatcher: AsyncEventDispatcher
           ) => {
-            return new SecurityController(authManager, tokenManager, refreshTokenManager);
+            return new SecurityController(authManager, tokenManager, refreshTokenManager, dispatcher);
           },
-          deps: [AuthenticationProviderManager, TOKEN_MANAGER, REFRESH_TOKEN_MANAGER]
+          deps: [AuthenticationProviderManager, TOKEN_MANAGER, REFRESH_TOKEN_MANAGER, AsyncEventDispatcher]
         },
         {
           provide: REFRESH_TOKEN_MANAGER,

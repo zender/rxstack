@@ -46,7 +46,7 @@ export class AuthenticationProviderManager {
   private async doAuthenticate(token: TokenInterface): Promise<TokenInterface> {
     return Array.from(this.providers.values()).reduce(
       async (current: Promise<TokenInterface>, provider): Promise<TokenInterface> => {
-        let authToken = await current;
+        const authToken = await current;
         if (authToken || !provider.support(token)) {
           return authToken;
         }

@@ -18,16 +18,17 @@ export class UserProviderManager {
 
   async loadUserByUsername(username: string, payload?: any): Promise<UserInterface> {
     const user = await this.findUser(username, payload);
-    if (!user)
+    if (!user) {
       throw new UserNotFoundException(username);
-    else
+    } else {
       return user;
+    }
   }
 
   private async findUser(username: string, payload?: Object): Promise<UserInterface> {
     return Array.from(this.providers.values()).reduce(
       async (current: Promise<UserInterface>, provider): Promise<UserInterface> => {
-        let user = await current;
+        const user = await current;
         if (user) {
           return user;
         }

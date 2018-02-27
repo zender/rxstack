@@ -9,13 +9,24 @@ export class TestTokenManager implements TokenManagerInterface {
   }
 
   async decode(token: string): Promise<Object> {
-    if (token !== 'generated-token') {
-      return null;
+    if (token === 'generated-token') {
+      return {
+        'username': 'admin',
+        'roles': ['ADMIN']
+      };
     }
 
-    return {
-      'username': 'admin',
-      'roles': ['ADMIN']
-    };
+    if (token === 'no-username') {
+      return {
+        'nousername': 'none',
+        'roles': ['ADMIN']
+      };
+    }
+
+    if (token === 'invalid') {
+      throw new Error('Invalid token');
+    }
+
+    return null;
   }
 }

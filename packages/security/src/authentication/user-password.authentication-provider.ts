@@ -21,6 +21,10 @@ export class UserPasswordAuthenticationProvider implements AuthenticationProvide
     token.setUser(user);
     token.setAuthenticated(true);
     token.setFullyAuthenticated(true);
+    token.setPayload({
+      username: user.username,
+      roles: user.roles
+    });
     return token;
   }
 
