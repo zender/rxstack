@@ -4,7 +4,7 @@ import {readFile} from '../utils';
 
 @Injectable()
 export class KeyLoader {
-  constructor(protected config: JwtConfiguration) {}
+  constructor(protected config: JwtConfiguration) { }
 
   async loadPrivateKey(): Promise<Buffer|string> {
     if (this.config.secret instanceof Rsa) {

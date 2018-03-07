@@ -1,0 +1,11 @@
+import {Controller, Response, Route} from '../../../src/kernel';
+import {Injectable} from 'injection-js';
+
+@Injectable()
+@Controller('/mock')
+export class MockController {
+  @Route('GET', '/index', 'mock_index')
+  async indexAction(): Promise<Response> {
+    return new Response('something');
+  }
+}

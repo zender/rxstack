@@ -21,7 +21,6 @@ import {InMemoryRefreshTokenManager} from './services/in-memory.refresh-token.ma
 import { BootstrapListener } from './event-listeners/bootstrap-listener';
 import {SecurityController} from './controllers/security-controller';
 import {AsyncEventDispatcher} from '@rxstack/async-event-dispatcher';
-import {Logger} from '@rxstack/logger';
 import {TokenAuthenticationProvider} from './authentication/token.authentication-provider';
 
 export const AUTH_PROVIDER_REGISTRY = new InjectionToken<AuthenticationProviderInterface[]>('AUTH_PROVIDER_REGISTRY');
