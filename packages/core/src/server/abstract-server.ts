@@ -102,6 +102,13 @@ export abstract class AbstractServer {
   }
 
   /**
+   * Name of the server
+   *
+   * @returns {string}
+   */
+  abstract getName(): string;
+
+  /**
    * Logger
    *
    * @returns {Logger}

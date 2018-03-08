@@ -3,3 +3,4 @@ export * from './server-manager';
 export * from './server-events';
 export * from './server-configuration.event';
 export * from './socket.event';
+export * from './interfaces';

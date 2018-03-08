@@ -8,6 +8,7 @@ import {application_environment} from '../environments/application_environment';
 import {MockServer} from './mocks/mock.server';
 import {MockService} from './mocks/mock.service';
 import {MockService2} from './mocks/mock.service2';
+import {ServerManager} from '../../src/server';
 
 describe('Application', () => {
   // Setup application
@@ -28,7 +29,8 @@ describe('Application', () => {
   });
 
   it('should start the servers', async () => {
-    injector.get(MockServer).started.should.be.true;
+    const manager = injector.get(ServerManager);
+    manager.getByName('mock')['started'].should.be.true;
   });
 
   it('should resolve injector aware services', async () => {
@@ -46,6 +48,7 @@ describe('Application', () => {
 
   it('should stop the servers', async () => {
     app.stop();
-    injector.get(MockServer).started.should.be.false;
+    const manager = injector.get(ServerManager);
+    manager.getByName('mock')['started'].should.be.false;
   });
 });

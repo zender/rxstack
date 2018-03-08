@@ -5,10 +5,11 @@ import {MockServer} from './mock.server';
 import {BootstrapListener} from './bootstrap-listener';
 import {ProviderDefinition} from '../../../src/application';
 import {application_environment} from '../../environments/application_environment';
+import {SERVER_REGISTRY} from '../../../src/server';
 
 export const APP_PROVIDERS: ProviderDefinition[] = [
   { provide: BootstrapListener, useClass: BootstrapListener },
-  { provide: MockServer, useClass: MockServer },
+  { provide: SERVER_REGISTRY, useClass: MockServer, multi: true },
   { provide: MockController, useClass: MockController },
 ];
 

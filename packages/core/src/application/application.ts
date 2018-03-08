@@ -1,6 +1,6 @@
 import 'reflect-metadata';
 import {Injector, ReflectiveInjector, ResolvedReflectiveProvider} from 'injection-js';
-import {Kernel, metadataStorage as kernelMedatastorage} from '../kernel';
+import {Kernel} from '../kernel';
 import {
   AsyncEventDispatcher, EVENT_LISTENER_KEY, EventListenerMetadata,
   ObserverMetadata
@@ -11,7 +11,6 @@ import {
   MODULE_KEY, ModuleInterface, ModuleMetadata, ModuleType,
   ProviderDefinition
 } from './interfaces';
-import {metadataStorage, ServiceRegistryMetadata} from '@rxstack/service-registry';
 import {ServerManager} from '../server';
 import {CORE_PROVIDERS} from './CORE_PROVDERS';
 import {ApplicationOptions} from './application-options';
@@ -29,7 +28,6 @@ export class Application {
 
   async stop(): Promise<void> {
     await this.stopServers();
-    // kernelMedatastorage.reset();
     this.providers = [];
   }
 
@@ -92,12 +90,6 @@ export class Application {
   private async startServers(): Promise<void> {
     const routeDefinitions = this.injector.get(Kernel).getRouteDefinitions();
     const manager = this.injector.get(ServerManager);
-    metadataStorage.all(ServerManager.ns).forEach((metadata: ServiceRegistryMetadata) => {
-      const server = this.injector.get(metadata.target, false);
-      if (server) {
-        manager.servers.set(metadata.name, this.injector.get(metadata.target));
-      }
-    });
     await manager.start(routeDefinitions);
   }
 

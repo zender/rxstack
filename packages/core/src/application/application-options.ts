@@ -4,6 +4,6 @@ export class ApplicationOptions {
   logger: LoggerConfiguration;
 
   constructor(obj?: any) {
-    this.logger = obj.loger;
+    this.logger = new LoggerConfiguration(obj.logger);
   }
 }

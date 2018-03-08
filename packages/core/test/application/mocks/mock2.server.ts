@@ -1,8 +1,8 @@
-import {ServiceRegistry} from '@rxstack/service-registry';
-import {AbstractServer, ServerManager} from '../../../src/server';
+import {AbstractServer} from '../../../src/server';
 import {RouteDefinition} from '../../../src/kernel';
+import {Injectable} from 'injection-js';
 
-@ServiceRegistry(ServerManager.ns, 'server.mock2')
+@Injectable()
 export class MockServer2 extends AbstractServer {
   started = false;
   getEngine(): any { }
@@ -11,6 +11,10 @@ export class MockServer2 extends AbstractServer {
   }
   async stopEngine(): Promise<void> {
     this.started = false;
+  }
+
+  getName(): string {
+    return 'mock2';
   }
 
   protected async configure(routeDefinitions: RouteDefinition[]): Promise<void> {
