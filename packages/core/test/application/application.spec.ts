@@ -31,6 +31,7 @@ describe('Application', () => {
   it('should start the servers', async () => {
     const manager = injector.get(ServerManager);
     manager.getByName('mock')['started'].should.be.true;
+    (typeof manager.getByName('mock')['injector']).should.be.equal('object');
   });
 
   it('should resolve injector aware services', async () => {

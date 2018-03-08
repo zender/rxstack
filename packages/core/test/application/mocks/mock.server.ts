@@ -1,10 +1,15 @@
 import {AbstractServer} from '../../../src/server';
 import {RouteDefinition} from '../../../src/kernel';
-import {Injectable} from 'injection-js';
+import {Injectable, Injector} from 'injection-js';
+import {InjectorAwareInterface} from '../../../src/application';
 
 @Injectable()
-export class MockServer extends AbstractServer {
+export class MockServer extends AbstractServer implements InjectorAwareInterface {
+  injector: Injector;
   started = false;
+  setInjector(injector: Injector): void {
+    this.injector = injector;
+  }
   getEngine(): any { }
   async startEngine(): Promise<void> {
     this.started = true;

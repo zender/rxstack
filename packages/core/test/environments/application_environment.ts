@@ -1,5 +1,6 @@
 export const application_environment = {
   app_name: 'My App',
+  skipServers: false,
   logger: {
     handlers: [
       {

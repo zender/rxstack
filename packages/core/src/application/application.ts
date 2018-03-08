@@ -16,26 +16,36 @@ import {CORE_PROVIDERS} from './CORE_PROVDERS';
 import {ApplicationOptions} from './application-options';
 
 export class Application {
-  private providers: ProviderDefinition[] = [];
+  private providers: ProviderDefinition[];
   private injector?: Injector;
   constructor(private module: ModuleInterface, private options: ApplicationOptions) {  }
 
-  async start(): Promise<void> {
+  async start(): Promise<this> {
+    this.providers = [];
     this.resolveModule(this.module);
-    this.injector = await this.bootstrap();
-    await this.startServers();
+    this.injector = await this.doBootstrap();
+
+    if (false === this.options.skipServers) {
+      const routeDefinitions = this.injector.get(Kernel).getRouteDefinitions();
+      const manager = this.injector.get(ServerManager);
+      await manager.start(routeDefinitions);
+    }
+    return this;
   }
 
-  async stop(): Promise<void> {
-    await this.stopServers();
-    this.providers = [];
+  async stop(): Promise<this> {
+    if (false === this.options.skipServers) {
+      const manager = this.injector.get(ServerManager);
+      await manager.stop();
+    }
+    return this;
   }
 
   getInjector(): Injector {
     return this.injector;
   }
 
-  private async bootstrap(): Promise<Injector> {
+  private async doBootstrap(): Promise<Injector> {
     return Promise.all(this.providers).then(async (providers) => {
       const resolvedProviders = ReflectiveInjector.resolve(CORE_PROVIDERS(this.options).concat(providers));
       const injector = ReflectiveInjector.fromResolvedProviders(resolvedProviders);
@@ -59,17 +69,17 @@ export class Application {
   }
 
   private getModuleMetadata(target: ModuleType): ModuleMetadata {
-
     const moduleMetadata: ModuleMetadata =
       Reflect.getMetadata(MODULE_KEY, target['module'] ? target['module'] : target);
-
     Array.isArray(target['imports']) ? moduleMetadata.imports.push(...target['imports']) : null;
     Array.isArray(target['providers']) ? moduleMetadata.providers.push(...target['providers']) : null;
     return moduleMetadata;
   }
 
   private resolveInjectorAwareService(service: Object, injector: Injector): void {
-    if (typeof service['setInjector'] !== 'undefined') {
+    if (Array.isArray(service)) {
+      service.forEach((s: Object) => this.resolveInjectorAwareService(s, injector));
+    } else if (typeof service['setInjector'] !== 'undefined') {
       service['setInjector'](injector);
     }
   }
@@ -85,16 +95,5 @@ export class Application {
         );
       });
     }
-  }
-
-  private async startServers(): Promise<void> {
-    const routeDefinitions = this.injector.get(Kernel).getRouteDefinitions();
-    const manager = this.injector.get(ServerManager);
-    await manager.start(routeDefinitions);
-  }
-
-  private async stopServers(): Promise<void> {
-    const manager = this.injector.get(ServerManager);
-    await manager.stop();
   }
 }
