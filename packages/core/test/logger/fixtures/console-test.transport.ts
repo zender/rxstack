@@ -1,4 +1,4 @@
-import {ConsoleTransport} from '../../src/logger/transports';
+import {ConsoleTransport} from '../../../src/logger/transports/index';
 
 const winston = require('winston');
 

@@ -1,4 +1,4 @@
-import {ConsoleTestTransport} from './console-test.transport';
+import {ConsoleTestTransport} from './fixtures/console-test.transport';
 import * as _ from 'lodash';
 import {Logger} from '../../src/logger';
 const stdMocks = require('std-mocks');
