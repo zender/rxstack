@@ -6,7 +6,8 @@ import {Logger, LOGGER_TRANSPORT_REGISTRY} from '../logger';
 import {Provider} from 'injection-js';
 import {ApplicationOptions} from './application-options';
 import {LoggerTransportInterface} from '../logger/interfaces';
-import {NoopServer} from '../server/noop.server';
+import {NoopHttpServer} from '../server/noop-http.server';
+import {NoopWebsocketServer} from '../server/noop-websocket.server';
 
 export const CORE_PROVIDERS = function (options: ApplicationOptions): Provider[]  {
   return [
@@ -21,13 +22,14 @@ export const CORE_PROVIDERS = function (options: ApplicationOptions): Provider[]
       },
       deps: [LOGGER_TRANSPORT_REGISTRY]
     },
-    { provide: SERVER_REGISTRY, useClass: NoopServer, multi: true },
+    { provide: SERVER_REGISTRY, useClass: NoopHttpServer, multi: true },
+    { provide: SERVER_REGISTRY, useClass: NoopWebsocketServer, multi: true },
     {
       provide: ServerManager,
-      useFactory: (registry: AbstractServer[]) => {
-        return new ServerManager(registry);
+      useFactory: (registry: AbstractServer[], kernel: Kernel) => {
+        return new ServerManager(registry, kernel);
       },
-      deps: [SERVER_REGISTRY]
+      deps: [SERVER_REGISTRY, Kernel]
     }
   ];
 };

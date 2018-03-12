@@ -1,39 +1,25 @@
-import {metadataStorage} from './metadata-storage';
 import {HttpMethod} from '../interfaces';
+import {httpMetadataStorage, webSocketMetadataStorage} from './metadata-storage';
 
-/**
- * Decorator is used to mark a class as a controller
- *
- * @param {string} path
- * @returns {ClassDecorator}
- * @constructor
- */
-export function Controller(path: string): ClassDecorator {
-  return function (target: Function): void {
-    metadataStorage.addControllerMetadata({
-      target: target,
-      path: path
-    });
-  };
-}
-
-/**
- * Decorator is used to mark a method as a route
- *
- * @param {HttpMethod} httpMethod
- * @param {string} path
- * @param {string} name
- * @returns {MethodDecorator}
- * @constructor
- */
-export function Route<T>(httpMethod: HttpMethod, path: string, name: string): MethodDecorator {
+export function Http<T>(httpMethod: HttpMethod, path: string, name: string): MethodDecorator {
   return function (target: Function, propertyKey: string): void {
-    metadataStorage.addRouteMetadata({
+    httpMetadataStorage.add({
       'target': target.constructor,
       'name': name,
       'path': path,
       'httpMethod': httpMethod,
       'propertyKey': propertyKey,
+    });
+  };
+}
+
+export function WebSocket<T>(eventName: string, ns = '/'): MethodDecorator {
+  return function (target: Function, propertyKey: string): void {
+    webSocketMetadataStorage.add({
+      'target': target.constructor,
+      'name': eventName,
+      'propertyKey': propertyKey,
+      'ns': ns
     });
   };
 }

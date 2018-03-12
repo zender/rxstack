@@ -1,16 +1,17 @@
 import {Injectable} from 'injection-js';
-import {Controller, Route} from '../../../src/kernel/metadata';
 import {Request, Response} from '../../../src/kernel/models';
+import {Http, WebSocket} from '../../../src/kernel/metadata';
 
 @Injectable()
-@Controller('/annotated')
 export class AnnotatedController {
-  @Route('GET', '/', 'annotated_index')
+  @Http('GET', '/annotated', 'annotated_index')
+  @WebSocket('annotated_index')
   async indexAction(request: Request): Promise<Response> {
     return new Response('AnnotatedController::indexAction');
   }
 
-  @Route('GET', '/exception', 'annotated_exception')
+  @Http('GET', '/annotated/exception', 'annotated_exception')
+  @WebSocket('annotated_exception')
   async exceptionAction(request: Request): Promise<Response> {
     throw new Error('Exception');
   }

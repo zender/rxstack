@@ -1,11 +1,12 @@
 import 'reflect-metadata';
+
 import {Configuration} from '@rxstack/configuration';
 Configuration.initialize(__dirname + '/../environments', 'application_environment');
 import {Injector} from 'injection-js';
 import {Exception, InternalServerErrorException} from '@rxstack/exceptions';
 import {Kernel, Request, Response} from '../../src/kernel';
 import {Application} from '../../src/application';
-import {KernelModule} from './stubs/kernel.module';
+import {KernelModule} from './fixtures/kernel.module';
 import {application_environment} from '../environments/application_environment';
 
 describe('Kernel', () => {
@@ -26,7 +27,7 @@ describe('Kernel', () => {
   });
 
   it('should call controller index action', async () => {
-    const def = kernel.findRouteDefinition('annotated_index');
+    const def = kernel.httpDefinitions.find((item) => item.name === 'annotated_index');
     const request = new Request('HTTP');
     const response: Response = await def.handler(request);
     response.statusCode.should.be.equal(200);
@@ -34,8 +35,8 @@ describe('Kernel', () => {
   });
 
   it('should throw an exception', async () => {
-    const def = kernel.findRouteDefinition('annotated_exception');
-    const request = new Request('HTTP');
+    const def = kernel.webSocketDefinitions.find((item) => item.name === 'annotated_exception');
+    const request = new Request('SOCKET');
     let exception: Exception;
 
     try {
@@ -49,23 +50,23 @@ describe('Kernel', () => {
   });
 
   it('should stop after request event is dispatched', async () => {
-    const def = kernel.findRouteDefinition('annotated_index');
+    const def = kernel.httpDefinitions.find((item) => item.name === 'annotated_index');
     const request = new Request('HTTP');
     request.params.set('type', 'test_request_event');
     const response: Response = await def.handler(request);
     response.content.should.be.equal('modified_by_request_event');
   });
 
-  it('should stop after response event is dispatched', async () => {
-    const def = kernel.findRouteDefinition('annotated_index');
+  it('should modify response after response event is dispatched', async () => {
+    const def = kernel.httpDefinitions.find((item) => item.name === 'annotated_index');
     const request = new Request('HTTP');
     request.params.set('type', 'test_response_event');
     let response: Response = await def.handler(request);
     response.content.should.be.equal('modified_by_response_event');
   });
 
-  it('should stop after exception event is dispatched', async () => {
-    const def = kernel.findRouteDefinition('annotated_exception');
+  it('should return response after exception event is dispatched', async () => {
+    const def = kernel.httpDefinitions.find((item) => item.name === 'annotated_exception');
     const request = new Request('HTTP');
     request.params.set('type', 'test_exception_event');
     const response: Response = await def.handler(request);
@@ -73,7 +74,7 @@ describe('Kernel', () => {
   });
 
   it('should throw different exception than original one after exception event is dispatched', async () => {
-    const def = kernel.findRouteDefinition('annotated_exception');
+    const def = kernel.httpDefinitions.find((item) => item.name === 'annotated_exception');
     const request = new Request('HTTP');
     request.params.set('type', 'test_exception_event_with_changed_exception');
     let exception;
@@ -86,7 +87,7 @@ describe('Kernel', () => {
   });
 
   it('should throw an exception after response event is dispatched', async () => {
-    const def = kernel.findRouteDefinition('annotated_index');
+    const def = kernel.httpDefinitions.find((item) => item.name === 'annotated_index');
     const request = new Request('HTTP');
     request.params.set('type', 'test_response_event_with_exception');
     let exception: Exception;
@@ -97,5 +98,11 @@ describe('Kernel', () => {
     }
     exception.should.be.instanceof(Exception);
     exception.message.should.be.equal('ExceptionInResponseEvent');
+  });
+
+  it('should reset', async () => {
+    kernel.reset();
+    kernel.httpDefinitions.length.should.be.equal(0);
+    kernel.webSocketDefinitions.length.should.be.equal(0);
   });
 });

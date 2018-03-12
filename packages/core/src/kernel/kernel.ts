@@ -1,7 +1,5 @@
-import {ResponseObject, RouteDefinition} from './interfaces';
+import {HttpDefinition, ResponseObject, WebSocketDefinition} from './interfaces';
 import {Injectable, Injector} from 'injection-js';
-import {ControllerMetadata} from './metadata/metadata';
-import {metadataStorage} from './metadata/metadata-storage';
 import {Request} from './models/request';
 import {AsyncEventDispatcher} from '@rxstack/async-event-dispatcher';
 import {transformToException} from '@rxstack/exceptions';
@@ -11,105 +9,83 @@ import {ResponseEvent} from './events/response-event';
 import {ExceptionEvent} from './events/exception-event';
 import {Logger} from '../logger';
 import {InjectorAwareInterface} from '../application';
+import {HttpMetadata, httpMetadataStorage, WebSocketMetadata, webSocketMetadataStorage} from './metadata';
 
 @Injectable()
 export class Kernel implements InjectorAwareInterface {
-  /**
-   * DI Injector
-   */
+
+  httpDefinitions: HttpDefinition[] = [];
+
+  webSocketDefinitions: WebSocketDefinition[] = [];
+
   private injector: Injector;
 
-  /**
-   * Route definitions
-   *
-   * @type {Array}
-   */
-  private routeDefinitions: RouteDefinition[];
-
-  /**
-   * Sets the injector
-   *
-   * @param {Injector} injector
-   */
   setInjector(injector: Injector): void {
     this.injector = injector;
   }
 
-  /**
-   * Initializes the kernel and registers route definitions.
-   */
   initialize(): void {
-    this.routeDefinitions = [];
-    metadataStorage.getControllerMetadataCollection().forEach((metadata: ControllerMetadata) => {
-      this.registerDefinition(metadata);
+    httpMetadataStorage.all.forEach((metadata: HttpMetadata) => {
+      this.registerHttpDefinition(metadata);
+    });
+    webSocketMetadataStorage.all.forEach((metadata: WebSocketMetadata) => {
+      this.registerWebSocketDefinition(metadata);
     });
   }
 
-  /**
-   * Retrieves route definitions
-   *
-   * @returns {RouteDefinition[]}
-   */
-  getRouteDefinitions(): RouteDefinition[] {
-    return this.routeDefinitions;
+  reset(): void {
+    this.httpDefinitions = [];
+    this.webSocketDefinitions = [];
   }
 
-  /**
-   * Finds RouteDefinition by name
-   *
-   * @param {string} name
-   * @returns {RouteDefinition}
-   */
-  findRouteDefinition (name: string): RouteDefinition {
-    const def = this.getRouteDefinitions().find((routeDef) => routeDef.routeName === name);
-    if (!def)
-      throw new Error('Route definition not found.');
-    return def;
-  };
-
-  /**
-   * Register route definitions
-   *
-   * @param {ControllerMetadata} controllerMetadata
-   */
-  private registerDefinition(controllerMetadata: ControllerMetadata): void {
+  private registerHttpDefinition(metadata: HttpMetadata): void {
     // controller instance
-    const controller: Object = this.injector.get(controllerMetadata.target, false);
+    const controller: Object = this.injector.get(metadata.target, false);
     if (!controller) {
       return;
     }
 
-    metadataStorage.getRouteMetadataCollection(controllerMetadata.target).forEach((routeMetadata) => {
-      // route path including controller prefix
-      const path = `${controllerMetadata.path}${routeMetadata.path}`.replace(new RegExp('/*$'), '');
+    const path = `${metadata.path}`.replace(new RegExp('/*$'), '');
 
-      this.routeDefinitions.push({
-        path: path,
-        routeName: routeMetadata.name,
-        method: routeMetadata.httpMethod,
-        handler: async (request: Request): Promise<ResponseObject> => {
-          request.method = routeMetadata.httpMethod;
-          request.basePath = controllerMetadata.path;
-          request.path = path;
-          request.routeName = routeMetadata.name;
-          request.controller = controller;
-          return this.process(request, controller, routeMetadata.propertyKey);
-        }
-      });
-
-      this.injector.get(Logger).source(this.constructor.name)
-        .debug(` registered ${routeMetadata.httpMethod} ${path} to ${controller.constructor.name}::${routeMetadata.propertyKey}`);
+    this.httpDefinitions.push({
+      path: path,
+      name: metadata.name,
+      method: metadata.httpMethod,
+      handler: async (request: Request): Promise<ResponseObject> => {
+        request.method = metadata.httpMethod;
+        request.path = path;
+        request.routeName = metadata.name;
+        request.controller = controller;
+        return this.process(request, controller, metadata.propertyKey);
+      }
     });
+
+    this.injector.get(Logger).source(this.constructor.name)
+      .debug(` registered http ${metadata.name}`);
   }
 
-  /**
-   * Process the request object
-   *
-   * @param {Request} request
-   * @param {Object} controller
-   * @param {string} propertyKey
-   * @returns {Promise<ResponseObject>}
-   */
+  private registerWebSocketDefinition(metadata: WebSocketMetadata): void {
+    // controller instance
+    const controller: Object = this.injector.get(metadata.target, false);
+    if (!controller) {
+      return;
+    }
+
+    this.webSocketDefinitions.push({
+      name: metadata.name,
+      ns: metadata.ns,
+      handler: async (request: Request): Promise<ResponseObject> => {
+        request.path = metadata.ns;
+        request.routeName = metadata.name;
+        request.controller = controller;
+        return this.process(request, controller, metadata.propertyKey);
+      }
+    });
+
+    this.injector.get(Logger).source(this.constructor.name)
+      .debug(` registered websocket ${metadata.name}`);
+  }
+
   private async process(request: Request, controller: Object, propertyKey: string): Promise<ResponseObject> {
     let response: ResponseObject;
     try {
@@ -138,13 +114,6 @@ export class Kernel implements InjectorAwareInterface {
     }
   }
 
-  /**
-   * Dispatched response event and returns response object or throws an exception
-   *
-   * @param {ResponseObject} response
-   * @param {Request} request
-   * @returns {Promise<ResponseObject>}
-   */
   private async handleResponse(response: ResponseObject, request: Request): Promise<ResponseObject> {
     try {
       const responseEvent = new ResponseEvent(request, response);

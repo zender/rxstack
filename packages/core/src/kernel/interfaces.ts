@@ -5,7 +5,7 @@ import {StreamableResponse} from './models/streamable-response';
 /**
  * Available http methods
  */
-export type HttpMethod = 'GET' | 'PUT' | 'PATCH' | 'POST' | 'DELETE';
+export type HttpMethod = 'HEAD' | 'GET' | 'PUT' | 'PATCH' | 'POST' | 'DELETE';
 
 /**
  * Available transports
@@ -17,15 +17,21 @@ export type Transport = 'HTTP' | 'SOCKET';
  */
 export type ResponseObject = Response | StreamableResponse;
 
-/**
- * Route Definition
- */
-export interface RouteDefinition {
-  path: string;
-  routeName: string;
-  method: HttpMethod;
+export interface BaseDefinition {
+  name: string;
   handler: (request: Request) => Promise<Response>;
 }
+
+export interface HttpDefinition extends BaseDefinition {
+  path: string;
+  method: HttpMethod;
+}
+
+export interface WebSocketDefinition extends BaseDefinition {
+  ns: string;
+}
+
+export type TransportDefinition = HttpDefinition | WebSocketDefinition;
 
 export interface UserInterface {
   username: string;

@@ -1,6 +1,6 @@
 import { Server as HttpServer } from 'http';
 import {Injector} from 'injection-js';
-import {RouteDefinition} from '../kernel';
+import {Transport, TransportDefinition} from '../kernel';
 import {Logger} from '../logger';
 
 /**
@@ -54,7 +54,7 @@ export abstract class AbstractServer {
   /**
    * Kicks off the server
    */
-  async start(routeDefinitions: RouteDefinition[]): Promise<void> {
+  async start(routeDefinitions: TransportDefinition[]): Promise<void> {
     await this.configure(routeDefinitions);
     await this.startEngine();
   }
@@ -109,6 +109,13 @@ export abstract class AbstractServer {
   abstract getName(): string;
 
   /**
+   * Transport type
+   *
+   * @returns {Transport}
+   */
+  abstract getTransport(): Transport;
+
+  /**
    * Logger
    *
    * @returns {Logger}
@@ -123,5 +130,5 @@ export abstract class AbstractServer {
    * @param {RouteDefinition[]} routeDefinitions
    * @returns {Promise<void>}
    */
-  protected abstract async configure(routeDefinitions: RouteDefinition[]): Promise<void>;
+  protected abstract async configure(routeDefinitions: TransportDefinition[]): Promise<void>;
 }

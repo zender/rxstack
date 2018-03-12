@@ -26,9 +26,8 @@ export class Application {
     this.injector = await this.doBootstrap();
 
     if (false === this.options.skipServers) {
-      const routeDefinitions = this.injector.get(Kernel).getRouteDefinitions();
       const manager = this.injector.get(ServerManager);
-      await manager.start(routeDefinitions);
+      await manager.start();
     }
     return this;
   }

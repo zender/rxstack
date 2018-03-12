@@ -1,18 +1,16 @@
 import {HttpMethod} from '../interfaces';
 
-/**
- * Contains controller metadata
- */
-export class ControllerMetadata {
+export class BaseMetadata {
   target: Function;
-  path: string;
-}
-
-/**
- * Contains route metadata
- */
-export class RouteMetadata extends ControllerMetadata {
-  httpMethod: HttpMethod;
   name: string;
   propertyKey: string;
+}
+
+export class HttpMetadata extends BaseMetadata {
+  path: string;
+  httpMethod: HttpMethod;
+}
+
+export class WebSocketMetadata extends BaseMetadata {
+  ns: string;
 }

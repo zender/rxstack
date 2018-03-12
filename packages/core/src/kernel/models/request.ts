@@ -36,11 +36,6 @@ export class Request {
   attributes: AttributeBag;
 
   /**
-   * Base path
-   */
-  basePath: string;
-
-  /**
    * Route path
    */
   path: string;
@@ -48,7 +43,7 @@ export class Request {
   /**
    * Http method
    */
-  method: HttpMethod;
+  method?: HttpMethod;
 
   /**
    * Controller instance

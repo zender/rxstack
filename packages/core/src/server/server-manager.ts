@@ -1,19 +1,21 @@
 import {AbstractServer} from './abstract-server';
-import {RouteDefinition} from '../kernel';
 import {Injectable} from 'injection-js';
+import {Kernel} from '../kernel';
 
 @Injectable()
 export class ServerManager {
   servers: Map<string, AbstractServer> = new Map();
 
-  constructor(registry: AbstractServer[]) {
+  constructor(registry: AbstractServer[], private kernel: Kernel) {
     registry.forEach((server) => this.servers.set(server.getName(), server));
   }
 
-  async start(routeDefinitions: RouteDefinition[]): Promise<void> {
+  async start(): Promise<void> {
     Array.from(this.servers.values()).reduce(async (current: Promise<void>, server: AbstractServer): Promise<void> => {
       current.then(async () => {
-        await server.start(routeDefinitions);
+        const definitions = server.getTransport() === 'HTTP'
+          ? this.kernel.httpDefinitions : this.kernel.webSocketDefinitions;
+        await server.start(definitions);
       });
     }, Promise.resolve(null));
   }
