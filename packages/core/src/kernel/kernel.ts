@@ -25,10 +25,10 @@ export class Kernel implements InjectorAwareInterface {
   }
 
   initialize(): void {
-    httpMetadataStorage.all.forEach((metadata: HttpMetadata) => {
+    httpMetadataStorage.all().forEach((metadata: HttpMetadata) => {
       this.registerHttpDefinition(metadata);
     });
-    webSocketMetadataStorage.all.forEach((metadata: WebSocketMetadata) => {
+    webSocketMetadataStorage.all().forEach((metadata: WebSocketMetadata) => {
       this.registerWebSocketDefinition(metadata);
     });
   }

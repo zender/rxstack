@@ -23,5 +23,4 @@ describe('Utils', () => {
     (result.includes('TestSource'));
     (result.includes('some value'));
   });
-
 });

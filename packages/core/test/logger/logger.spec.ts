@@ -1,6 +1,8 @@
+import 'reflect-metadata';
 import {ConsoleTestTransport} from './fixtures/console-test.transport';
 import * as _ from 'lodash';
 import {Logger} from '../../src/logger';
+import {Exception} from '@rxstack/exceptions';
 const stdMocks = require('std-mocks');
 
 describe('Logger', () => {
@@ -49,5 +51,39 @@ describe('Logger', () => {
     _.forEach(output.stdout, (message: string, i: number) => {
       message.includes(types[i]).should.be.true;
     });
+  });
+
+  it('should throw an exception if transport does not exist', () => {
+    let exception: Exception;
+    try {
+      new Logger([new ConsoleTestTransport()], [
+        {
+          type: 'none',
+          options: {
+            level: 'silly',
+          }
+        }
+      ]);
+    } catch (e) {
+      exception = e;
+    }
+    exception.should.be.instanceOf(Exception);
+  });
+
+  it('should throw an exception if transport is already registered', () => {
+    let exception: Exception;
+    try {
+      new Logger([new ConsoleTestTransport(), new ConsoleTestTransport()], [
+        {
+          type: 'console.test',
+          options: {
+            level: 'silly',
+          }
+        }
+      ]);
+    } catch (e) {
+      exception = e;
+    }
+    exception.should.be.instanceOf(Exception);
   });
 });

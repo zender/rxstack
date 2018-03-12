@@ -1,5 +1,6 @@
 import {LoggerHandler, LoggerTransportInterface, LoggingLevel} from './interfaces';
 import {Injectable} from 'injection-js';
+import {Exception} from '@rxstack/exceptions';
 const winstonLogger = require('winston');
 
 @Injectable()
@@ -51,7 +52,7 @@ export class Logger {
 
   private registerTransport(transport: LoggerTransportInterface): this {
     if (this.transports.has(transport.getName())) {
-      throw new Error(`Transport "${transport.getName()}" already exists.`);
+      throw new Exception(`Transport "${transport.getName()}" already exists.`);
     }
     this.transports.set(transport.getName(), transport);
     return this;
@@ -61,7 +62,7 @@ export class Logger {
     winstonLogger.clear();
     handlers.forEach((handler) => {
       if (!this.transports.has(handler.type)) {
-        throw new Error(`Transport "${handler.type}" does not exist.`);
+        throw new Exception(`Transport "${handler.type}" does not exist.`);
       }
       const transportInstance = this.transports.get(handler.type).createInstance(handler.options);
       winstonLogger.add(transportInstance);

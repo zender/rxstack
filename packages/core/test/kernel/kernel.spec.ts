@@ -1,5 +1,4 @@
 import 'reflect-metadata';
-
 import {Configuration} from '@rxstack/configuration';
 Configuration.initialize(__dirname + '/../environments', 'application_environment');
 import {Injector} from 'injection-js';
@@ -65,7 +64,7 @@ describe('Kernel', () => {
     response.content.should.be.equal('modified_by_response_event');
   });
 
-  it('should return response after exception event is dispatched', async () => {
+  it('should catch exception and return response', async () => {
     const def = kernel.httpDefinitions.find((item) => item.name === 'annotated_exception');
     const request = new Request('HTTP');
     request.params.set('type', 'test_exception_event');

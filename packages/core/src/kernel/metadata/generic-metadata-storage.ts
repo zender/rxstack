@@ -3,10 +3,14 @@ import {BaseMetadata} from './metadata';
 
 export class GenericMetadataStorage<T extends BaseMetadata> {
 
-  all: T[] = [];
+  private items: T[] = [];
+
+  all(): T[] {
+    return this.items;
+  }
 
   get(name: string): T {
-    return this.all.find(metadata => metadata.name === name);
+    return this.all().find(metadata => metadata.name === name);
   }
 
   has(name: string): boolean {
@@ -16,19 +20,19 @@ export class GenericMetadataStorage<T extends BaseMetadata> {
   add(metadata: T): void {
     if (this.has(metadata.name))
       throw new Exception(`${metadata.name} metadata already exists.`);
-    this.all.push(metadata);
+    this.all().push(metadata);
   }
 
   remove(name: string): void {
-    const idx = this.all
+    const idx = this.all()
       .findIndex((metadata) => metadata.name === name);
     if (idx === -1)
       throw new Exception(`${name} metadata does not exist.`);
-    this.all.splice(idx, 1);
+    this.all().splice(idx, 1);
   }
   
   reset(): void {
-    this.all = [];
+    this.items = [];
   }
 }
 

@@ -1,3 +1,5 @@
+import {Configuration} from '@rxstack/configuration';
+Configuration.initAppDirectory();
 import {Request} from '../../src/kernel/models/request';
 import {HeaderBag} from '../../src/kernel/models/header-bag';
 import {ParameterBag} from '../../src/kernel/models/parameter-bag';
@@ -7,7 +9,7 @@ import {Response} from '../../src/kernel/models/response';
 import {File} from '../../src/kernel/models/file';
 import {StreamableResponse} from '../../src/kernel/models/streamable-response';
 import {RangeNotSatisfiableException} from '@rxstack/exceptions';
-const rootPath = process.mainModule['paths'][0].split('node_modules')[0].slice(0, -1);
+const rootPath = process.env.APP_DIR;
 
 describe('Models', () => {
   it('should initialize request', async () => {

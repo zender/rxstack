@@ -1,3 +1,4 @@
+import 'reflect-metadata';
 import {Injectable} from 'injection-js';
 import {Request, Response} from '../../../src/kernel/models';
 import {Http, WebSocket} from '../../../src/kernel/metadata';
