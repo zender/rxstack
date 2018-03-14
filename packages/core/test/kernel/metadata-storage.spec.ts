@@ -16,14 +16,16 @@ describe('MetadataStorage', () => {
       'target': AnnotatedController,
       'name': 'annotated_index',
       'propertyKey': 'indexAction',
-      'ns': '/'
+      'ns': '/',
+      'transport': 'SOCKET'
     });
 
     storage.add({
       'target': AnnotatedController,
       'name': 'annotated_exception',
       'propertyKey': 'exceptionAction',
-      'ns': '/'
+      'ns': '/',
+      'transport': 'SOCKET'
     });
     storage.all().length.should.be.equal(2);
   });
@@ -35,7 +37,8 @@ describe('MetadataStorage', () => {
         'target': AnnotatedController,
         'name': 'annotated_index',
         'propertyKey': 'indexAction',
-        'ns': '/'
+        'ns': '/',
+        'transport': 'SOCKET'
       });
     } catch (e) {
       exception = e;

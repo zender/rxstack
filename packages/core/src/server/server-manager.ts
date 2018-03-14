@@ -6,8 +6,12 @@ import {Kernel} from '../kernel';
 export class ServerManager {
   servers: Map<string, AbstractServer> = new Map();
 
-  constructor(registry: AbstractServer[], private kernel: Kernel) {
-    registry.forEach((server) => this.servers.set(server.getName(), server));
+  constructor(registry: AbstractServer[], private kernel: Kernel, enabledServers: string[]) {
+    registry.forEach((server) => {
+      if (enabledServers.findIndex((value) => value === server.getName()) > -1) {
+        this.servers.set(server.getName(), server);
+      }
+    });
   }
 
   async start(): Promise<void> {

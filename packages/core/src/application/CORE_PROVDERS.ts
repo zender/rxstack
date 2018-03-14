@@ -27,7 +27,7 @@ export const CORE_PROVIDERS = function (options: ApplicationOptions): Provider[]
     {
       provide: ServerManager,
       useFactory: (registry: AbstractServer[], kernel: Kernel) => {
-        return new ServerManager(registry, kernel);
+        return new ServerManager(registry, kernel, options.servers);
       },
       deps: [SERVER_REGISTRY, Kernel]
     }

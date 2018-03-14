@@ -24,19 +24,14 @@ export class Application {
     this.providers = [];
     this.resolveModule(this.module);
     this.injector = await this.doBootstrap();
-
-    if (false === this.options.skipServers) {
-      const manager = this.injector.get(ServerManager);
-      await manager.start();
-    }
+    const manager = this.injector.get(ServerManager);
+    await manager.start();
     return this;
   }
 
   async stop(): Promise<this> {
-    if (false === this.options.skipServers) {
-      const manager = this.injector.get(ServerManager);
-      await manager.stop();
-    }
+    const manager = this.injector.get(ServerManager);
+    await manager.stop();
     return this;
   }
 

@@ -1,12 +1,10 @@
 import {HttpDefinition, ResponseObject, WebSocketDefinition} from './interfaces';
 import {Injectable, Injector} from 'injection-js';
-import {Request} from './models/request';
+import {Request} from './models';
 import {AsyncEventDispatcher} from '@rxstack/async-event-dispatcher';
 import {transformToException} from '@rxstack/exceptions';
 import {KernelEvents} from './kernel-events';
-import {RequestEvent} from './events/request-event';
-import {ResponseEvent} from './events/response-event';
-import {ExceptionEvent} from './events/exception-event';
+import {RequestEvent, ResponseEvent, ExceptionEvent} from './events';
 import {Logger} from '../logger';
 import {InjectorAwareInterface} from '../application';
 import {HttpMetadata, httpMetadataStorage, WebSocketMetadata, webSocketMetadataStorage} from './metadata';
@@ -26,10 +24,10 @@ export class Kernel implements InjectorAwareInterface {
 
   initialize(): void {
     httpMetadataStorage.all().forEach((metadata: HttpMetadata) => {
-      this.registerHttpDefinition(metadata);
+      this.registerDefinition(metadata);
     });
     webSocketMetadataStorage.all().forEach((metadata: WebSocketMetadata) => {
-      this.registerWebSocketDefinition(metadata);
+      this.registerDefinition(metadata);
     });
   }
 
@@ -38,15 +36,23 @@ export class Kernel implements InjectorAwareInterface {
     this.webSocketDefinitions = [];
   }
 
-  private registerHttpDefinition(metadata: HttpMetadata): void {
+  private registerDefinition(metadata: HttpMetadata|WebSocketMetadata): void {
     // controller instance
     const controller: Object = this.injector.get(metadata.target, false);
     if (!controller) {
       return;
     }
+    if (metadata.transport === 'HTTP') {
+      this.pushHttpDefinition(<HttpMetadata>metadata, controller);
+    } else {
+      this.pushWebSocketDefinition(<WebSocketMetadata>metadata, controller);
+    }
+    this.injector.get(Logger).source(this.constructor.name)
+      .debug(`registered ${metadata.transport} ${metadata.name}`);
+  }
 
+  private pushHttpDefinition(metadata: HttpMetadata, controller: Object): void {
     const path = `${metadata.path}`.replace(new RegExp('/*$'), '');
-
     this.httpDefinitions.push({
       path: path,
       name: metadata.name,
@@ -59,18 +65,9 @@ export class Kernel implements InjectorAwareInterface {
         return this.process(request, controller, metadata.propertyKey);
       }
     });
-
-    this.injector.get(Logger).source(this.constructor.name)
-      .debug(` registered http ${metadata.name}`);
   }
 
-  private registerWebSocketDefinition(metadata: WebSocketMetadata): void {
-    // controller instance
-    const controller: Object = this.injector.get(metadata.target, false);
-    if (!controller) {
-      return;
-    }
-
+  private pushWebSocketDefinition(metadata: WebSocketMetadata, controller: Object): void {
     this.webSocketDefinitions.push({
       name: metadata.name,
       ns: metadata.ns,
@@ -81,9 +78,6 @@ export class Kernel implements InjectorAwareInterface {
         return this.process(request, controller, metadata.propertyKey);
       }
     });
-
-    this.injector.get(Logger).source(this.constructor.name)
-      .debug(` registered websocket ${metadata.name}`);
   }
 
   private async process(request: Request, controller: Object, propertyKey: string): Promise<ResponseObject> {
@@ -93,8 +87,9 @@ export class Kernel implements InjectorAwareInterface {
       await this.injector.get(AsyncEventDispatcher).dispatch(KernelEvents.KERNEL_REQUEST, requestEvent);
       request = requestEvent.getRequest();
 
-      if (requestEvent.hasResponse())
+      if (requestEvent.hasResponse()) {
         return await this.handleResponse(requestEvent.getResponse(), request);
+      }
       // call controller
       response = await controller[propertyKey].call(controller, request);
       return await this.handleResponse(response, request);
@@ -105,8 +100,9 @@ export class Kernel implements InjectorAwareInterface {
         const exceptionEvent = new ExceptionEvent(exception, request);
         await this.injector.get(AsyncEventDispatcher).dispatch(KernelEvents.KERNEL_EXCEPTION, exceptionEvent);
         exception = exceptionEvent.getException();
-        if (exceptionEvent.hasResponse())
+        if (exceptionEvent.hasResponse()) {
           return await this.handleResponse(exceptionEvent.getResponse(), request);
+        }
         throw exception;
       } catch (e) {
         throw transformToException(e);

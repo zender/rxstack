@@ -1,6 +1,6 @@
 export const application_environment = {
   app_name: 'My App',
-  skipServers: false,
+  servers: ['noop-http', 'noop-websocket'],
   logger: {
     handlers: [
       {

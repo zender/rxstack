@@ -1,8 +1,9 @@
 import {GenericEvent} from '@rxstack/async-event-dispatcher';
 import {EventEmitter} from 'events';
+import {AbstractServer} from './abstract-server';
 
 export class SocketEvent extends GenericEvent {
-  constructor(public readonly socket: EventEmitter, public readonly name: string) {
+  constructor(public readonly socket: EventEmitter, public readonly server: AbstractServer, public readonly ns = '/') {
     super();
   }
 }

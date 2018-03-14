@@ -9,6 +9,7 @@ export function Http<T>(httpMethod: HttpMethod, path: string, name: string): Met
       'path': path,
       'httpMethod': httpMethod,
       'propertyKey': propertyKey,
+      'transport': 'HTTP'
     });
   };
 }
@@ -19,7 +20,8 @@ export function WebSocket<T>(eventName: string, ns = '/'): MethodDecorator {
       'target': target.constructor,
       'name': eventName,
       'propertyKey': propertyKey,
-      'ns': ns
+      'ns': ns,
+      'transport': 'SOCKET'
     });
   };
 }
