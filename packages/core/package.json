@@ -1,7 +1,7 @@
 {
   "name": "@rxstack/core",
   "version": "0.0.1",
-  "description": "RxStack Core Module",
+  "description": "RxStack Core",
   "private": false,
   "author": "Nikolay Gergiev <symfonist@gmail.com>",
   "license": "MIT",
@@ -22,7 +22,7 @@
     "@types/chai-as-promised": "0.0.30",
     "@types/gulp": "^4.0.2",
     "@types/mocha": "^2.2.40",
-    "@types/node": "^7.0.55",
+    "@types/node": "^7.0.56",
     "@types/sinon": "^1.16.36",
     "chai": "^3.4.1",
     "chai-as-promised": "^6.0.0",
@@ -58,7 +58,7 @@
     "lodash": "^4.17.5",
     "mime": "^2.1.0",
     "reflect-metadata": "^0.1.12",
-    "winston": "^3.0.0-rc1"
+    "winston": "^3.0.0-rc2"
   },
   "bugs": {
     "url": "https://github.com/rxstack/rxstack/issues"

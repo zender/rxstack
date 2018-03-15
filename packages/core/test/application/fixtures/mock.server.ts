@@ -1,19 +1,29 @@
 import {AbstractServer} from '../../../src/server';
-import {RouteDefinition} from '../../../src/kernel';
 import {Injectable, Injector} from 'injection-js';
 import {InjectorAwareInterface} from '../../../src/application';
+import {HttpDefinition, Transport} from '../../../src/kernel';
 
 @Injectable()
 export class MockServer extends AbstractServer implements InjectorAwareInterface {
   injector: Injector;
   started = false;
+
   setInjector(injector: Injector): void {
     this.injector = injector;
   }
-  getEngine(): any { }
+
+  getEngine(): any {
+    return 'mock-engine';
+  }
+
+  getTransport(): Transport {
+    return 'HTTP';
+  }
+
   async startEngine(): Promise<void> {
     this.started = true;
   }
+
   async stopEngine(): Promise<void> {
     this.started = false;
   }
@@ -22,7 +32,7 @@ export class MockServer extends AbstractServer implements InjectorAwareInterface
     return 'mock';
   }
 
-  protected async configure(routeDefinitions: RouteDefinition[]): Promise<void> {
+  protected async configure(routeDefinitions: HttpDefinition[]): Promise<void> {
     this.host = 'example.com';
     this.port = 8080;
   }

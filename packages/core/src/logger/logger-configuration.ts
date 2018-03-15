@@ -1,9 +1,9 @@
 import {LoggerHandler} from './interfaces';
 
 export class LoggerConfiguration {
-  handlers: LoggerHandler[];
+  handlers: LoggerHandler[] = [];
 
   constructor(obj: Object) {
-    this.handlers = Array.isArray(obj['handlers']) ? obj['handlers'] : [];
+    this.handlers = obj['handlers'];
   }
 }

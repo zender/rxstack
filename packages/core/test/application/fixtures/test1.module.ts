@@ -1,9 +1,9 @@
 import {Module} from '../../../src/application/decorators';
-import {MockService} from './mock.service';
 import {Test2Module} from './test2.module';
 import {ModuleWithProviders} from '../../../src/application/interfaces';
+import {Service2} from './service2';
 
-export interface Test1ModuleConfiguration {
+export class Test1ModuleConfiguration {
   name: string;
 }
 
@@ -14,7 +14,8 @@ export class Test1Module {
       module: Test1Module,
       imports: [Test2Module],
       providers: [
-        { provide: MockService, useClass: MockService },
+        { provide: Test1ModuleConfiguration, useValue: config },
+        { provide: Service2, useClass: Service2 },
       ]
     };
   }

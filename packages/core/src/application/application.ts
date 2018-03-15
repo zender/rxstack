@@ -18,7 +18,10 @@ import {ApplicationOptions} from './application-options';
 export class Application {
   private providers: ProviderDefinition[];
   private injector?: Injector;
-  constructor(private module: ModuleInterface, private options: ApplicationOptions) {  }
+  private options: ApplicationOptions;
+  constructor(private module: ModuleInterface, options: ApplicationOptions) {
+    this.options = new ApplicationOptions(options);
+  }
 
   async start(): Promise<this> {
     this.providers = [];
@@ -73,7 +76,7 @@ export class Application {
   private resolveInjectorAwareService(service: Object, injector: Injector): void {
     if (Array.isArray(service)) {
       service.forEach((s: Object) => this.resolveInjectorAwareService(s, injector));
-    } else if (typeof service['setInjector'] !== 'undefined') {
+    } else if (typeof service['setInjector'] === 'function') {
       service['setInjector'](injector);
     }
   }

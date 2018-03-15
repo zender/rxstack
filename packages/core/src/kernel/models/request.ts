@@ -58,12 +58,12 @@ export class Request {
   /**
    * Security token
    */
-  token: TokenInterface;
+  token?: TokenInterface;
 
   /**
    * Socket connection
    */
-  connection: EventEmitter;
+  connection?: EventEmitter;
 
   /**
    * Constructor

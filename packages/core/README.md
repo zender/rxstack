@@ -1,6 +1,6 @@
 # @rxstack/Core
 
-> The Core module.
+> The RxStack Core.
 
 ## Installation
 
