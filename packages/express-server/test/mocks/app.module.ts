@@ -1,21 +1,16 @@
 import {MockController} from './mock.controller';
-import {Module, ProviderDefinition} from '@rxstack/application';
 import {ExpressModule} from '../../src/express.module';
 import {ConfigurationListener} from './configuration.listener';
-import {environment} from '../environments/environment';
-import {BootstrapModule} from '@rxstack/application';
-
-export const APP_PROVIDERS: ProviderDefinition[] = [
-  { provide: MockController, useClass: MockController },
-  { provide: ConfigurationListener, useClass: ConfigurationListener },
-];
+import {Module} from '@rxstack/core';
+import {express_server_environment} from '../environments/express_server_environment';
 
 @Module({
   imports: [
-    BootstrapModule.configure(environment),
-    ExpressModule.configure(environment.express_server),
-
+    ExpressModule.configure(express_server_environment.express_server)
   ],
-  providers: APP_PROVIDERS
+  providers: [
+    { provide: MockController, useClass: MockController },
+    { provide: ConfigurationListener, useClass: ConfigurationListener },
+  ]
 })
 export class AppModule {}

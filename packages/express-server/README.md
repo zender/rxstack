@@ -1,6 +1,6 @@
 # @rxstack/express-server
 
-> The ExpressServer component.
+> The ExpressServer module.
 
 ## Installation
 

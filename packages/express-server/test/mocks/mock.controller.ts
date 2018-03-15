@@ -1,25 +1,24 @@
-import {Controller, Request, Response, Route, StreamableResponse} from '@rxstack/kernel';
+import {Http, Request, Response, StreamableResponse} from '@rxstack/core';
 import {NotFoundException} from '@rxstack/exceptions';
 
-@Controller('/mock')
 export class MockController {
 
-  @Route('GET', '/text', 'mock_text')
+  @Http('GET', '/mock/text', 'mock_text')
   async textAction(): Promise<Response> {
     return new Response('something');
   }
 
-  @Route('GET', '/json', 'mock_json')
+  @Http('GET', '/mock/json', 'mock_json')
   async jsonAction(request: Request): Promise<Response> {
     return new Response({'id': 'json'});
   }
 
-  @Route('POST', '/upload', 'mock_upload')
+  @Http('POST', '/mock/upload', 'mock_upload')
   async uploadAction(request: Request): Promise<Response> {
     return new Response(request.files.get('file'));
   }
 
-  @Route('GET', '/download', 'mock_download')
+  @Http('GET', '/mock/download', 'mock_download')
   async downloadAction(request: Request): Promise<StreamableResponse> {
     const path =  process.env.APP_DIR + '/test/assets/video.mp4';
     const response = new StreamableResponse(path);
@@ -28,13 +27,13 @@ export class MockController {
     return response;
   }
 
-  @Route('GET', '/stream', 'mock_stream')
+  @Http('GET', '/mock/stream', 'mock_stream')
   async streamAction(request: Request): Promise<StreamableResponse> {
     const path = process.env.APP_DIR + '/test/assets/video.mp4';
     return new StreamableResponse(path, request.headers.get('range'));
   }
 
-  @Route('GET', '/exception', 'mock_exception')
+  @Http('GET', '/mock/exception', 'mock_exception')
   async exceptionAction(request: Request): Promise<StreamableResponse> {
     if (parseInt(request.params.get('code')) === 404) {
       throw new NotFoundException();

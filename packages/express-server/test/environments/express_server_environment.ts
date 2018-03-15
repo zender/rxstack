@@ -1,4 +1,5 @@
-export const environment = {
+export const express_server_environment = {
+  servers: ['express'],
   logger: {
     handlers: [
       {

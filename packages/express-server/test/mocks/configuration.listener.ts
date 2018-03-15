@@ -1,9 +1,9 @@
 import {Observe} from '@rxstack/async-event-dispatcher';
-import {ServerConfigurationEvent, ServerEvents} from '@rxstack/server-commons';
 import {expressMiddleware, requestModifierMiddleware} from './express.middleware';
 import {Injectable, Injector} from 'injection-js';
 import {ExpressServer} from '../../src/express.server';
-import {environment} from '../environments/environment';
+import {ServerConfigurationEvent, ServerEvents} from '@rxstack/core';
+import {express_server_environment} from '../environments/express_server_environment';
 
 @Injectable()
 export class ConfigurationListener {
@@ -16,13 +16,13 @@ export class ConfigurationListener {
 
   @Observe(ServerEvents.CONFIGURE)
   async onConfigure(event: ServerConfigurationEvent): Promise<void> {
-    if (event.name !== ExpressServer.serverName) {
+    if (event.server.getName() !== ExpressServer.serverName) {
       return;
     }
 
-    event.engine
-      .get(environment.express_server.prefix + '/express-middleware', expressMiddleware(this.injector))
-      .get(environment.express_server.prefix + '/mock/json', requestModifierMiddleware(this.injector))
+    event.server.getEngine()
+      .get(express_server_environment.express_server.prefix + '/express-middleware', expressMiddleware(this.injector))
+      .get(express_server_environment.express_server.prefix + '/mock/json', requestModifierMiddleware(this.injector))
     ;
   }
 }

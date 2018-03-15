@@ -1,6 +1,6 @@
 import {ExpressServer} from './express.server';
-import {Module, ModuleWithProviders} from '@rxstack/application';
 import {ExpressServerConfiguration} from './express-server-configuration';
+import {Module, ModuleWithProviders, SERVER_REGISTRY} from '@rxstack/core';
 
 @Module()
 export class ExpressModule {
@@ -15,7 +15,7 @@ export class ExpressModule {
           },
           deps: []
         },
-        { provide: ExpressServer, useClass: ExpressServer },
+        { provide: SERVER_REGISTRY, useClass: ExpressServer, multi: true },
       ],
     };
   }

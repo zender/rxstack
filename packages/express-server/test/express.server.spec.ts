@@ -1,12 +1,12 @@
 import 'reflect-metadata';
 import {Configuration} from '@rxstack/configuration';
-Configuration.initialize(__dirname + '/environments');
+Configuration.initialize(__dirname + '/environments', 'express_server_environment');
 import {ExpressServer} from '../src/express.server';
-import {Application} from '@rxstack/application';
 import {AppModule} from './mocks/app.module';
 import {Injector} from 'injection-js';
 import {IncomingMessage} from 'http';
-import {Kernel} from '@rxstack/kernel';
+import {Application, ServerManager} from '@rxstack/core';
+import {express_server_environment} from './environments/express_server_environment';
 const rp = require('request-promise');
 const fs = require('fs-extra');
 
@@ -14,7 +14,7 @@ describe('ExpressServer', () => {
 
   // Setup application
   const assetsDir = process.env.APP_DIR + '/test/assets';
-  const app = new Application(AppModule);
+  const app = new Application(AppModule, express_server_environment);
   let injector: Injector;
   let host: string;
   let expressServer: ExpressServer;
@@ -22,7 +22,7 @@ describe('ExpressServer', () => {
   before(async() =>  {
     await app.start();
     injector = app.getInjector();
-    expressServer = injector.get(ExpressServer);
+    expressServer = <ExpressServer>injector.get(ServerManager).getByName('express');
     host = 'http://localhost:3200/api';
   });
 

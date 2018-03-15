@@ -7,19 +7,29 @@ import {
   Response as ExpressResponse
 } from 'express';
 import * as bodyParser from 'body-parser';
-import {Request, ResponseObject, RouteDefinition, StreamableResponse} from '@rxstack/kernel';
-import {AbstractServer, ServerConfigurationEvent, ServerManager, ServerEvents} from '@rxstack/server-commons';
+import {
+  Request, ResponseObject, HttpDefinition, StreamableResponse,
+  AbstractServer, ServerConfigurationEvent, ServerEvents, Transport
+} from '@rxstack/core';
 import * as compress from 'compression';
-import {ServiceRegistry} from '@rxstack/service-registry';
 import {AsyncEventDispatcher} from '@rxstack/async-event-dispatcher';
 import {ExpressServerConfiguration} from './express-server-configuration';
+import {Injectable} from 'injection-js';
 
-@ServiceRegistry(ServerManager.ns, ExpressServer.serverName)
+@Injectable()
 export class ExpressServer extends AbstractServer {
 
-  static serverName = 'server.express';
+  static serverName = 'express';
 
-  protected async configure(routeDefinitions: RouteDefinition[]): Promise<void> {
+  getTransport(): Transport {
+    return 'HTTP';
+  }
+
+  getName(): string {
+    return ExpressServer.serverName;
+  }
+
+  protected async configure(routeDefinitions: HttpDefinition[]): Promise<void> {
     const configuration = this.injector.get(ExpressServerConfiguration);
     const dispatcher = this.injector.get(AsyncEventDispatcher);
     this.host = configuration.host;
@@ -31,15 +41,14 @@ export class ExpressServer extends AbstractServer {
     this.engine.use(bodyParser.urlencoded({ extended: true }));
     this.engine.use(this.errorHandler());
 
-
     await dispatcher
-      .dispatch(ServerEvents.CONFIGURE, new ServerConfigurationEvent(this.engine, ExpressServer.serverName));
+      .dispatch(ServerEvents.CONFIGURE, new ServerConfigurationEvent(this));
     // register routes
     routeDefinitions.forEach(routeDefinition => this.registerRoute(routeDefinition, configuration));
     this.httpServer = http.createServer(<any>(this.engine));
   }
 
-  private createRequest(req: ExpressRequest, routeDefinition: RouteDefinition): Request {
+  private createRequest(req: ExpressRequest, routeDefinition: HttpDefinition): Request {
     const request = new Request('HTTP');
     request.path = routeDefinition.path;
     request.headers.fromObject(req.headers);
@@ -50,7 +59,7 @@ export class ExpressServer extends AbstractServer {
     return request;
   }
 
-  private async registerRoute(routeDefinition: RouteDefinition, configuration: ExpressServerConfiguration): Promise<void> {
+  private async registerRoute(routeDefinition: HttpDefinition, configuration: ExpressServerConfiguration): Promise<void> {
     const prefix: string = configuration.prefix;
     const path: string = prefix ? (prefix + routeDefinition.path) : routeDefinition.path;
 
@@ -76,18 +85,20 @@ export class ExpressServer extends AbstractServer {
     return (err: any, req: ExpressRequest, res: ExpressResponse, next: NextFunction): void => {
       const status = err.statusCode ? err.statusCode : 500;
 
-      if (status >= 500)
-        this.getLogger().error(err.message, err);
-      else
-        this.getLogger().debug(err.message, err);
+      if (status >= 500) {
+        this.getLogger().error(err.message);
+      } else {
+        this.getLogger().debug(err.message);
+      }
 
-      if (process.env.NODE_ENV === 'production' && status >= 500)
+      if (process.env.NODE_ENV === 'production' && status >= 500) {
         res.status(status).send({
           'statusCode': status,
           'message': 'Internal Server Error'
         });
-      else
+      } else {
         res.status(status).send(err);
+      }
     };
   }
 }
