@@ -1,7 +1,7 @@
 {
   "name": "@rxstack/socketio-server",
-  "version": "0.0.5",
-  "description": "RxStack SocketIO Server Component",
+  "version": "0.0.6",
+  "description": "RxStack SocketIO Server Module",
   "private": false,
   "author": "Nikolay Gergiev <symfonist@gmail.com>",
   "license": "MIT",
@@ -14,16 +14,16 @@
     "test": "gulp tests",
     "publish-package": "gulp publish"
   },
-  "dependencies": {
-    "@rxstack/application": "latest",
+  "peerDependencies": {
     "@rxstack/async-event-dispatcher": "latest",
     "@rxstack/exceptions": "latest",
-    "@rxstack/kernel": "latest",
-    "@rxstack/logger": "latest",
-    "@rxstack/server-commons": "latest",
-    "@rxstack/service-registry": "latest",
     "injection-js": "^2.1.0",
-    "reflect-metadata": "^0.1.12",
+    "reflect-metadata": "^0.1.12"
+  },
+  "dependencies": {
+    "@rxstack/core": "latest",
+    "@rxstack/async-event-dispatcher": "latest",
+    "@rxstack/exceptions": "latest",
     "socket.io": "^2.0.4"
   },
   "devDependencies": {
@@ -32,11 +32,11 @@
     "@types/chai-as-promised": "0.0.30",
     "@types/compression": "0.0.35",
     "@types/gulp": "^4.0.2",
-    "@types/lodash": "^4.14.100",
+    "@types/lodash": "^4.14.105",
     "@types/mocha": "^2.2.48",
-    "@types/node": "^7.0.52",
+    "@types/node": "^7.0.56",
     "@types/sinon": "^1.16.36",
-    "@types/socket.io": "^1.4.31",
+    "@types/socket.io": "^1.4.32",
     "chai": "^3.4.1",
     "chai-as-promised": "^6.0.0",
     "codecov": "^2.1.0",
@@ -59,7 +59,7 @@
     "ts-node": "^3.0.2",
     "tslint": "^4.5.1",
     "tslint-stylish": "^2.1.0",
-    "typescript": "^2.7.1"
+    "typescript": "^2.7.2"
   },
   "bugs": {
     "url": "https://github.com/rxstack/rxstack/issues"

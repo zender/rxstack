@@ -1,6 +1,6 @@
 # @rxstack/socketio-server
 
-> The SecketIO component.
+> The SecketIO module.
 
 ## Installation
 

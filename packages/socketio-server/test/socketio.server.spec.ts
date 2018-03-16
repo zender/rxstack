@@ -1,33 +1,33 @@
 import 'reflect-metadata';
 import {Configuration} from '@rxstack/configuration';
 Configuration.initialize(__dirname + '/environments');
-import {Application} from '@rxstack/application';
+import {Application, ServerManager} from '@rxstack/core';
 import {AppModule} from './mocks/app.module';
 import {Injector} from 'injection-js';
 import {SocketioServer} from '../src/socketio.server';
 import {MockEventListener} from './mocks/mock-event-listener';
-import {Kernel} from '@rxstack/kernel';
+import {environment} from './environments/environment';
 const io = require('socket.io-client');
 
 
 describe('SocketIOServer', () => {
   // Setup application
-  const app = new Application(AppModule);
+  const app = new Application(AppModule, environment);
   let injector: Injector;
   let host: string;
   let server: SocketioServer;
-  let client: any;
+  let defaultNs: any;
 
   before(async() =>  {
     await app.start();
     injector = app.getInjector();
-    server = injector.get(SocketioServer);
+    server = <SocketioServer>injector.get(ServerManager).getByName('socketio');
     host = server.getHost();
-    client = io(host, {transports: ['websocket']});
+    defaultNs = io(host, {transports: ['websocket']});
   });
 
   after(async() =>  {
-    client.close();
+    defaultNs.close();
     await app.stop();
   });
 
@@ -37,7 +37,7 @@ describe('SocketIOServer', () => {
 
 
   it('should call mock_json', (done: Function) => {
-    client.emit('mock_json', null, function (response: any) {
+    defaultNs.emit('mock_json', null, function (response: any) {
       response['statusCode'].should.be.equal(200);
       JSON.stringify(response['content']).should.be.equal(JSON.stringify({ id: 'json' }));
       done();
@@ -45,7 +45,7 @@ describe('SocketIOServer', () => {
   });
 
   it('should call mock_null', (done: Function) => {
-    client.emit('mock_null', null, function (response: any) {
+    defaultNs.emit('mock_null', null, function (response: any) {
       response['statusCode'].should.be.equal(200);
       (null === response['content']).should.be.true;
       done();
@@ -59,7 +59,7 @@ describe('SocketIOServer', () => {
       }
     };
 
-    client.emit('mock_exception', args, function (response: any) {
+    defaultNs.emit('mock_exception', args, function (response: any) {
       response['statusCode'].should.be.equal(404);
       response['message'].should.be.equal('Not Found');
       done();
@@ -73,7 +73,7 @@ describe('SocketIOServer', () => {
       }
     };
 
-    client.emit('mock_exception', args, function (response: any) {
+    defaultNs.emit('mock_exception', args, function (response: any) {
       response['statusCode'].should.be.equal(500);
       response['message'].should.be.equal('something');
       done();
@@ -89,7 +89,7 @@ describe('SocketIOServer', () => {
 
     process.env.NODE_ENV = 'production';
 
-    client.emit('mock_exception', args, function (response: any) {
+    defaultNs.emit('mock_exception', args, function (response: any) {
       response['statusCode'].should.be.equal(500);
       response['message'].should.be.equal('Internal Server Error');
       process.env.NODE_ENV = 'testing';
@@ -98,7 +98,7 @@ describe('SocketIOServer', () => {
   });
 
   it('should throw exception if streamable', (done: Function) => {
-    client.emit('mock_stream', null, function (response: any) {
+    defaultNs.emit('mock_stream', null, function (response: any) {
       response['statusCode'].should.be.equal(500);
       response['message'].should.be.equal('StreamableResponse is not supported.');
       done();
@@ -106,11 +106,23 @@ describe('SocketIOServer', () => {
   });
 
 
-  it('should add connected users', (done: Function) => {
+  it('should add another user and receive amessage', (done: Function) => {
     const client2 = io(host, {transports: ['websocket']});
     client2.on('connect', () => {
       injector.get(MockEventListener).connectedUsers.length.should.be.equal(2);
-      client2.close();
+      client2.on('hi', (event: any) => {
+        event.should.be.equal('all');
+        client2.close();
+        done();
+      });
+    });
+  });
+
+  it('should connect to custom namespace', (done: Function) => {
+    const client3 = io(host + '/custom', {transports: ['websocket']});
+    client3.on('connect', () => {
+      injector.get(MockEventListener).connectedCustomNamespaceUsers.length.should.be.equal(1);
+      client3.close();
       done();
     });
   });

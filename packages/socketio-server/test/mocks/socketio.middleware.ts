@@ -1,8 +1,8 @@
 import {Injector} from 'injection-js';
-import Socket = SocketIO.Socket;
+import {EventEmitter} from 'events';
 
 export function socketMiddleware(injector: Injector) {
-  return (socket: Socket, next: Function): void => {
+  return (socket: EventEmitter, next: Function): void => {
     socket['token'] = 'user token';
     next();
   };

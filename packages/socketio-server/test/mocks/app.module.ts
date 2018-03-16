@@ -1,20 +1,18 @@
 import {MockController} from './mock.controller';
-import {Module, ProviderDefinition} from '@rxstack/application';
+import {Module} from '@rxstack/core';
 import {MockEventListener} from './mock-event-listener';
 import {SocketioModule} from '../../src/socketio.module';
 import {environment} from '../environments/environment';
-import {BootstrapModule} from '@rxstack/application';
-
-export const APP_PROVIDERS: ProviderDefinition[] = [
-  { provide: MockController, useClass: MockController },
-  { provide: MockEventListener, useClass: MockEventListener },
-];
+import {MockWithCustomNamespaceController} from './mock-with-custom-namespace.controller';
 
 @Module({
   imports: [
-    BootstrapModule.configure(environment),
     SocketioModule.configure(environment.socketio_server)
   ],
-  providers: APP_PROVIDERS
+  providers: [
+    { provide: MockController, useClass: MockController },
+    { provide: MockWithCustomNamespaceController, useClass: MockWithCustomNamespaceController },
+    { provide: MockEventListener, useClass: MockEventListener },
+  ]
 })
 export class AppModule {}

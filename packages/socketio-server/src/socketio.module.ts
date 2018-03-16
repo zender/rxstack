@@ -1,4 +1,4 @@
-import {Module, ModuleWithProviders} from '@rxstack/application';
+import {Module, ModuleWithProviders, SERVER_REGISTRY} from '@rxstack/core';
 import {SocketioServer} from './socketio.server';
 import {SocketioServerConfiguration} from './socketio-server-configuration';
 
@@ -8,7 +8,7 @@ export class SocketioModule {
     return {
       module: SocketioModule,
       providers: [
-        { provide: SocketioServer, useClass: SocketioServer },
+        { provide: SERVER_REGISTRY, useClass: SocketioServer, multi: true },
         {
           provide: SocketioServerConfiguration,
           useFactory: () => {
