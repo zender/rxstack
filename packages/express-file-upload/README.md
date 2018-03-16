@@ -1,6 +1,6 @@
 # @rxstack/express-file-upload
 
-> The ExpressFileUpload component.
+> The ExpressFileUpload module.
 
 ## Installation
 

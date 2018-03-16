@@ -1,6 +1,6 @@
 import {Injectable} from 'injection-js';
 import {Observe} from '@rxstack/async-event-dispatcher';
-import {ServerConfigurationEvent, ServerEvents} from '@rxstack/server-commons';
+import {ServerConfigurationEvent, ServerEvents} from '@rxstack/core';
 import {ExpressServer} from '@rxstack/express-server';
 import {
   NextFunction, Request as ExpressRequest, RequestHandler,
@@ -15,10 +15,10 @@ export class FileUploadListener {
 
   @Observe(ServerEvents.CONFIGURE, -200)
   async onConfigure(event: ServerConfigurationEvent): Promise<void> {
-    if (event.name !== ExpressServer.serverName) {
+    if (event.server.getName() !== ExpressServer.serverName) {
       return;
     }
-    event.engine.use(this.uploadHandler());
+    event.server.getEngine().use(this.uploadHandler());
   }
 
   private uploadHandler(): RequestHandler {
@@ -32,7 +32,7 @@ export class FileUploadListener {
       form.multiples = this.configuration.multiples;
       form.hash = this.configuration.hash;
       form.parse(req, function(err: any, fields: any, files: any) {
-        req['files'] = files;
+        req['files'] = files ? files : [];
         next(err);
       });
     };

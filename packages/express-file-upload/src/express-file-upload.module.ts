@@ -1,4 +1,4 @@
-import {Module, ModuleWithProviders} from '@rxstack/application';
+import {Module, ModuleWithProviders} from '@rxstack/core';
 import {FileUploadListener} from './file-upload.listener';
 import {ExpressFileUploadConfiguration} from './express-file-upload-configuration';
 const fs = require('fs');

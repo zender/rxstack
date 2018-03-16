@@ -83,9 +83,9 @@ export class SocketioServer extends AbstractServer {
     const status = err['statusCode'] ?  err['statusCode'] : 500;
     err['statusCode'] = status;
     if (status >= 500)
-      this.getLogger().error(err.message, err);
+      this.getLogger().error(err.message);
     else
-      this.getLogger().debug(err.message, err);
+      this.getLogger().debug(err.message);
 
     if (process.env.NODE_ENV === 'production' && status >= 500)
       callback.call(null, {message: 'Internal Server Error', statusCode: status});

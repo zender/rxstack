@@ -1,21 +1,22 @@
 import {MockController} from './mock.controller';
-import {BootstrapModule, Module, ProviderDefinition} from '@rxstack/application';
+import {Module, ModuleWithProviders, SERVER_REGISTRY} from '@rxstack/core';
 import {ExpressModule} from '@rxstack/express-server';
 import {ExpressFileUploadModule} from '../../src/express-file-upload.module';
 import {MockServer} from './mock.server';
-import {environment} from '../environments/environment';
 
-export const APP_PROVIDERS: ProviderDefinition[] = [
-  { provide: MockController, useClass: MockController },
-  { provide: MockServer, useClass: MockServer },
-];
-
-@Module({
-  imports: [
-    BootstrapModule.configure(environment),
-    ExpressModule.configure(environment.express_server),
-    ExpressFileUploadModule.configure(environment.express_file_upload)
-  ],
-  providers: APP_PROVIDERS
-})
-export class AppModule {}
+@Module()
+export class AppModule {
+  static configure(options: any): ModuleWithProviders {
+    return {
+      module: AppModule,
+      imports: [
+        ExpressModule.configure(options.express_server),
+        ExpressFileUploadModule.configure(options.express_file_upload)
+      ],
+      providers: [
+        { provide: MockController, useClass: MockController },
+        { provide: SERVER_REGISTRY, useClass: MockServer, multi: true },
+      ]
+    };
+  }
+}

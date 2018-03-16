@@ -1,4 +1,5 @@
-export const environment = {
+export const file_upload_environment = {
+  servers: ['express', 'mock'],
   logger: {
     handlers: [
       {

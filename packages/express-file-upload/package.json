@@ -1,7 +1,7 @@
 {
   "name": "@rxstack/express-file-upload",
-  "version": "0.0.4",
-  "description": "RxStack Express File Upload Component",
+  "version": "0.0.6",
+  "description": "RxStack Express File Upload Module",
   "private": false,
   "author": "Nikolay Gergiev <symfonist@gmail.com>",
   "license": "MIT",
@@ -14,22 +14,20 @@
     "test": "gulp tests",
     "publish-package": "gulp publish"
   },
-  "dependencies": {
-    "@rxstack/application": "latest",
+  "peerDependencies": {
     "@rxstack/async-event-dispatcher": "latest",
     "@rxstack/exceptions": "latest",
-    "@rxstack/express-server": "latest",
-    "@rxstack/kernel": "latest",
-    "@rxstack/logger": "latest",
-    "@rxstack/server-commons": "latest",
-    "formidable": "^1.1.1",
-    "injection-js": "^2.2.1",
+    "injection-js": "^2.1.0",
+    "reflect-metadata": "^0.1.12",
     "mime": "^2.2.0"
+  },
+  "dependencies": {
+    "@rxstack/core": "latest",
+    "@rxstack/express-server": "latest",
+    "formidable": "^1.1.1"
   },
   "devDependencies": {
     "@rxstack/configuration": "latest",
-    "@rxstack/kernel": "latest",
-    "@rxstack/service-registry": "latest",
     "@types/chai": "^3.4.35",
     "@types/chai-as-promised": "0.0.30",
     "@types/compression": "0.0.35",
