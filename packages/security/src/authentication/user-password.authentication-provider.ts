@@ -3,7 +3,7 @@ import {BadCredentialsException} from '../exceptions/index';
 import {EncoderFactory} from '../password-encoders/encoder-factory';
 import {AuthenticationProviderInterface} from '../interfaces';
 import {UserProviderManager} from '../user-providers/user-provider-manager';
-import {TokenInterface, UserInterface} from '@rxstack/kernel';
+import {TokenInterface, UserInterface} from '@rxstack/core';
 import {UsernameAndPasswordToken} from '../models/username-and-password.token';
 
 @Injectable()

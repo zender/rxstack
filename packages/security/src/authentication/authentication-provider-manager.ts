@@ -5,7 +5,7 @@ import {AuthenticationEvents} from '../authentication-events';
 import {Injectable} from 'injection-js';
 import {AuthenticationProviderInterface} from '../interfaces';
 import {AsyncEventDispatcher} from '@rxstack/async-event-dispatcher';
-import {TokenInterface} from '@rxstack/kernel';
+import {TokenInterface} from '@rxstack/core';
 
 @Injectable()
 export class AuthenticationProviderManager {

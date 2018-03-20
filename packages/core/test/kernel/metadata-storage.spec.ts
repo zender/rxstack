@@ -1,9 +1,7 @@
 import 'reflect-metadata';
-
 import {GenericMetadataStorage} from '../../src/kernel/metadata/generic-metadata-storage';
 import {WebSocketMetadata} from '../../src/kernel/metadata';
 import {AnnotatedController} from './fixtures/annotated.controller';
-import {Exception} from '@rxstack/exceptions';
 
 describe('MetadataStorage', () => {
   const storage = new GenericMetadataStorage<WebSocketMetadata>();
@@ -30,22 +28,6 @@ describe('MetadataStorage', () => {
     storage.all().length.should.be.equal(2);
   });
 
-  it('should throw and exception if metadata already exists', async () => {
-    let exception: Exception;
-    try {
-      storage.add({
-        'target': AnnotatedController,
-        'name': 'annotated_index',
-        'propertyKey': 'indexAction',
-        'ns': '/',
-        'transport': 'SOCKET'
-      });
-    } catch (e) {
-      exception = e;
-    }
-    exception.should.be.instanceOf(Exception);
-  });
-
   it('should check if metadata exists', async () => {
     storage.has('annotated_index').should.be.true;
   });
@@ -59,17 +41,7 @@ describe('MetadataStorage', () => {
     storage.has('annotated_index').should.be.false;
   });
 
-  it('should throw an exception when removing if item does not exists', async () => {
-    let exception: Exception;
-    try {
-      storage.remove('annotated_index');
-    } catch (e) {
-      exception = e;
-    }
-    exception.should.be.instanceOf(Exception);
-  });
-
-  it('should reset metatdata', async () => {
+  it('should reset metadata', async () => {
     storage.reset();
     storage.all().length.should.be.equal(0);
   });

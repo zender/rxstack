@@ -1,4 +1,4 @@
-import {Request, TokenInterface, UserInterface} from '@rxstack/kernel';
+import {Request, TokenInterface, UserInterface} from '@rxstack/core';
 
 export type UserFactoryFunc<T extends UserInterface> = (data: UserInterface) => T;
 

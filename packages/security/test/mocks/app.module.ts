@@ -1,4 +1,4 @@
-import {BootstrapModule, Module, ProviderDefinition} from '@rxstack/application';
+import {Module, ProviderDefinition, UserInterface} from '@rxstack/core';
 import {environment} from '../environments/environment';
 import {
   AUTH_PROVIDER_REGISTRY, PASSWORD_ENCODER_REGISTRY, SecurityModule, TOKEN_MANAGER,
@@ -7,20 +7,14 @@ import {
 import {PlainTextPasswordEncoder} from '../../src/password-encoders/plain-text.password-encoder';
 import {InMemoryUserProvider} from '../../src/user-providers/in-memory-user-provider';
 import {Noop2UserProvider} from './noop2-user-provider';
-import {UserInterface} from '@rxstack/kernel';
 import {TestUserWithEncoder} from './test-user-with-encoder';
 import {TestAuthenticationProvider} from './test.authentication-provider';
 import {AuthListener} from './auth.listener';
 import {TestTokenManager} from './test.token-manager';
 import {TestController} from './test.controller';
-import {BootstrapListener} from './bootstrap.listener';
 import {TestJwtAuthenticationProvider} from './test-jwt.authentication-provider';
 
 export const APP_PROVIDERS: ProviderDefinition[] = [
-  {
-    provide: BootstrapListener,
-    useClass: BootstrapListener
-  },
   {
     provide: TestController,
     useClass: TestController
@@ -71,7 +65,6 @@ export const APP_PROVIDERS: ProviderDefinition[] = [
 
 @Module({
   imports: [
-    BootstrapModule.configure(environment),
     SecurityModule.configure(environment.security)
   ],
   providers: APP_PROVIDERS

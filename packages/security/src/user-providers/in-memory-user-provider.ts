@@ -2,7 +2,7 @@ import * as _ from 'lodash';
 import {Injectable} from 'injection-js';
 import {UserFactoryFunc, UserProviderInterface} from '../interfaces';
 import {UserNotFoundException} from '../exceptions/index';
-import {UserInterface} from '@rxstack/kernel';
+import {UserInterface} from '@rxstack/core';
 
 @Injectable()
 export class InMemoryUserProvider<T extends UserInterface> implements UserProviderInterface {

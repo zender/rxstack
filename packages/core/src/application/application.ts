@@ -33,6 +33,7 @@ export class Application {
   }
 
   async stop(): Promise<this> {
+    this.injector.get(Kernel).reset();
     const manager = this.injector.get(ServerManager);
     await manager.stop();
     return this;

@@ -1,18 +1,18 @@
 import 'reflect-metadata';
 import {Configuration} from '@rxstack/configuration';
 Configuration.initialize(__dirname + '/environments');
-import {Application} from '@rxstack/application';
 import {AppModule} from './mocks/app.module';
 import {Injector} from 'injection-js';
 import {UserProviderManager} from '../src/user-providers/user-provider-manager';
 import {UserNotFoundException} from '../src/exceptions/index';
 import {User} from '../src/models';
 import {PayloadUserProvider} from '../src/user-providers/payload-user-provider';
-import {UserInterface} from '@rxstack/kernel';
+import {Application, UserInterface} from '@rxstack/core';
+import {environment} from './environments/environment';
 
 describe('Security:UserProvider', () => {
   // Setup application
-  const app = new Application(AppModule);
+  const app = new Application(AppModule, environment);
   let injector: Injector = null;
 
   before(async() =>  {

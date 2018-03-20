@@ -1,7 +1,7 @@
 /**
  * Base user class
  */
-import {UserInterface} from '@rxstack/kernel';
+import {UserInterface} from '@rxstack/core';
 
 export class User implements UserInterface {
   /**

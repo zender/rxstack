@@ -1,8 +1,8 @@
 import {Injectable} from 'injection-js';
-import {TokenInterface} from '@rxstack/kernel';
 import {AuthenticationProviderInterface} from '../../src/interfaces';
 import {Exception} from '@rxstack/exceptions';
 import {TestSupportedToken} from './test-supported-token';
+import {TokenInterface} from '@rxstack/core';
 
 export class TestAuthenticationProviderException extends Exception {}
 

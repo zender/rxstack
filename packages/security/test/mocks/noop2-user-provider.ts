@@ -1,7 +1,7 @@
 import {Injectable} from 'injection-js';
 import {UserProviderInterface} from '../../src/interfaces';
 import {UserNotFoundException} from '../../src/exceptions/index';
-import {UserInterface} from '@rxstack/kernel';
+import {UserInterface} from '@rxstack/core';
 
 @Injectable()
 export class Noop2UserProvider implements UserProviderInterface {

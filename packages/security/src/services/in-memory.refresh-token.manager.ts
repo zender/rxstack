@@ -2,7 +2,7 @@ import {RefreshTokenInterface, RefreshTokenManagerInterface, TokenManagerInterfa
 import {RefreshToken} from '../models/refresh-token';
 import {Injectable} from 'injection-js';
 import {UnauthorizedException} from '@rxstack/exceptions';
-import {TokenInterface} from '@rxstack/kernel';
+import {TokenInterface} from '@rxstack/core';
 const md5 = require('crypto-js/md5');
 const uuid = require('uuid/v4');
 

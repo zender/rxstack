@@ -1,5 +1,5 @@
 import {Injectable} from 'injection-js';
-import {Request} from '@rxstack/kernel';
+import {Request} from '@rxstack/core';
 import {TokenExtractorInterface} from '../interfaces';
 
 @Injectable()

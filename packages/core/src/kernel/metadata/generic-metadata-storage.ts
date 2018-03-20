@@ -1,4 +1,3 @@
-import {Exception} from '@rxstack/exceptions';
 import {BaseMetadata} from './metadata';
 
 export class GenericMetadataStorage<T extends BaseMetadata> {
@@ -18,17 +17,17 @@ export class GenericMetadataStorage<T extends BaseMetadata> {
   }
 
   add(metadata: T): void {
-    if (this.has(metadata.name))
-      throw new Exception(`${metadata.name} metadata already exists.`);
-    this.all().push(metadata);
+    if (!this.has(metadata.name)) {
+      this.all().push(metadata);
+    }
   }
 
   remove(name: string): void {
     const idx = this.all()
       .findIndex((metadata) => metadata.name === name);
-    if (idx === -1)
-      throw new Exception(`${name} metadata does not exist.`);
-    this.all().splice(idx, 1);
+    if (idx !== -1) {
+      this.all().splice(idx, 1);
+    }
   }
   
   reset(): void {

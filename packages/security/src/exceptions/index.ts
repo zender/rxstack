@@ -1,5 +1,5 @@
 import {Exception} from '@rxstack/exceptions';
-import {TokenInterface} from '@rxstack/kernel';
+import {TokenInterface} from '@rxstack/core';
 
 export abstract class SecurityException extends Exception {
 

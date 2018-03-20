@@ -1,7 +1,7 @@
 import {Injectable} from 'injection-js';
 import {AuthenticationProviderManager} from '../authentication/authentication-provider-manager';
 import {Observe} from '@rxstack/async-event-dispatcher';
-import {KernelEvents, RequestEvent} from '@rxstack/kernel';
+import {KernelEvents, RequestEvent} from '@rxstack/core';
 import {UnauthorizedException} from '@rxstack/exceptions';
 
 @Injectable()

@@ -1,7 +1,7 @@
 import {TokenExtractorInterface} from '../interfaces';
 import {Injectable} from 'injection-js';
 import {SecurityConfiguration} from '../security-configuration';
-import {Request} from '@rxstack/kernel';
+import {Request} from '@rxstack/core';
 
 @Injectable()
 export class QueryParameterTokenExtractor implements TokenExtractorInterface {

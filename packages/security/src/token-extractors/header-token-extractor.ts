@@ -1,7 +1,7 @@
 import {Injectable} from 'injection-js';
 import {TokenExtractorInterface} from '../interfaces';
 import {SecurityConfiguration} from '../security-configuration';
-import {Request} from '@rxstack/kernel';
+import {Request} from '@rxstack/core';
 
 @Injectable()
 export class HeaderTokenExtractor implements TokenExtractorInterface {

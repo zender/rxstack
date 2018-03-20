@@ -1,4 +1,5 @@
 export const environment = {
+  servers: ['none'],
   user_providers: {
     in_memory: {
       users: [
@@ -35,6 +36,6 @@ export const environment = {
       }
     },
     local_authentication: true,
-    socket_authentication: true
+    ttl: 100
   }
 };

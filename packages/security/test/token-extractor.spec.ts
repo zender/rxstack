@@ -1,16 +1,16 @@
 import 'reflect-metadata';
 import {Configuration} from '@rxstack/configuration';
 Configuration.initialize(__dirname + '/environments');
-import {Application} from '@rxstack/application';
 import {AppModule} from './mocks/app.module';
 import {Injector} from 'injection-js';
 import {TokenExtractorManager} from '../src/token-extractors/token-extractor-manager';
 import {QueryParameterTokenExtractor} from '../src/token-extractors/query-parameter-token-extractor';
-import {Kernel, Request} from '@rxstack/kernel';
+import {Application, Request} from '@rxstack/core';
+import {environment} from './environments/environment';
 
 describe('Security:TokenExtractors', () => {
   // Setup application
-  const app = new Application(AppModule);
+  const app = new Application(AppModule, environment);
   let injector: Injector = null;
 
   before(async() =>  {

@@ -1,4 +1,4 @@
-import {TokenInterface, UserInterface} from '@rxstack/kernel';
+import {TokenInterface, UserInterface} from '@rxstack/core';
 
 export abstract class AbstractToken implements TokenInterface {
 

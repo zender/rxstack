@@ -2,7 +2,7 @@ import {Injectable} from 'injection-js';
 import {BadCredentialsException} from '../exceptions/index';
 import {AuthenticationProviderInterface, TokenManagerInterface} from '../interfaces';
 import {UserProviderManager} from '../user-providers/user-provider-manager';
-import {TokenInterface, UserInterface} from '@rxstack/kernel';
+import {TokenInterface, UserInterface} from '@rxstack/core';
 import {SecurityConfiguration} from '../security-configuration';
 import {Token} from '../models';
 

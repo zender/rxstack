@@ -1,6 +1,6 @@
 import {Injectable} from 'injection-js';
 import {UserProviderInterface} from '../interfaces';
-import {UserInterface} from '@rxstack/kernel';
+import {UserInterface} from '@rxstack/core';
 import {UserNotFoundException} from '../exceptions/index';
 
 @Injectable()

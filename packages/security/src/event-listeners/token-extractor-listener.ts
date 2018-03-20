@@ -1,6 +1,6 @@
 import {Injectable} from 'injection-js';
 import {TokenExtractorManager} from '../token-extractors/token-extractor-manager';
-import {KernelEvents, RequestEvent} from '@rxstack/kernel';
+import {KernelEvents, RequestEvent} from '@rxstack/core';
 import {Observe} from '@rxstack/async-event-dispatcher';
 import {Token} from '../models/token';
 import {AnonymousToken} from '../models/anonymous.token';

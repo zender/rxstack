@@ -1,4 +1,4 @@
-import {Module, ModuleWithProviders} from '@rxstack/application';
+import {Module, ModuleWithProviders} from '@rxstack/core';
 import {SecurityConfiguration} from './security-configuration';
 import {InjectionToken} from 'injection-js';
 import {
@@ -22,6 +22,7 @@ import { BootstrapListener } from './event-listeners/bootstrap-listener';
 import {SecurityController} from './controllers/security-controller';
 import {AsyncEventDispatcher} from '@rxstack/async-event-dispatcher';
 import {TokenAuthenticationProvider} from './authentication/token.authentication-provider';
+import {SocketListener} from './event-listeners/socket-listener';
 
 export const AUTH_PROVIDER_REGISTRY = new InjectionToken<AuthenticationProviderInterface[]>('AUTH_PROVIDER_REGISTRY');
 export const USER_PROVIDER_REGISTRY = new InjectionToken<UserProviderInterface[]>('USER_PROVIDER_REGISTRY');
@@ -55,15 +56,23 @@ export class SecurityModule {
           useClass: BootstrapListener,
         },
         {
+          provide: SocketListener,
+          useClass: SocketListener,
+        },
+        {
           provide: SecurityController,
           useFactory: (authManager: AuthenticationProviderManager,
                        tokenManager: TokenManagerInterface,
                        refreshTokenManager: RefreshTokenManagerInterface,
-                       dispatcher: AsyncEventDispatcher
+                       dispatcher: AsyncEventDispatcher,
+                       configuration: SecurityConfiguration
           ) => {
-            return new SecurityController(authManager, tokenManager, refreshTokenManager, dispatcher);
+            return new SecurityController(authManager, tokenManager, refreshTokenManager, dispatcher, configuration);
           },
-          deps: [AuthenticationProviderManager, TOKEN_MANAGER, REFRESH_TOKEN_MANAGER, AsyncEventDispatcher]
+          deps: [
+            AuthenticationProviderManager, TOKEN_MANAGER, REFRESH_TOKEN_MANAGER,
+            AsyncEventDispatcher, SecurityConfiguration
+          ]
         },
         {
           provide: REFRESH_TOKEN_MANAGER,

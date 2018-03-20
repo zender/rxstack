@@ -1,9 +1,9 @@
 import {Injectable} from 'injection-js';
-import {TokenInterface} from '@rxstack/kernel';
 import {AuthenticationProviderInterface} from '../../src/interfaces';
 import {User} from '../../src/models/user';
 import {Token} from '../../src/models/token';
 import {BadCredentialsException} from '../../src/exceptions/index';
+import {TokenInterface} from '@rxstack/core';
 
 @Injectable()
 export class TestJwtAuthenticationProvider implements AuthenticationProviderInterface {
