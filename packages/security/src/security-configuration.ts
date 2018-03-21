@@ -20,7 +20,7 @@ export class AuthorizationHeaderExtractorOptions {
   }
 }
 
-export class TokenExtractorsOptons {
+export class TokenExtractorsOptions {
   query_parameter?: QueryParameterExtractorOptions;
   authorization_header?: AuthorizationHeaderExtractorOptions;
 
@@ -31,12 +31,14 @@ export class TokenExtractorsOptons {
 }
 
 export class SecurityConfiguration {
-  token_extractors: TokenExtractorsOptons;
+  transports: string[];
+  token_extractors: TokenExtractorsOptions;
   local_authentication?: boolean;
   user_identity_field?: string;
   ttl?: number
   constructor(obj?: any) {
-    this.token_extractors = new TokenExtractorsOptons(obj.token_extractors);
+    this.transports = obj.transports || [];
+    this.token_extractors = new TokenExtractorsOptions(obj.token_extractors);
     this.local_authentication = obj.local_authentication || false;
     this.user_identity_field = obj.user_identity_field || 'username';
     this.ttl = obj.ttl || (300 * 1000);

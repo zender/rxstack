@@ -27,6 +27,7 @@ export const environment = {
     ]
   },
   security: {
+    transports: ['HTTP', 'SOCKET'],
     token_extractors: {
       query_parameter: {
         enabled: true,

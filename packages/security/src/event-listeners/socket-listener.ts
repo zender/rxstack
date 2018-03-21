@@ -8,6 +8,7 @@ export class SocketListener {
   async onDisconnect(event: SocketEvent): Promise<void> {
     if (event.socket['tokenTimeout']) {
       clearTimeout(event.socket['tokenTimeout']);
+      event.socket['tokenTimeout'] = null;
     }
   }
 }

@@ -85,6 +85,7 @@ export class SecurityController {
   private clearConnectionTimeout(connection: EventEmitter): void {
     if (connection['tokenTimeout']) {
       clearTimeout(connection['tokenTimeout']);
+      connection['tokenTimeout'] = null;
     }
   }
 }

@@ -3,10 +3,12 @@ import {Configuration} from '@rxstack/configuration';
 Configuration.initialize(__dirname + '/environments');
 import {AppModule} from './mocks/app.module';
 import {Injector} from 'injection-js';
-import {Application, Kernel, Request, Response} from '@rxstack/core';
+import {Application, Kernel, Request, Response, ServerManager, SocketEvent} from '@rxstack/core';
 import {UnauthorizedException} from '@rxstack/exceptions';
 import {environment} from './environments/environment';
 import {findHttpDefinition} from './helpers/kernel-definition-finder';
+import {SocketListener} from '../src/event-listeners/socket-listener';
+import {EventEmitter} from 'events';
 
 describe('Security:Listeners', () => {
   // Setup application
@@ -68,5 +70,15 @@ describe('Security:Listeners', () => {
     const request = new Request('HTTP');
     let response: Response = await def.handler(request);
     response.content.username.should.be.equal('anon');
+  });
+
+  it('should remove token timeout on disconnect', async () => {
+    const server = injector.get(ServerManager).getByName('noop-websocket');
+    const connection = new EventEmitter();
+    connection['tokenTimeout'] = setTimeout(() => {}, 5000);
+    const listener = injector.get(SocketListener);
+    const event = new SocketEvent(connection, server);
+    await listener.onDisconnect(event);
+    (null === connection['tokenTimeout']).should.be.true;
   });
 });

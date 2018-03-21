@@ -41,16 +41,22 @@ export class BootstrapListener {
         {
           name: 'security_logout',
           action: 'logoutAction'
-        },
-        {
-          name: 'security_authenticate',
-          action: 'authenticateAction'
         }
       ];
 
-      httpMetadata.forEach(meta => httpMetadataStorage.add(this.createHttpMetadata(meta)));
-      socketMetadata.forEach(meta => webSocketMetadataStorage.add(this.createWebSocketMetadata(meta)));
+      if (this.configuration.transports.includes('HTTP')) {
+        httpMetadata.forEach(meta => httpMetadataStorage.add(this.createHttpMetadata(meta)));
+      }
+
+      if (this.configuration.transports.includes('SOCKET')) {
+        socketMetadata.forEach(meta => webSocketMetadataStorage.add(this.createWebSocketMetadata(meta)));
+      }
     }
+
+    webSocketMetadataStorage.add(this.createWebSocketMetadata({
+      name: 'security_authenticate',
+      action: 'authenticateAction'
+    }));
   }
 
   private createHttpMetadata(meta: Object): HttpMetadata {

@@ -68,7 +68,7 @@ describe('Security:SocketController', () => {
     exception.should.be.instanceOf(UnauthorizedException);
   });
 
-  it('should wait', (done) => {
+  it('should wait for the token timeout', (done) => {
     (typeof connection['tokenTimeout'] === 'object').should.be.true;
     setTimeout(() => {
       connection['token']['fullyAuthenticated'].should.be.false;

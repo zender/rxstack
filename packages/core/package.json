@@ -1,6 +1,6 @@
 {
   "name": "@rxstack/core",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "RxStack Core",
   "private": false,
   "author": "Nikolay Gergiev <symfonist@gmail.com>",
