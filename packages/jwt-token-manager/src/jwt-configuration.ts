@@ -19,7 +19,7 @@ export class JwtConfiguration {
   constructor(obj: any) {
     this.secret = (typeof obj.secret === 'string') ? obj.secret : new Rsa(obj.secret);
     this.signature_algorithm = obj.signature_algorithm || 'RS512';
-    this.ttl = obj.ttl || 5000;
+    this.ttl = obj.ttl || (300 * 1000);
     this.issuer = obj.issuer || 'rxstack';
   }
 }

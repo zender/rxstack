@@ -1,4 +1,5 @@
-export const environmentWitRsa = {
+export const environmentWithInvalidAlgorithm = {
+  servers: ['none'],
   user_providers: {
     in_memory: {
       users: [
@@ -37,11 +38,8 @@ export const environmentWitRsa = {
     local_authentication: true,
     socket_authentication: true
   },
-  jwt_authentication: {
-    secret: {
-      public_key: './test/jwt-keys/public.pem',
-      private_key: './test/jwt-keys/id_rsa',
-      passphrase: 'secret'
-    }
+  jwt_token_manager: {
+    secret: 'my_secret',
+    signature_algorithm: 'invalid'
   }
 };

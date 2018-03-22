@@ -1,4 +1,5 @@
-export const environmentWithoutRsa = {
+export const environmentWitRsa = {
+  servers: ['none'],
   user_providers: {
     in_memory: {
       users: [
@@ -34,11 +35,13 @@ export const environmentWithoutRsa = {
         enabled: true,
       }
     },
-    local_authentication: true,
-    socket_authentication: true
+    local_authentication: true
   },
-  jwt_authentication: {
-    secret: 'my_secret',
-    signature_algorithm: 'HS512'
+  jwt_token_manager: {
+    secret: {
+      public_key: './test/jwt-keys/public.pem',
+      private_key: './test/jwt-keys/id_rsa',
+      passphrase: 'secret'
+    }
   }
 };

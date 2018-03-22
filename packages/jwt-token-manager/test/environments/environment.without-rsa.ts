@@ -1,4 +1,5 @@
-export const environmentWithInvalidAlgorithm = {
+export const environmentWithoutRsa = {
+  servers: ['none'],
   user_providers: {
     in_memory: {
       users: [
@@ -37,8 +38,8 @@ export const environmentWithInvalidAlgorithm = {
     local_authentication: true,
     socket_authentication: true
   },
-  jwt_authentication: {
+  jwt_token_manager: {
     secret: 'my_secret',
-    signature_algorithm: 'invalid'
+    signature_algorithm: 'HS512'
   }
 };

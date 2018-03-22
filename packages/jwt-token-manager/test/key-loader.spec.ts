@@ -1,14 +1,13 @@
 import 'reflect-metadata';
-import {Application} from '@rxstack/application';
+import {Application} from '@rxstack/core';
 import {Injector} from 'injection-js';
 import {AppModule} from './mocks/app.module';
-import {environmentWithoutRsa} from './environments/environment.without-rsa';
+import {environmentWitRsa} from './environments/environment.with-rsa';
 import {KeyLoader} from '../src/services';
 
-describe('KeyLoaderWithoutRsa', () => {
+describe('KeyLoaderWithRsa', () => {
   // Setup application
-  AppModule.options = environmentWithoutRsa;
-  const app = new Application(AppModule.configure());
+  const app = new Application(AppModule.configure(environmentWitRsa), environmentWitRsa);
   let injector: Injector = null;
 
   before(async() =>  {
@@ -22,11 +21,11 @@ describe('KeyLoaderWithoutRsa', () => {
 
   it('should load public key', async () => {
     const key = await injector.get(KeyLoader).loadPublicKey();
-    key.should.be.equal('my_secret');
+    (typeof key).should.be.equal('object');
   });
 
   it('should load private key', async () => {
     const key = await injector.get(KeyLoader).loadPrivateKey();
-    key.should.be.equal('my_secret');
+    (typeof key).should.be.equal('object');
   });
 });

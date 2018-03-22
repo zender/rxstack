@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import {Application} from '@rxstack/application';
+import {Application} from '@rxstack/core';
 import {Injector} from 'injection-js';
 import {AppModule} from './mocks/app.module';
 import {TokenManager} from '../src/services';
@@ -8,9 +8,8 @@ import {JWTDecodeFailureException} from '../src/exceptions';
 import {environmentWitRsa} from './environments/environment.with-rsa';
 
 describe('TokenManager', () => {
-  AppModule.options = environmentWitRsa;
   // Setup application
-  const app = new Application(AppModule.configure());
+  const app = new Application(AppModule.configure(environmentWitRsa), environmentWitRsa);
   let injector: Injector = null;
 
   before(async() =>  {
