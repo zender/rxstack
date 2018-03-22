@@ -14,13 +14,12 @@ export function Http<T>(httpMethod: HttpMethod, path: string, name: string): Met
   };
 }
 
-export function WebSocket<T>(eventName: string, ns = '/'): MethodDecorator {
+export function WebSocket<T>(eventName: string): MethodDecorator {
   return function (target: Function, propertyKey: string): void {
     webSocketMetadataStorage.add({
       'target': target.constructor,
       'name': eventName,
       'propertyKey': propertyKey,
-      'ns': ns,
       'transport': 'SOCKET'
     });
   };

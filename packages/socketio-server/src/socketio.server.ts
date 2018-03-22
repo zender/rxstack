@@ -3,7 +3,6 @@ import {
   Request, ResponseObject, WebSocketDefinition, StreamableResponse,
   AbstractServer, ServerConfigurationEvent, ServerEvents, SocketEvent, Transport
 } from '@rxstack/core';
-
 import {AsyncEventDispatcher} from '@rxstack/async-event-dispatcher';
 import * as socketIO from 'socket.io';
 import {Exception} from '@rxstack/exceptions';
@@ -35,30 +34,19 @@ export class SocketioServer extends AbstractServer {
 
     await dispatcher.dispatch(ServerEvents.CONFIGURE, new ServerConfigurationEvent(this));
 
-    this.getNamespaces(definitions).forEach((namespace) => {
-      const filteredDefinitions = definitions.filter((item) => item.ns === namespace);
-      const nsp = this.engine.of(namespace);
-      nsp.on('connection', async (socket: EventEmitter) => {
-        this.getLogger().log('debug', `Setting up namespace: ${namespace}`);
-        this.setupSocket(socket, filteredDefinitions);
+    this.engine.on('connection', async (socket: EventEmitter) => {
+      this.setupSocket(socket, definitions);
+      await dispatcher.dispatch(
+        ServerEvents.CONNECTED,
+        new SocketEvent(socket, this)
+      );
+      socket.on('disconnect', async (reason: any) => {
         await dispatcher.dispatch(
-          ServerEvents.CONNECTED,
-          new SocketEvent(socket, this, namespace)
+          ServerEvents.DISCONNECTED,
+          new SocketEvent(socket, this)
         );
-        socket.on('disconnect', async (reason: any) => {
-          await dispatcher.dispatch(
-            ServerEvents.DISCONNECTED,
-            new SocketEvent(socket, this, namespace)
-          );
-        });
       });
     });
-  }
-
-  private getNamespaces(definitions: WebSocketDefinition[]): string[] {
-    let ns: string[] = [];
-    definitions.forEach((definition) => ns.push(definition.ns));
-    return ns.reduce((x: string[], y: string) => x.includes(y) ? x : [...x, y], []);
   }
 
   private setupSocket(socket: EventEmitter, definitions: WebSocketDefinition[]): void {
@@ -78,7 +66,6 @@ export class SocketioServer extends AbstractServer {
   private createRequest(definition: WebSocketDefinition, socket: EventEmitter, args: any): Request {
     args = args || {};
     const request = new Request('SOCKET');
-    request.path = definition.ns;
     request.headers.fromObject(socket['request'].headers);
     request.params.fromObject(args.params || {});
     request.files.fromObject({}); // todo - implement file upload

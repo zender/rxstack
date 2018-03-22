@@ -106,7 +106,7 @@ describe('SocketIOServer', () => {
   });
 
 
-  it('should add another user and receive amessage', (done: Function) => {
+  it('should add another user and receive a message', (done: Function) => {
     const client2 = io(host, {transports: ['websocket']});
     client2.on('connect', () => {
       injector.get(MockEventListener).connectedUsers.length.should.be.equal(2);
@@ -118,12 +118,4 @@ describe('SocketIOServer', () => {
     });
   });
 
-  it('should connect to custom namespace', (done: Function) => {
-    const client3 = io(host + '/custom', {transports: ['websocket']});
-    client3.on('connect', () => {
-      injector.get(MockEventListener).connectedCustomNamespaceUsers.length.should.be.equal(1);
-      client3.close();
-      done();
-    });
-  });
 });

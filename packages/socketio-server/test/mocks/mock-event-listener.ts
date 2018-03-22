@@ -33,12 +33,8 @@ export class MockEventListener {
       return;
     }
 
-    if (event.ns === '/custom') {
-      this.connectedCustomNamespaceUsers.push(event.socket);
-    } else {
-      this.connectedUsers.push(event.socket);
-      event.server.getEngine().of(event.ns).emit('hi', 'all');
-    }
+    this.connectedUsers.push(event.socket);
+    event.server.getEngine().emit('hi', 'all');
   }
 
   @Observe(ServerEvents.DISCONNECTED)
@@ -46,9 +42,10 @@ export class MockEventListener {
     if (event.server.getName() !== SocketioServer.serverName) {
       return;
     }
-    const pool = event.ns === '/custom' ? this.connectedCustomNamespaceUsers : this.connectedUsers;
-    let idx = pool.findIndex((current) => current === event.socket);
-    if (idx !== -1)
-      pool.splice(idx, 1);
+
+    let idx = this.connectedUsers.findIndex((current) => current === event.socket);
+    if (idx !== -1) {
+      this.connectedUsers.splice(idx, 1);
+    }
   }
 }

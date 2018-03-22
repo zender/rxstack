@@ -70,9 +70,7 @@ export class Kernel implements InjectorAwareInterface {
   private pushWebSocketDefinition(metadata: WebSocketMetadata, controller: Object): void {
     this.webSocketDefinitions.push({
       name: metadata.name,
-      ns: metadata.ns,
       handler: async (request: Request): Promise<ResponseObject> => {
-        request.path = metadata.ns;
         request.routeName = metadata.name;
         request.controller = controller;
         return this.process(request, controller, metadata.propertyKey);

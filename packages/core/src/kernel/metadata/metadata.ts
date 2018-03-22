@@ -12,6 +12,4 @@ export class HttpMetadata extends BaseMetadata {
   httpMethod: HttpMethod;
 }
 
-export class WebSocketMetadata extends BaseMetadata {
-  ns: string;
-}
+export class WebSocketMetadata extends BaseMetadata { }

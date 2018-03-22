@@ -14,7 +14,6 @@ describe('MetadataStorage', () => {
       'target': AnnotatedController,
       'name': 'annotated_index',
       'propertyKey': 'indexAction',
-      'ns': '/',
       'transport': 'SOCKET'
     });
 
@@ -22,7 +21,6 @@ describe('MetadataStorage', () => {
       'target': AnnotatedController,
       'name': 'annotated_exception',
       'propertyKey': 'exceptionAction',
-      'ns': '/',
       'transport': 'SOCKET'
     });
     storage.all().length.should.be.equal(2);

@@ -27,9 +27,7 @@ export interface HttpDefinition extends BaseDefinition {
   method: HttpMethod;
 }
 
-export interface WebSocketDefinition extends BaseDefinition {
-  ns: string;
-}
+export interface WebSocketDefinition extends BaseDefinition { }
 
 export type TransportDefinition = HttpDefinition | WebSocketDefinition;
 
