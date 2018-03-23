@@ -1,6 +1,6 @@
 {
   "name": "@rxstack/socketio-server",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "RxStack SocketIO Server Module",
   "private": false,
   "author": "Nikolay Gergiev <symfonist@gmail.com>",
@@ -21,8 +21,8 @@
     "reflect-metadata": "^0.1.12"
   },
   "dependencies": {
-    "@rxstack/core": "latest",
     "@rxstack/async-event-dispatcher": "latest",
+    "@rxstack/core": "0.0.5",
     "@rxstack/exceptions": "latest",
     "socket.io": "^2.0.4"
   },

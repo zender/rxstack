@@ -14,6 +14,7 @@ import {
 import {ServerManager} from '../server';
 import {CORE_PROVIDERS} from './CORE_PROVDERS';
 import {ApplicationOptions} from './application-options';
+import {CommandManager} from '../console';
 
 export class Application {
   private providers: ProviderDefinition[];
@@ -23,19 +24,27 @@ export class Application {
     this.options = new ApplicationOptions(options);
   }
 
-  async start(): Promise<this> {
+  async start(cli = false): Promise<this> {
     this.providers = [];
     this.resolveModule(this.module);
-    this.injector = await this.doBootstrap();
-    const manager = this.injector.get(ServerManager);
-    await manager.start();
+    this.injector = await this.doBootstrap(cli);
+    if (cli) {
+      this.injector.get(CommandManager).execute();
+    } else {
+      const manager = this.injector.get(ServerManager);
+      await manager.start();
+    }
     return this;
   }
 
   async stop(): Promise<this> {
     this.injector.get(Kernel).reset();
     const manager = this.injector.get(ServerManager);
-    await manager.stop();
+    try {
+      await manager.stop();
+    } catch (e) {
+      // in case servers have never been started.
+    }
     return this;
   }
 
@@ -43,7 +52,7 @@ export class Application {
     return this.injector;
   }
 
-  private async doBootstrap(): Promise<Injector> {
+  private async doBootstrap(skipKernel = false): Promise<Injector> {
     return Promise.all(this.providers).then(async (providers) => {
       const resolvedProviders = ReflectiveInjector.resolve(CORE_PROVIDERS(this.options).concat(providers));
       const injector = ReflectiveInjector.fromResolvedProviders(resolvedProviders);
@@ -55,7 +64,9 @@ export class Application {
       });
       const bootstrapEvent = new BootstrapEvent(injector, resolvedProviders);
       await dispatcher.dispatch(ApplicationEvents.BOOTSTRAP, bootstrapEvent);
-      injector.get(Kernel).initialize();
+      if (false === skipKernel) {
+        injector.get(Kernel).initialize();
+      }
       return injector;
     });
   }

@@ -8,6 +8,9 @@ import {ApplicationOptions} from './application-options';
 import {LoggerTransportInterface} from '../logger/interfaces';
 import {NoopHttpServer} from '../server/noop-http.server';
 import {NoopWebsocketServer} from '../server/noop-websocket.server';
+import {COMMAND_REGISTRY, CommandManager} from '../console';
+import {VersionCommand} from '../console/version-command';
+import {AbstractCommand} from '../console/abstract-command';
 
 export const CORE_PROVIDERS = function (options: ApplicationOptions): Provider[]  {
   return [
@@ -30,6 +33,14 @@ export const CORE_PROVIDERS = function (options: ApplicationOptions): Provider[]
         return new ServerManager(registry, kernel, options.servers);
       },
       deps: [SERVER_REGISTRY, Kernel]
+    },
+    { provide: COMMAND_REGISTRY, useClass: VersionCommand, multi: true },
+    {
+      provide: CommandManager,
+      useFactory: (registry: AbstractCommand[]) => {
+        return new CommandManager(registry);
+      },
+      deps: [COMMAND_REGISTRY]
     }
   ];
 };

@@ -1,6 +1,6 @@
 {
   "name": "@rxstack/core",
-  "version": "0.0.4",
+  "version": "0.0.7",
   "description": "RxStack Core",
   "private": false,
   "author": "Nikolay Gergiev <symfonist@gmail.com>",
@@ -58,7 +58,9 @@
     "lodash": "^4.17.5",
     "mime": "^2.1.0",
     "reflect-metadata": "^0.1.12",
-    "winston": "^3.0.0-rc2"
+    "winston": "^3.0.0-rc2",
+    "yargonaut": "^1.1.2",
+    "yargs": "^11.0.0"
   },
   "bugs": {
     "url": "https://github.com/rxstack/rxstack/issues"
