@@ -15,6 +15,8 @@ import * as compress from 'compression';
 import {AsyncEventDispatcher} from '@rxstack/async-event-dispatcher';
 import {ExpressServerConfiguration} from './express-server-configuration';
 import {Injectable} from 'injection-js';
+import * as _ from 'lodash';
+import {Stream} from 'stream';
 
 @Injectable()
 export class ExpressServer extends AbstractServer {
@@ -39,12 +41,13 @@ export class ExpressServer extends AbstractServer {
     this.engine.use(compress());
     this.engine.use(bodyParser.json());
     this.engine.use(bodyParser.urlencoded({ extended: true }));
-    this.engine.use(this.errorHandler());
 
     await dispatcher
       .dispatch(ServerEvents.CONFIGURE, new ServerConfigurationEvent(this));
     // register routes
     routeDefinitions.forEach(routeDefinition => this.registerRoute(routeDefinition, configuration));
+    // important!!!
+    this.engine.use(this.errorHandler());
     this.httpServer = http.createServer(<any>(this.engine));
   }
 
@@ -52,7 +55,7 @@ export class ExpressServer extends AbstractServer {
     const request = new Request('HTTP');
     request.path = routeDefinition.path;
     request.headers.fromObject(req.headers);
-    request.params.fromObject(Object.assign({}, req.query, req.params));
+    request.params.fromObject(Object.assign(_.isPlainObject(req.body) ? req.body : {}, req.query, req.params));
     request.files.fromObject(req['files'] || {});
     request.body = req.body;
 
@@ -75,8 +78,8 @@ export class ExpressServer extends AbstractServer {
   private responseHandler(response: ResponseObject, res: ExpressResponse): void {
     response.headers.forEach((value, key) => res.header(key, value));
     res.status(response.statusCode);
-    if (response instanceof StreamableResponse)
-      response.fileReadStream.pipe(res);
+    if (response.content instanceof Stream.Readable)
+      response.content.pipe(res);
     else
       res.send(response.content);
   }

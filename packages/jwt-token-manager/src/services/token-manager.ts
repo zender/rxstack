@@ -42,10 +42,6 @@ export class TokenManager implements TokenManagerInterface {
       issuer: this.config.issuer
     };
 
-    if (this.config.secret instanceof Rsa) {
-      options['passphrase'] = this.config.secret['passphrase'];
-    }
-
     try {
       return  jwt.verify(token, loadedPublicKey, options);
     } catch (e) {

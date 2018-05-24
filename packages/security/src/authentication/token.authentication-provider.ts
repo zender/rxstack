@@ -21,7 +21,8 @@ export class TokenAuthenticationProvider implements AuthenticationProviderInterf
     token.setPayload(payload);
     token.setUser(user);
     token.setAuthenticated(true);
-    token.setFullyAuthenticated(true);
+    const isFullyAuthenticated = payload['refreshedAt'] ? false : true;
+    token.setFullyAuthenticated(isFullyAuthenticated);
     return token;
   }
 

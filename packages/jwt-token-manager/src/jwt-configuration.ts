@@ -20,6 +20,6 @@ export class JwtConfiguration {
     this.secret = (typeof obj.secret === 'string') ? obj.secret : new Rsa(obj.secret);
     this.signature_algorithm = obj.signature_algorithm || 'RS512';
     this.ttl = obj.ttl || (300 * 1000);
-    this.issuer = obj.issuer || 'rxstack';
+    this.issuer = obj.issuer ? obj.issuer : 'rxstack';
   }
 }

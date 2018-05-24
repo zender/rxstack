@@ -1,6 +1,6 @@
 {
   "name": "@rxstack/express-file-upload",
-  "version": "0.0.6",
+  "version": "0.0.10",
   "description": "RxStack Express File Upload Module",
   "private": false,
   "author": "Nikolay Gergiev <symfonist@gmail.com>",
@@ -14,16 +14,13 @@
     "test": "gulp tests",
     "publish-package": "gulp publish"
   },
-  "peerDependencies": {
-    "@rxstack/async-event-dispatcher": "latest",
-    "@rxstack/exceptions": "latest",
-    "injection-js": "^2.1.0",
-    "reflect-metadata": "^0.1.12",
-    "mime": "^2.2.0"
-  },
   "dependencies": {
-    "@rxstack/core": "latest",
-    "@rxstack/express-server": "latest",
+    "@rxstack/async-event-dispatcher": "^0.0.24",
+    "@rxstack/exceptions": "^0.0.21",
+    "@rxstack/express-server": "^0.0.36",
+    "reflect-metadata": "^0.1.12",
+    "injection-js": "^2.1.0",
+    "mime": "^2.2.0",
     "formidable": "^1.1.1"
   },
   "devDependencies": {
@@ -32,9 +29,9 @@
     "@types/chai-as-promised": "0.0.30",
     "@types/compression": "0.0.35",
     "@types/gulp": "^4.0.2",
-    "@types/lodash": "^4.14.100",
+    "@types/lodash": "^4.14.108",
     "@types/mocha": "^2.2.48",
-    "@types/node": "^7.0.52",
+    "@types/node": "^7.0.62",
     "@types/sinon": "^1.16.36",
     "chai": "^3.4.1",
     "chai-as-promised": "^6.0.0",
@@ -60,7 +57,7 @@
     "ts-node": "^3.0.2",
     "tslint": "^4.5.1",
     "tslint-stylish": "^2.1.0",
-    "typescript": "^2.7.1"
+    "typescript": "^2.8.3"
   },
   "bugs": {
     "url": "https://github.com/rxstack/rxstack/issues"

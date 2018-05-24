@@ -24,16 +24,20 @@ export class Application {
     this.options = new ApplicationOptions(options);
   }
 
-  async start(cli = false): Promise<this> {
+  async start(): Promise<this> {
     this.providers = [];
     this.resolveModule(this.module);
-    this.injector = await this.doBootstrap(cli);
-    if (cli) {
-      this.injector.get(CommandManager).execute();
-    } else {
-      const manager = this.injector.get(ServerManager);
-      await manager.start();
-    }
+    this.injector = await this.doBootstrap();
+    const manager = this.injector.get(ServerManager);
+    await manager.start();
+    return this;
+  }
+
+  async runCli(): Promise<this> {
+    this.providers = [];
+    this.resolveModule(this.module);
+    this.injector = await this.doBootstrap(true);
+    this.injector.get(CommandManager).execute();
     return this;
   }
 

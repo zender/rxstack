@@ -15,7 +15,7 @@ describe('Security:SocketController', () => {
   // Setup application
   const app = new Application(AppModule, environment);
   let injector: Injector = null;
-  let refreshToken: string;
+  let token: string;
   let connection = new EventEmitter();
 
   before(async() =>  {
@@ -25,20 +25,6 @@ describe('Security:SocketController', () => {
 
   after(async() =>  {
     await app.stop();
-  });
-
-  it('should login', async () => {
-    const kernel = injector.get(Kernel);
-    const def = findWebSocketDefinition(kernel.webSocketDefinitions, 'security_login');
-    const request = new Request('SOCKET');
-    request.connection = connection;
-    request.params.set('username', 'admin');
-    request.params.set('password', 'admin');
-    let response: Response = await def.handler(request);
-    refreshToken = response.content.refreshToken;
-    request.connection['token'].should.be.instanceOf(UsernameAndPasswordToken);
-    request.token.should.be.instanceOf(UsernameAndPasswordToken);
-    request.token.isFullyAuthenticated().should.be.true;
   });
 
   it('should authenticate', async () => {
@@ -76,16 +62,13 @@ describe('Security:SocketController', () => {
     }, 1000);
   });
 
-  it('should logout', async () => {
+  it('should unauthenticate', async () => {
     const kernel = injector.get(Kernel);
-    const def = findWebSocketDefinition(kernel.webSocketDefinitions, 'security_logout');
+    const def = findWebSocketDefinition(kernel.webSocketDefinitions, 'security_unauthenticate');
     const request = new Request('SOCKET');
     request.connection = connection;
-    request.params.set('refreshToken', refreshToken);
     let response: Response = await def.handler(request);
     response.statusCode.should.be.equal(204);
-    const refreshTokenObj = await injector.get(REFRESH_TOKEN_MANAGER).get(refreshToken);
-    refreshTokenObj.isValid().should.be.false;
     request.connection['token'].should.be.instanceOf(AnonymousToken);
   });
 });

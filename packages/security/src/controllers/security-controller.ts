@@ -26,10 +26,6 @@ export class SecurityController {
     await this.dispatcher.dispatch(AuthenticationEvents.LOGIN_SUCCESS, new AuthenticationRequestEvent(request));
     const rawToken = await this.tokenManager.encode(request.token.getPayload());
     const refreshToken = await this.refreshTokenManager.create(request.token);
-    if (request.transport === 'SOCKET') {
-      request.connection['token'] = request.token;
-      this.setConnectionTimeout(request.connection);
-    }
     return new Response({'token': rawToken, 'refreshToken': refreshToken.toString()});
   }
 
@@ -37,10 +33,6 @@ export class SecurityController {
     const refreshToken = await this.findRefreshTokenOr404(request.params.get('refreshToken'));
     await this.refreshTokenManager.disable(refreshToken);
     await this.dispatcher.dispatch(AuthenticationEvents.LOGOUT_SUCCESS, new AuthenticationRequestEvent(request));
-    if (request.transport === 'SOCKET') {
-      this.clearConnectionTimeout(request.connection);
-      request.connection['token'] = new AnonymousToken();
-    }
     return new Response(null, 204);
   }
 
@@ -48,7 +40,7 @@ export class SecurityController {
     const refreshToken = await this.findRefreshTokenOr404(request.params.get('refreshToken'));
     const token = await this.refreshTokenManager.refresh(refreshToken);
     await this.dispatcher.dispatch(AuthenticationEvents.REFRESH_TOKEN_SUCCESS, new AuthenticationRequestEvent(request));
-    return new Response({token});
+    return new Response({'token': token, 'refreshToken': refreshToken.toString()});
   }
 
   async authenticateAction(request: Request): Promise<Response> {
@@ -56,13 +48,20 @@ export class SecurityController {
       const token = new Token(request.params.get('bearer'));
       request.connection['token'] = await this.authManager.authenticate(token);
       request.token = request.connection['token'];
+      this.setConnectionTimeout(request.connection);
       await this.dispatcher
         .dispatch(AuthenticationEvents.SOCKET_AUTHENTICATION_SUCCESS, new AuthenticationRequestEvent(request));
-      this.setConnectionTimeout(request.connection);
       return new Response(null, 204);
     } catch (e) {
       throw new UnauthorizedException();
     }
+  }
+
+  async unauthenticateAction(request: Request): Promise<Response> {
+    await this.dispatcher.dispatch(AuthenticationEvents.SOCKET_UNAUTHENTICATION_SUCCESS, new AuthenticationRequestEvent(request));
+    this.clearConnectionTimeout(request.connection);
+    request.connection['token'] = new AnonymousToken();
+    return new Response(null, 204);
   }
 
   private async findRefreshTokenOr404(token: string): Promise<RefreshTokenInterface> {

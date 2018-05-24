@@ -23,7 +23,7 @@ export class FileUploadListener {
 
   private uploadHandler(): RequestHandler {
     return (req: ExpressRequest, res: ExpressResponse, next: NextFunction): void => {
-      if (!this.configuration.enabled || req.method.toLowerCase() !== 'post') {
+      if (!this.configuration.enabled || req.method.toLowerCase() !== 'post' || !this.isMultiPart(req)) {
         return next();
       }
       const form = new formidable.IncomingForm();
@@ -36,5 +36,10 @@ export class FileUploadListener {
         next(err);
       });
     };
+  }
+
+  private isMultiPart(req: ExpressRequest): boolean {
+    return Boolean(req.header('content-type') &&
+      req.header('content-type').includes('multipart/form-data;'));
   }
 }

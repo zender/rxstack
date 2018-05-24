@@ -1,16 +1,9 @@
-import {Exception} from '@rxstack/exceptions';
+import {UnauthorizedException} from '@rxstack/exceptions';
 import {TokenInterface} from '@rxstack/core';
 
-export abstract class SecurityException extends Exception {
 
-  constructor(public message: string) {
-    super(message);
-    this.name = 'SecurityException';
-  }
-}
-
-export class AuthenticationException extends SecurityException {
-  public token: TokenInterface;
+export class AuthenticationException extends UnauthorizedException {
+  token: TokenInterface;
   constructor(message = 'Authentication Exception' ) {
     super(message);
     this.name = 'AuthenticationException';
@@ -31,7 +24,7 @@ export class UserNotFoundException extends AuthenticationException {
   }
 }
 
-export class ProviderNotFoundException extends SecurityException {
+export class ProviderNotFoundException extends UnauthorizedException {
   constructor(message: string = 'No authentication provider found to support the authentication token.') {
     super(message);
     this.name = 'ProviderNotFoundException';

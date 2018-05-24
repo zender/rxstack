@@ -1,6 +1,6 @@
 {
   "name": "@rxstack/core",
-  "version": "0.0.7",
+  "version": "0.0.9",
   "description": "RxStack Core",
   "private": false,
   "author": "Nikolay Gergiev <symfonist@gmail.com>",
@@ -22,7 +22,7 @@
     "@types/chai-as-promised": "0.0.30",
     "@types/gulp": "^4.0.2",
     "@types/mocha": "^2.2.40",
-    "@types/node": "^7.0.56",
+    "@types/node": "^7.0.57",
     "@types/sinon": "^1.16.36",
     "chai": "^3.4.1",
     "chai-as-promised": "^6.0.0",
@@ -50,9 +50,9 @@
     "typescript": "^2.7.2"
   },
   "dependencies": {
-    "@rxstack/async-event-dispatcher": "latest",
-    "@rxstack/exceptions": "latest",
-    "@types/lodash": "^4.14.104",
+    "@rxstack/async-event-dispatcher": "^0.0.24",
+    "@rxstack/exceptions": "^0.0.21",
+    "@types/lodash": "^4.14.106",
     "@types/winston": "^2.3.8",
     "injection-js": "^2.1.0",
     "lodash": "^4.17.5",
@@ -60,7 +60,7 @@
     "reflect-metadata": "^0.1.12",
     "winston": "^3.0.0-rc2",
     "yargonaut": "^1.1.2",
-    "yargs": "^11.0.0"
+    "yargs": "^11.1.0"
   },
   "bugs": {
     "url": "https://github.com/rxstack/rxstack/issues"

@@ -39,8 +39,12 @@ export class BootstrapListener {
           action: 'loginAction'
         },
         {
-          name: 'security_logout',
-          action: 'logoutAction'
+          name: 'security_authenticate',
+          action: 'authenticateAction'
+        },
+        {
+          name: 'security_unauthenticate',
+          action: 'unauthenticateAction'
         }
       ];
 
@@ -52,11 +56,6 @@ export class BootstrapListener {
         socketMetadata.forEach(meta => webSocketMetadataStorage.add(this.createWebSocketMetadata(meta)));
       }
     }
-
-    webSocketMetadataStorage.add(this.createWebSocketMetadata({
-      name: 'security_authenticate',
-      action: 'authenticateAction'
-    }));
   }
 
   private createHttpMetadata(meta: Object): HttpMetadata {
@@ -77,7 +76,6 @@ export class BootstrapListener {
     metadata.target = SecurityController;
     metadata.name = meta['name'];
     metadata.propertyKey = meta['action'];
-    metadata.ns = '/';
     return metadata;
   }
 }

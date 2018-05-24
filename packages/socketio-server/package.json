@@ -1,6 +1,6 @@
 {
   "name": "@rxstack/socketio-server",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "description": "RxStack SocketIO Server Module",
   "private": false,
   "author": "Nikolay Gergiev <symfonist@gmail.com>",
@@ -14,16 +14,12 @@
     "test": "gulp tests",
     "publish-package": "gulp publish"
   },
-  "peerDependencies": {
-    "@rxstack/async-event-dispatcher": "latest",
-    "@rxstack/exceptions": "latest",
-    "injection-js": "^2.1.0",
-    "reflect-metadata": "^0.1.12"
-  },
   "dependencies": {
-    "@rxstack/async-event-dispatcher": "latest",
-    "@rxstack/core": "0.0.5",
-    "@rxstack/exceptions": "latest",
+    "@rxstack/async-event-dispatcher": "^0.0.24",
+    "@rxstack/exceptions": "^0.0.21",
+    "@rxstack/core": "^0.0.9",
+    "injection-js": "^2.1.0",
+    "reflect-metadata": "^0.1.12",
     "socket.io": "^2.0.4"
   },
   "devDependencies": {

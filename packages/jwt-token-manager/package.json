@@ -1,6 +1,6 @@
 {
   "name": "@rxstack/jwt-token-manager",
-  "version": "0.0.1",
+  "version": "0.0.3",
   "description": "RxStack JWT Token Manager Module",
   "private": false,
   "author": "Nikolay Gergiev <symfonist@gmail.com>",
@@ -46,16 +46,12 @@
     "tslint-stylish": "^2.1.0",
     "typescript": "^2.7.2"
   },
-  "peerDependencies": {
-    "@rxstack/async-event-dispatcher": "latest",
-    "@rxstack/exceptions": "latest",
-    "injection-js": "^2.1.0",
-    "reflect-metadata": "^0.1.12"
-  },
   "dependencies": {
-    "@rxstack/core": "latest",
-    "@rxstack/exceptions": "latest",
-    "@rxstack/security": "latest",
+    "@rxstack/security": "^0.0.4",
+    "@rxstack/exceptions": "^0.0.21",
+    "@rxstack/core": "^0.0.9",
+    "injection-js": "^2.1.0",
+    "reflect-metadata": "^0.1.12",
     "jsonwebtoken": "^8.1.1"
   },
   "bugs": {

@@ -6,7 +6,7 @@ import {Injector} from 'injection-js';
 import {Application, Kernel, Request, Response} from '@rxstack/core';
 import { NotFoundException} from '@rxstack/exceptions';
 import {EventEmitter} from 'events';
-import {REFRESH_TOKEN_MANAGER} from '../src';
+import {REFRESH_TOKEN_MANAGER, UserNotFoundException} from '../src';
 import {environment} from './environments/environment';
 import {findHttpDefinition} from './helpers/kernel-definition-finder';
 
@@ -38,6 +38,22 @@ describe('Security:HttpController', () => {
     request.token.isFullyAuthenticated().should.be.true;
   });
 
+  it('should not login', async () => {
+    const kernel = injector.get(Kernel);
+    const def = findHttpDefinition(kernel.httpDefinitions, 'security_login');
+    const request = new Request('HTTP');
+    request.params.set('username', 'not-valid');
+    request.params.set('password', 'not-valid');
+    let exception;
+    try {
+      await def.handler(request);
+    } catch (e) {
+      exception = e;
+    }
+    exception.should.be.instanceOf(UserNotFoundException);
+    exception.getStatusCode().should.be.equal(401);
+  });
+
   it('should refresh token', async () => {
     const kernel = injector.get(Kernel);
     const def = findHttpDefinition(kernel.httpDefinitions, 'security_refresh_token');
@@ -46,7 +62,6 @@ describe('Security:HttpController', () => {
     request.params.set('refreshToken', refreshToken);
     let response: Response = await def.handler(request);
     response.content.token.should.be.equal('generated-token');
-    request.token.isFullyAuthenticated().should.be.false;
   });
 
   it('should throw exception calling refresh token with invalid token', async () => {
