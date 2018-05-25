@@ -1,15 +1,14 @@
 import {Injectable} from 'injection-js';
-import {TokenManagerInterface} from '@rxstack/security';
 import {KeyLoader} from './key-loader';
-import {JwtConfiguration, Rsa} from '../jwt-configuration';
 import {JWTDecodeFailureException, JWTEncodeFailureException} from '../exceptions';
-import {Secret} from '../interfaces';
+import {Secret, TokenManagerInterface} from '../interfaces';
+import {Rsa, SecurityConfiguration} from '../security-configuration';
 const jwt = require('jsonwebtoken');
 
 @Injectable()
 export class TokenManager implements TokenManagerInterface {
 
-  constructor(private keyLoader: KeyLoader, private config: JwtConfiguration) {}
+  constructor(private keyLoader: KeyLoader, private config: SecurityConfiguration) {}
 
   async encode(payload: Object): Promise<string> {
     const key = await this.keyLoader.loadPrivateKey();

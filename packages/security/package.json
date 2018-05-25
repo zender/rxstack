@@ -18,12 +18,12 @@
   },
   "devDependencies": {
     "@rxstack/configuration": "latest",
-    "@types/lodash": "^4.14.104",
     "@types/chai": "^3.4.35",
     "@types/chai-as-promised": "0.0.30",
     "@types/gulp": "^4.0.2",
+    "@types/lodash": "^4.14.109",
     "@types/mocha": "^2.2.40",
-    "@types/node": "^7.0.55",
+    "@types/node": "^7.0.65",
     "@types/sinon": "^1.16.36",
     "chai": "^3.4.1",
     "chai-as-promised": "^6.0.0",
@@ -46,17 +46,18 @@
     "ts-node": "^3.0.2",
     "tslint": "^4.5.1",
     "tslint-stylish": "^2.1.0",
-    "typescript": "^2.7.2"
+    "typescript": "^2.8.3"
   },
   "dependencies": {
     "@rxstack/async-event-dispatcher": "^0.0.24",
-    "@rxstack/exceptions": "^0.0.21",
     "@rxstack/core": "^0.0.9",
-    "injection-js": "^2.1.0",
-    "reflect-metadata": "^0.1.12",
+    "@rxstack/exceptions": "^0.0.21",
     "bcrypt": "^1.0.3",
     "crypto-js": "^3.1.9-1",
-    "lodash": "^4.17.5",
+    "injection-js": "^2.1.0",
+    "jsonwebtoken": "^8.1.1",
+    "lodash": "^4.17.10",
+    "reflect-metadata": "^0.1.12",
     "uuid": "^3.2.1"
   },
   "bugs": {

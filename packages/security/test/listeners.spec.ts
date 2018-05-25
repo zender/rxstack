@@ -1,18 +1,16 @@
 import 'reflect-metadata';
-import {Configuration} from '@rxstack/configuration';
-Configuration.initialize(__dirname + '/environments');
 import {AppModule} from './mocks/app.module';
 import {Injector} from 'injection-js';
 import {Application, Kernel, Request, Response, ServerManager, SocketEvent} from '@rxstack/core';
 import {UnauthorizedException} from '@rxstack/exceptions';
-import {environment} from './environments/environment';
+import {environmentSecurity} from './environments/environment.security';
 import {findHttpDefinition} from './helpers/kernel-definition-finder';
 import {SocketListener} from '../src/event-listeners/socket-listener';
 import {EventEmitter} from 'events';
 
 describe('Security:Listeners', () => {
   // Setup application
-  const app = new Application(AppModule, environment);
+  const app = new Application(AppModule.configure(environmentSecurity), environmentSecurity);
   let injector: Injector = null;
 
   before(async() =>  {

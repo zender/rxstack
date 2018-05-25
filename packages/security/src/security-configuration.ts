@@ -30,17 +30,35 @@ export class TokenExtractorsOptions {
   }
 }
 
+export class Rsa {
+  public_key: string;
+  private_key?: string;
+  passphrase?: string;
+
+  constructor(obj: any) {
+    this.public_key = obj.public_key;
+    this.private_key = obj.private_key || null;
+    this.passphrase = obj.passphrase || null;
+  }
+}
+
 export class SecurityConfiguration {
   transports: string[];
   token_extractors: TokenExtractorsOptions;
   local_authentication?: boolean;
   user_identity_field?: string;
-  ttl?: number
+  secret: Rsa | string;
+  signature_algorithm?: string;
+  issuer?: string;
+  ttl?: number;
   constructor(obj?: any) {
     this.transports = obj.transports || [];
     this.token_extractors = new TokenExtractorsOptions(obj.token_extractors);
     this.local_authentication = obj.local_authentication || false;
     this.user_identity_field = obj.user_identity_field || 'username';
-    this.ttl = obj.ttl || (300 * 1000);
+    this.ttl = obj.ttl ? obj.ttl : 300;
+    this.secret = (typeof obj.secret === 'string') ? obj.secret : new Rsa(obj.secret);
+    this.signature_algorithm = obj.signature_algorithm || 'RS512';
+    this.issuer = obj.issuer ? obj.issuer : 'rxstack';
   }
 }

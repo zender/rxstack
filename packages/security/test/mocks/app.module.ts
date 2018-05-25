@@ -1,5 +1,5 @@
-import {Module, ProviderDefinition, UserInterface} from '@rxstack/core';
-import {environment} from '../environments/environment';
+import {Module, ModuleWithProviders, ProviderDefinition, UserInterface} from '@rxstack/core';
+import {environmentSecurity} from '../environments/environment.security';
 import {
   AUTH_PROVIDER_REGISTRY, PASSWORD_ENCODER_REGISTRY, SecurityModule, TOKEN_MANAGER,
   USER_PROVIDER_REGISTRY
@@ -39,7 +39,7 @@ export const APP_PROVIDERS: ProviderDefinition[] = [
     provide: USER_PROVIDER_REGISTRY,
     useFactory: () => {
       return new InMemoryUserProvider<UserInterface>(
-        environment.user_providers.in_memory.users,
+        environmentSecurity.user_providers.in_memory.users,
         (data: UserInterface) => new TestUserWithEncoder(data.username, data.password, data.roles)
       );
     },
@@ -63,10 +63,15 @@ export const APP_PROVIDERS: ProviderDefinition[] = [
   },
 ];
 
-@Module({
-  imports: [
-    SecurityModule.configure(environment.security)
-  ],
-  providers: APP_PROVIDERS
-})
-export class AppModule {}
+@Module()
+export class AppModule {
+  static configure(options: any): ModuleWithProviders {
+    return {
+      module: AppModule,
+      imports: [
+        SecurityModule.configure(options.security)
+      ],
+      providers: APP_PROVIDERS
+    };
+  }
+}

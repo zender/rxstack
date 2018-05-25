@@ -1,15 +1,13 @@
 import {Module, ModuleWithProviders} from '@rxstack/core';
-import {SecurityModule} from '@rxstack/security';
-import {JwtTokenManagerModule} from '../../src/jwt-token-manager.module';
+import {SecurityModule} from '../../src';
 
 @Module()
-export class AppModule {
+export class AppJwtModule {
   static configure(options: any): ModuleWithProviders {
     return {
-      module: AppModule,
+      module: AppJwtModule,
       imports: [
         SecurityModule.configure(options.security),
-        JwtTokenManagerModule.configure(options.jwt_token_manager)
       ],
       providers: []
     };

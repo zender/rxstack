@@ -1,6 +1,4 @@
 import 'reflect-metadata';
-import {Configuration} from '@rxstack/configuration';
-Configuration.initialize(__dirname + '/environments');
 import {AppModule} from './mocks/app.module';
 import {Injector} from 'injection-js';
 import {Application, Kernel, Request, Response} from '@rxstack/core';
@@ -8,12 +6,12 @@ import {UnauthorizedException} from '@rxstack/exceptions';
 import {EventEmitter} from 'events';
 import {REFRESH_TOKEN_MANAGER} from '../src';
 import {AnonymousToken, Token, UsernameAndPasswordToken} from '../src/models';
-import {environment} from './environments/environment';
+import {environmentSecurity} from './environments/environment.security';
 import {findWebSocketDefinition} from './helpers/kernel-definition-finder';
 
 describe('Security:SocketController', () => {
   // Setup application
-  const app = new Application(AppModule, environment);
+  const app = new Application(AppModule.configure(environmentSecurity), environmentSecurity);
   let injector: Injector = null;
   let token: string;
   let connection = new EventEmitter();

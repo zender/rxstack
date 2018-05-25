@@ -1,13 +1,13 @@
 import 'reflect-metadata';
 import {Application} from '@rxstack/core';
 import {Injector} from 'injection-js';
-import {TOKEN_MANAGER} from '@rxstack/security';
-import {AppModule} from './mocks/app.module';
 import {environmentWithoutRsa} from './environments/environment.without-rsa';
+import {AppJwtModule} from './mocks/app-jwt.module';
+import {TOKEN_MANAGER} from '../src';
 
 describe('TokenManagerWithRsa', () => {
   // Setup application
-  const app = new Application(AppModule.configure(environmentWithoutRsa), environmentWithoutRsa);
+  const app = new Application(AppJwtModule.configure(environmentWithoutRsa), environmentWithoutRsa);
   let injector: Injector = null;
 
   before(async() =>  {

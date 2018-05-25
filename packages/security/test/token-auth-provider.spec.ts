@@ -1,6 +1,4 @@
 import 'reflect-metadata';
-import {Configuration} from '@rxstack/configuration';
-Configuration.initialize(__dirname + '/environments');
 import {AppModule} from './mocks/app.module';
 import {Injector} from 'injection-js';
 import {Token} from '../src/models';
@@ -8,11 +6,11 @@ import {User} from '../src/models/user';
 import {AuthenticationProviderManager} from '../src/authentication/authentication-provider-manager';
 import {BadCredentialsException} from '../src/exceptions';
 import {Application} from '@rxstack/core';
-import {environment} from './environments/environment';
+import {environmentSecurity} from './environments/environment.security';
 
 describe('Security:TokenAuthenticationProvider', () => {
   // Setup application
-  const app = new Application(AppModule, environment);
+  const app = new Application(AppModule.configure(environmentSecurity), environmentSecurity);
   let injector: Injector;
 
   before(async() =>  {

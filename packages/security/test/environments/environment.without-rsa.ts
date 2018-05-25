@@ -1,4 +1,4 @@
-export const environment = {
+export const environmentWithoutRsa = {
   servers: ['none'],
   user_providers: {
     in_memory: {
@@ -27,7 +27,6 @@ export const environment = {
     ]
   },
   security: {
-    transports: ['HTTP', 'SOCKET'],
     token_extractors: {
       query_parameter: {
         enabled: true,
@@ -37,6 +36,8 @@ export const environment = {
       }
     },
     local_authentication: true,
-    ttl: 100
+    socket_authentication: true,
+    secret: 'my_secret',
+    signature_algorithm: 'HS512'
   }
 };

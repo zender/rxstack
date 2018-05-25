@@ -1,15 +1,15 @@
 import 'reflect-metadata';
 import {Application} from '@rxstack/core';
 import {Injector} from 'injection-js';
-import {AppModule} from './mocks/app.module';
 import {TokenManager} from '../src/services';
-import {TOKEN_MANAGER} from '@rxstack/security';
 import {JWTDecodeFailureException} from '../src/exceptions';
 import {environmentWitRsa} from './environments/environment.with-rsa';
+import {AppJwtModule} from './mocks/app-jwt.module';
+import {TOKEN_MANAGER} from '../src';
 
 describe('TokenManager', () => {
   // Setup application
-  const app = new Application(AppModule.configure(environmentWitRsa), environmentWitRsa);
+  const app = new Application(AppJwtModule.configure(environmentWitRsa), environmentWitRsa);
   let injector: Injector = null;
 
   before(async() =>  {
@@ -29,6 +29,7 @@ describe('TokenManager', () => {
     decoded.hasOwnProperty('iss').should.be.true;
     decoded.hasOwnProperty('iat').should.be.true;
     decoded.hasOwnProperty('exp').should.be.true;
+    console.log(decoded);
   });
 
   it('should throw an exception if token is invalid', async () => {

@@ -1,10 +1,10 @@
-import {JwtConfiguration, Rsa} from '../jwt-configuration';
 import {Injectable} from 'injection-js';
 import {readFile} from '../utils';
+import {Rsa, SecurityConfiguration} from '../security-configuration';
 
 @Injectable()
 export class KeyLoader {
-  constructor(protected config: JwtConfiguration) { }
+  constructor(protected config: SecurityConfiguration) { }
 
   async loadPrivateKey(): Promise<Buffer|string> {
     if (this.config.secret instanceof Rsa) {

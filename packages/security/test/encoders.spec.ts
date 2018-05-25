@@ -1,6 +1,4 @@
 import 'reflect-metadata';
-import {Configuration} from '@rxstack/configuration';
-Configuration.initialize(__dirname + '/environments');
 import {AppModule} from './mocks/app.module';
 import {Injector} from 'injection-js';
 import {EncoderFactory} from '../src/password-encoders/encoder-factory';
@@ -8,12 +6,12 @@ import {TestUserWithEncoder} from './mocks/test-user-with-encoder';
 import {PlainTextPasswordEncoder} from '../src/password-encoders/plain-text.password-encoder';
 import {BcryptPasswordEncoder} from '../src/password-encoders/bcrypt.password-encoder';
 import {User} from '../src/models/user';
-import {environment} from './environments/environment';
+import {environmentSecurity} from './environments/environment.security';
 import {Application} from '@rxstack/core';
 
 describe('Security:Encoder', () => {
   // Setup application
-  const app = new Application(AppModule, environment);
+  const app = new Application(AppModule.configure(environmentSecurity), environmentSecurity);
   let injector: Injector;
 
   before(async() =>  {

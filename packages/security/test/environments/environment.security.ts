@@ -1,4 +1,4 @@
-export const environmentWithInvalidAlgorithm = {
+export const environmentSecurity = {
   servers: ['none'],
   user_providers: {
     in_memory: {
@@ -27,6 +27,7 @@ export const environmentWithInvalidAlgorithm = {
     ]
   },
   security: {
+    transports: ['HTTP', 'SOCKET'],
     token_extractors: {
       query_parameter: {
         enabled: true,
@@ -36,10 +37,8 @@ export const environmentWithInvalidAlgorithm = {
       }
     },
     local_authentication: true,
-    socket_authentication: true
-  },
-  jwt_token_manager: {
+    ttl: 100,
     secret: 'my_secret',
-    signature_algorithm: 'invalid'
+    signature_algorithm: 'HS512'
   }
 };
