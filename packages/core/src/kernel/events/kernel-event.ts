@@ -1,6 +1,6 @@
 import {GenericEvent} from '@rxstack/async-event-dispatcher';
-import {Request} from '../models/request';
-import {ResponseObject} from '../interfaces';
+import {Request} from '../models';
+import {Response} from '../models';
 
 /**
  * Base class for kernel events.
@@ -10,7 +10,7 @@ export class KernelEvent extends GenericEvent {
   /**
    * Response object
    */
-  private response?: ResponseObject;
+  private response?: Response;
 
   /**
    * Constructor
@@ -33,18 +33,18 @@ export class KernelEvent extends GenericEvent {
   /**
    * Sets the response
    *
-   * @param {ResponseObject} response
+   * @param {Response} response
    */
-  setResponse(response: ResponseObject): void {
+  setResponse(response: Response): void {
     this.response = response;
   }
 
   /**
    * Retrieves the response
    *
-   * @returns {ResponseObject}
+   * @returns {Response}
    */
-  getResponse(): ResponseObject {
+  getResponse(): Response {
     return this.response;
   }
 

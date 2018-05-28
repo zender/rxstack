@@ -85,11 +85,10 @@ export class SecurityModule {
         },
         {
           provide: REFRESH_TOKEN_MANAGER,
-          useFactory: (tokenManager: TokenManagerInterface) => {
-            const ttl = (60 * 60 * 24);
-            return new InMemoryRefreshTokenManager(tokenManager, ttl);
+          useFactory: (tokenManager: TokenManagerInterface, config: SecurityConfiguration) => {
+            return new InMemoryRefreshTokenManager(tokenManager, config.refresh_token_ttl);
           },
-          deps: [TOKEN_MANAGER]
+          deps: [TOKEN_MANAGER, SecurityConfiguration]
         },
         {
           provide: PASSWORD_ENCODER_REGISTRY,

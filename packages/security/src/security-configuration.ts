@@ -51,12 +51,14 @@ export class SecurityConfiguration {
   signature_algorithm?: string;
   issuer?: string;
   ttl?: number;
+  refresh_token_ttl?: number;
   constructor(obj?: any) {
     this.transports = obj.transports || [];
     this.token_extractors = new TokenExtractorsOptions(obj.token_extractors);
     this.local_authentication = obj.local_authentication || false;
     this.user_identity_field = obj.user_identity_field || 'username';
     this.ttl = obj.ttl ? obj.ttl : 300;
+    this.refresh_token_ttl = obj.refresh_token_ttl ? obj.refresh_token_ttl : (60 * 60 * 24);
     this.secret = (typeof obj.secret === 'string') ? obj.secret : new Rsa(obj.secret);
     this.signature_algorithm = obj.signature_algorithm || 'RS512';
     this.issuer = obj.issuer ? obj.issuer : 'rxstack';

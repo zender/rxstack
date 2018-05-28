@@ -37,7 +37,6 @@ export const environmentWithInvalidAlgorithm = {
     },
     local_authentication: true,
     socket_authentication: true,
-
     secret: 'my_secret',
     signature_algorithm: 'invalid'
   }

@@ -9,7 +9,6 @@ export type ModuleType = ModuleInterface | ModuleWithProviders;
 export interface ModuleInterface {}
 
 export interface ModuleMetadata {
-  imports?: ModuleType[];
   providers?: ProviderDefinition[];
 }
 

@@ -3,7 +3,7 @@ import {MODULE_KEY , ModuleMetadata, } from './interfaces';
 import * as _ from 'lodash';
 
 const normalize = function (options?: ModuleMetadata): ModuleMetadata {
-  let defaultOptions: ModuleMetadata = { imports: [], providers: [] };
+  let defaultOptions: ModuleMetadata = { providers: [] };
   if (options) {
     return _.merge(defaultOptions, options);
   }

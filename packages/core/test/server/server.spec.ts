@@ -1,16 +1,15 @@
 import 'reflect-metadata';
 import {Application} from '../../src/application';
-import {application_environment} from '../environments/application_environment';
 import {Injector} from 'injection-js';
 import {NoopHttpServer, ServerEvents, ServerManager, SocketEvent} from '../../src/server';
 import {AsyncEventDispatcher} from '@rxstack/async-event-dispatcher';
 import {EventEmitter} from 'events';
-import {ServerModule} from './fixtures/server.module';
 import {SocketListener} from './fixtures/socket-listener';
+import {SERVER_APP_OPTIONS} from './fixtures/server-app-options';
 
 describe('Server', () => {
   // Setup application
-  const app = new Application(ServerModule, application_environment);
+  const app = new Application(SERVER_APP_OPTIONS);
   let injector: Injector;
   let manager: ServerManager;
 
