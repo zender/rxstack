@@ -1,16 +1,15 @@
 import 'reflect-metadata';
-import {AppModule} from './mocks/app.module';
 import {Injector} from 'injection-js';
 import {Application, Kernel, Request, Response} from '@rxstack/core';
 import { NotFoundException} from '@rxstack/exceptions';
 import {EventEmitter} from 'events';
 import {REFRESH_TOKEN_MANAGER, UserNotFoundException} from '../src';
-import {environmentSecurity} from './environments/environment.security';
 import {findHttpDefinition} from './helpers/kernel-definition-finder';
+import {SECURITY_APP_OPTIONS} from './mocks/security-app-options';
 
 describe('Security:HttpController', () => {
   // Setup application
-  const app = new Application(AppModule.configure(environmentSecurity), environmentSecurity);
+  const app = new Application(SECURITY_APP_OPTIONS);
   let injector: Injector = null;
   let refreshToken: string;
 

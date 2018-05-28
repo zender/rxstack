@@ -12,7 +12,7 @@ describe('Configuration', () => {
       Configuration.initialize(__dirname + '/not-exist');
     };
 
-    fn.should.throw('Base environmentSecurity file');
+    fn.should.throw('Base environment file');
   });
 
   it('should set app dir', () => {

@@ -1,17 +1,16 @@
 import 'reflect-metadata';
-import {AppModule} from './mocks/app.module';
 import {Injector} from 'injection-js';
 import {EncoderFactory} from '../src/password-encoders/encoder-factory';
 import {TestUserWithEncoder} from './mocks/test-user-with-encoder';
 import {PlainTextPasswordEncoder} from '../src/password-encoders/plain-text.password-encoder';
 import {BcryptPasswordEncoder} from '../src/password-encoders/bcrypt.password-encoder';
 import {User} from '../src/models/user';
-import {environmentSecurity} from './environments/environment.security';
 import {Application} from '@rxstack/core';
+import {SECURITY_APP_OPTIONS} from './mocks/security-app-options';
 
 describe('Security:Encoder', () => {
   // Setup application
-  const app = new Application(AppModule.configure(environmentSecurity), environmentSecurity);
+  const app = new Application(SECURITY_APP_OPTIONS);
   let injector: Injector;
 
   before(async() =>  {

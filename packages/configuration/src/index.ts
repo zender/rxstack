@@ -1,6 +1,7 @@
 const path = require('path');
 const fs = require('fs');
 const _ = require('lodash');
+const appRootPath = require('app-root-path').path;
 
 /**
  * Configuration component
@@ -26,7 +27,7 @@ export class Configuration {
 
   static initAppDirectory(): void {
     if (!process.env.APP_DIR) {
-      process.env.APP_DIR = process.mainModule['paths'][0].split('node_modules')[0].slice(0, -1);
+      process.env.APP_DIR = appRootPath;
     }
   }
 

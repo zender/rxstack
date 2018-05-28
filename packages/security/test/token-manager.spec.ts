@@ -4,12 +4,12 @@ import {Injector} from 'injection-js';
 import {TokenManager} from '../src/services';
 import {JWTDecodeFailureException} from '../src/exceptions';
 import {environmentWitRsa} from './environments/environment.with-rsa';
-import {AppJwtModule} from './mocks/app-jwt.module';
 import {TOKEN_MANAGER} from '../src';
+import {jwt_app_options} from './mocks/jwt-app-options';
 
 describe('TokenManager', () => {
   // Setup application
-  const app = new Application(AppJwtModule.configure(environmentWitRsa), environmentWitRsa);
+  const app = new Application(jwt_app_options(environmentWitRsa));
   let injector: Injector = null;
 
   before(async() =>  {

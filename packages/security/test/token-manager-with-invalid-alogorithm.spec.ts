@@ -3,12 +3,12 @@ import {Application} from '@rxstack/core';
 import {Injector} from 'injection-js';
 import {environmentWithInvalidAlgorithm} from './environments/environment.with-invalid-algowithm';
 import {JWTEncodeFailureException} from '../src/exceptions';
-import {AppJwtModule} from './mocks/app-jwt.module';
 import {TOKEN_MANAGER} from '../src';
+import {jwt_app_options} from './mocks/jwt-app-options';
 
 describe('TokenManagerWithInvalidAlgorithm', () => {
   // Setup application
-  const app = new Application(AppJwtModule.configure(environmentWithInvalidAlgorithm), environmentWithInvalidAlgorithm);
+  const app = new Application(jwt_app_options(environmentWithInvalidAlgorithm));
   let injector: Injector = null;
 
   before(async() =>  {

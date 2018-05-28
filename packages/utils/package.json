@@ -1,7 +1,7 @@
 {
-  "name": "@rxstack/express-file-upload",
-  "version": "0.0.11",
-  "description": "RxStack Express File Upload Module",
+  "name": "@rxstack/utils",
+  "version": "0.0.1",
+  "description": "RxStack Utils Component",
   "private": false,
   "author": "Nikolay Gergiev <symfonist@gmail.com>",
   "license": "MIT",
@@ -14,53 +14,39 @@
     "test": "gulp tests",
     "publish-package": "gulp publish"
   },
-  "dependencies": {
-    "@rxstack/async-event-dispatcher": "^0.0.24",
-    "@rxstack/exceptions": "^0.0.21",
-    "@rxstack/core": "^0.0.10",
-    "@rxstack/express-server": "^0.0.37",
-    "reflect-metadata": "^0.1.12",
-    "injection-js": "^2.1.0",
-    "mime": "^2.2.0",
-    "formidable": "^1.1.1"
-  },
   "devDependencies": {
-    "@rxstack/configuration": "latest",
     "@types/chai": "^3.4.35",
     "@types/chai-as-promised": "0.0.30",
-    "@types/compression": "0.0.35",
+    "@types/chalk": "^2.2.0",
     "@types/gulp": "^4.0.2",
-    "@types/lodash": "^4.14.108",
-    "@types/mocha": "^2.2.48",
-    "@types/node": "^7.0.62",
+    "@types/lodash": "^4.14.91",
+    "@types/mocha": "^2.2.45",
+    "@types/node": "^7.0.51",
     "@types/sinon": "^1.16.36",
-    "app-root-path": "^2.0.1",
     "chai": "^3.4.1",
     "chai-as-promised": "^6.0.0",
     "codecov": "^2.1.0",
     "del": "^2.2.2",
     "es6-shim": "^0.35.3",
-    "fs-extra": "^5.0.0",
     "gulp": "^3.9.1",
     "gulp-istanbul": "^1.1.3",
     "gulp-mocha": "^3.0.1",
     "gulp-replace": "^0.5.4",
     "gulp-shell": "^0.6.5",
-    "gulp-sourcemaps": "^2.6.4",
+    "gulp-sourcemaps": "^2.6.3",
     "gulp-tslint": "^7.1.0",
-    "gulp-typescript": "^3.2.4",
+    "gulp-typescript": "^3.1.6",
     "gulpclass": "0.1.2",
     "mocha": "^3.2.0",
-    "remap-istanbul": "^0.9.6",
-    "request": "^2.83.0",
-    "request-promise": "^4.2.2",
+    "remap-istanbul": "^0.9.1",
     "sinon": "^2.1.0",
     "sinon-chai": "^2.9.0",
     "ts-node": "^3.0.2",
     "tslint": "^4.5.1",
     "tslint-stylish": "^2.1.0",
-    "typescript": "^2.8.3"
+    "typescript": "^2.6.2"
   },
+  "dependencies": {},
   "bugs": {
     "url": "https://github.com/rxstack/rxstack/issues"
   },
@@ -70,8 +56,6 @@
     "test": "test"
   },
   "keywords": [
-    "rxstack",
-    "express",
-    "file-upload"
+    "rxstack"
   ]
 }

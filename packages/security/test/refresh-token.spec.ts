@@ -1,5 +1,4 @@
 import 'reflect-metadata';
-import {AppModule} from './mocks/app.module';
 import {Injector} from 'injection-js';
 import {REFRESH_TOKEN_MANAGER} from '../src/security.module';
 import {RefreshTokenInterface, RefreshTokenManagerInterface} from '../src/interfaces';
@@ -8,12 +7,12 @@ import {User} from '../src/models/user';
 import {RefreshToken} from '../src/models/refresh-token';
 import {UnauthorizedException} from '@rxstack/exceptions';
 import {Application} from '@rxstack/core';
-import {environmentSecurity} from './environments/environment.security';
+import {SECURITY_APP_OPTIONS} from './mocks/security-app-options';
 
 
 describe('Security:RefreshToken', () => {
   // Setup application
-  const app = new Application(AppModule.configure(environmentSecurity), environmentSecurity);
+  const app = new Application(SECURITY_APP_OPTIONS);
   let injector: Injector = null;
   let authToken: Token;
   let refreshToken: RefreshTokenInterface;

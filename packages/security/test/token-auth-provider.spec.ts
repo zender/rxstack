@@ -1,16 +1,15 @@
 import 'reflect-metadata';
-import {AppModule} from './mocks/app.module';
 import {Injector} from 'injection-js';
 import {Token} from '../src/models';
 import {User} from '../src/models/user';
 import {AuthenticationProviderManager} from '../src/authentication/authentication-provider-manager';
 import {BadCredentialsException} from '../src/exceptions';
 import {Application} from '@rxstack/core';
-import {environmentSecurity} from './environments/environment.security';
+import {SECURITY_APP_OPTIONS} from './mocks/security-app-options';
 
 describe('Security:TokenAuthenticationProvider', () => {
   // Setup application
-  const app = new Application(AppModule.configure(environmentSecurity), environmentSecurity);
+  const app = new Application(SECURITY_APP_OPTIONS);
   let injector: Injector;
 
   before(async() =>  {

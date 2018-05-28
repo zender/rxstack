@@ -1,7 +1,8 @@
-import {Request, Response, StreamableResponse} from '@rxstack/core';
+import {Request, Response} from '@rxstack/core';
 import {NotFoundException} from '@rxstack/exceptions';
 import {WebSocket} from '@rxstack/core';
-const assetsDir = process.env.APP_DIR + '/test/assets';
+const assetsDir = require('app-root-path').path + '/test/assets';
+const fs = require('fs');
 
 export class MockController {
 
@@ -25,8 +26,8 @@ export class MockController {
   }
 
   @WebSocket('mock_stream')
-  async streamAction(request: Request): Promise<StreamableResponse> {
+  async streamAction(request: Request): Promise<Response> {
     const path = assetsDir + '/video.mp4';
-    return new StreamableResponse(path, request.headers.get('range'));
+    return new Response(fs.createReadStream(path));
   }
 }

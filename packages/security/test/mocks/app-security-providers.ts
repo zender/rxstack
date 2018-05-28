@@ -1,20 +1,22 @@
-import {Module, ModuleWithProviders, ProviderDefinition, UserInterface} from '@rxstack/core';
 import {environmentSecurity} from '../environments/environment.security';
+import {TestAuthenticationProvider} from './test.authentication-provider';
+import {TestTokenManager} from './test.token-manager';
+import {Noop2UserProvider} from './noop2-user-provider';
+import {PlainTextPasswordEncoder} from '../../src/password-encoders/plain-text.password-encoder';
+import {ProviderDefinition, UserInterface} from '@rxstack/core';
 import {
-  AUTH_PROVIDER_REGISTRY, PASSWORD_ENCODER_REGISTRY, SecurityModule, TOKEN_MANAGER,
+  AUTH_PROVIDER_REGISTRY,
+  PASSWORD_ENCODER_REGISTRY,
+  TOKEN_MANAGER,
   USER_PROVIDER_REGISTRY
 } from '../../src/security.module';
-import {PlainTextPasswordEncoder} from '../../src/password-encoders/plain-text.password-encoder';
 import {InMemoryUserProvider} from '../../src/user-providers/in-memory-user-provider';
-import {Noop2UserProvider} from './noop2-user-provider';
-import {TestUserWithEncoder} from './test-user-with-encoder';
-import {TestAuthenticationProvider} from './test.authentication-provider';
-import {AuthListener} from './auth.listener';
-import {TestTokenManager} from './test.token-manager';
 import {TestController} from './test.controller';
+import {TestUserWithEncoder} from './test-user-with-encoder';
+import {AuthListener} from './auth.listener';
 import {TestJwtAuthenticationProvider} from './test-jwt.authentication-provider';
 
-export const APP_PROVIDERS: ProviderDefinition[] = [
+export const APP_SECURITY_PROVIDERS: ProviderDefinition[] = [
   {
     provide: TestController,
     useClass: TestController
@@ -62,16 +64,3 @@ export const APP_PROVIDERS: ProviderDefinition[] = [
     multi: true
   },
 ];
-
-@Module()
-export class AppModule {
-  static configure(options: any): ModuleWithProviders {
-    return {
-      module: AppModule,
-      imports: [
-        SecurityModule.configure(options.security)
-      ],
-      providers: APP_PROVIDERS
-    };
-  }
-}

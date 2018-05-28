@@ -1,16 +1,15 @@
 import 'reflect-metadata';
-import {AppModule} from './mocks/app.module';
 import {Injector} from 'injection-js';
 import {UserProviderManager} from '../src/user-providers/user-provider-manager';
 import {UserNotFoundException} from '../src/exceptions/index';
 import {User} from '../src/models';
 import {PayloadUserProvider} from '../src/user-providers/payload-user-provider';
 import {Application, UserInterface} from '@rxstack/core';
-import {environmentSecurity} from './environments/environment.security';
+import {SECURITY_APP_OPTIONS} from './mocks/security-app-options';
 
 describe('Security:UserProvider', () => {
   // Setup application
-  const app = new Application(AppModule.configure(environmentSecurity), environmentSecurity);
+  const app = new Application(SECURITY_APP_OPTIONS);
   let injector: Injector = null;
 
   before(async() =>  {

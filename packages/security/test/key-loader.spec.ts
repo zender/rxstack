@@ -3,11 +3,11 @@ import {Application} from '@rxstack/core';
 import {Injector} from 'injection-js';
 import {environmentWitRsa} from './environments/environment.with-rsa';
 import {KeyLoader} from '../src/services';
-import {AppJwtModule} from './mocks/app-jwt.module';
+import {jwt_app_options} from './mocks/jwt-app-options';
 
 describe('KeyLoaderWithRsa', () => {
   // Setup application
-  const app = new Application(AppJwtModule.configure(environmentWitRsa), environmentWitRsa);
+  const app = new Application(jwt_app_options(environmentWitRsa));
   let injector: Injector = null;
 
   before(async() =>  {

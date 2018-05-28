@@ -1,17 +1,14 @@
 import 'reflect-metadata';
-import {Configuration} from '@rxstack/configuration';
-Configuration.initialize(__dirname + '/environments', 'file_upload_environment');
 import {Application} from '@rxstack/core';
-import {AppModule} from './mocks/app.module';
 import {IncomingMessage} from 'http';
-import {file_upload_environment} from './environments/file_upload_environment';
+import {EXPRESS_FILE_UPLOAD_OPTIONS} from './mocks/express-file-upload-app-options';
 const rp = require('request-promise');
 const fs = require('fs-extra');
-const assetsDir = process.env.APP_DIR + '/test/assets';
+const assetsDir = require('app-root-path').path + '/test/assets';
 
 describe('ExpressFileUpload', () => {
   // Setup application
-  const app = new Application(AppModule.configure(file_upload_environment), file_upload_environment);
+  const app = new Application(EXPRESS_FILE_UPLOAD_OPTIONS);
   let host = 'http://localhost:3210';
 
   before(async() =>  {

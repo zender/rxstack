@@ -21,4 +21,10 @@ describe('Channel', () => {
     combined.children.length.should.be.equal(2);
     combined.ns.should.be.equal('test1_test2');
   });
+
+  it('should remove channel', () => {
+    const channel1 = channelManager.channel('test1');
+    channelManager.removeChannel('test1');
+    channelManager.hasChannel('test1').should.be.false;
+  });
 });

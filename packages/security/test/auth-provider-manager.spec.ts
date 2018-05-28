@@ -1,5 +1,4 @@
 import 'reflect-metadata';
-import {AppModule} from './mocks/app.module';
 import {Injector} from 'injection-js';
 import {AuthenticationProviderManager} from '../src/authentication/authentication-provider-manager';
 import {UsernameAndPasswordToken} from '../src/models/username-and-password.token';
@@ -10,11 +9,11 @@ import {TestSupportedToken} from './mocks/test-supported-token';
 import {TestAuthenticationProviderException} from './mocks/test.authentication-provider';
 import {AuthListener} from './mocks/auth.listener';
 import {Application} from '@rxstack/core';
-import {environmentSecurity} from './environments/environment.security';
+import {SECURITY_APP_OPTIONS} from './mocks/security-app-options';
 
 describe('Security:AuthenticationProviderManager', () => {
   // Setup application
-  const app = new Application(AppModule.configure(environmentSecurity), environmentSecurity);
+  const app = new Application(SECURITY_APP_OPTIONS);
   let injector: Injector;
 
   before(async() =>  {
