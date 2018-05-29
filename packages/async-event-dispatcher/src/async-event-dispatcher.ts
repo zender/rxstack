@@ -88,9 +88,9 @@ export class AsyncEventDispatcher {
    * @returns {Observer[]}
    */
   private getNamedStack(name: string): Observer[] {
-    if (!this.stack.has(name))
+    if (!this.stack.has(name)) {
       this.stack.set(name, []);
-
+    }
     return this.stack.get(name);
   }
 
@@ -104,8 +104,10 @@ export class AsyncEventDispatcher {
   private async doDispatch(listeners: EventCallable[], event: GenericEvent): Promise<GenericEvent> {
     return listeners.reduce((currrent: Promise<GenericEvent>, next: EventCallable): Promise<GenericEvent> => {
       return currrent.then(async (): Promise<GenericEvent> => {
-        if (event.isPropagationStopped())
+        if (event.isPropagationStopped()) {
           return event;
+        }
+
         return next.call(this, event);
       });
 
