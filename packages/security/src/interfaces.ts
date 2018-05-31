@@ -51,3 +51,8 @@ export interface TokenExtractorInterface {
   extract(request: Request): string;
   getName(): string;
 }
+
+export interface Secret {
+  key: string | Buffer;
+  passphrase?: string;
+}

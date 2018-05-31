@@ -16,3 +16,9 @@ export function requestModifierMiddleware(injector: Injector): RequestHandler {
     next();
   };
 }
+
+export function exceptionMiddleware(injector: Injector): RequestHandler {
+  return (request: ExpressRequest, response: ExpressResponse, next: NextFunction): void => {
+    throw new Error('Custom middleware error');
+  };
+}

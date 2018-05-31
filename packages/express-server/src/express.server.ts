@@ -8,7 +8,7 @@ import {
 } from 'express';
 import * as bodyParser from 'body-parser';
 import {
-  Request, ResponseObject, HttpDefinition, StreamableResponse,
+  Request, Response, HttpDefinition,
   AbstractServer, ServerConfigurationEvent, ServerEvents, Transport
 } from '@rxstack/core';
 import * as compress from 'compression';
@@ -69,29 +69,37 @@ export class ExpressServer extends AbstractServer {
     return this.engine[routeDefinition.method.toLowerCase()](path,
       async (req: ExpressRequest, res: ExpressResponse, next: NextFunction): Promise<void> => {
         return routeDefinition.handler(this.createRequest(req, routeDefinition))
-          .then((response: ResponseObject) => this.responseHandler(response, res))
+          .then((response: Response) => this.responseHandler(response, res))
           .catch(err => this.errorHandler()(err, req, res, next))
         ;
     });
   }
 
-  private responseHandler(response: ResponseObject, res: ExpressResponse): void {
+  private responseHandler(response: Response, res: ExpressResponse): void {
     response.headers.forEach((value, key) => res.header(key, value));
     res.status(response.statusCode);
-    if (response.content instanceof Stream.Readable)
+    if (response.content instanceof Stream.Readable) {
       response.content.pipe(res);
-    else
+    } else {
       res.send(response.content);
+    }
   }
 
   private errorHandler(): ErrorRequestHandler {
     return (err: any, req: ExpressRequest, res: ExpressResponse, next: NextFunction): void => {
-      const status = err.statusCode ? err.statusCode : 500;
+      process.on('uncaughtException', (err: any) => {
+        this.getLogger().error('uncaughtException', err);
+      });
 
+      process.on('unhandledRejection', function (reason: any, promise: Promise<any>) {
+        this.getLogger().error('unhandledRejection', {reason: reason, promise: promise});
+      });
+
+      const status = err.statusCode ? err.statusCode : 500;
       if (status >= 500) {
-        this.getLogger().error(err.message);
+        this.getLogger().error(err.message, err);
       } else {
-        this.getLogger().debug(err.message);
+        this.getLogger().debug(err.message, err);
       }
 
       if (process.env.NODE_ENV === 'production' && status >= 500) {

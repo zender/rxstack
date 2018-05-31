@@ -1,6 +1,5 @@
 import {Request} from './models/request';
 import {Response} from './models/response';
-import {StreamableResponse} from './models/streamable-response';
 
 /**
  * Available http methods
@@ -11,11 +10,6 @@ export type HttpMethod = 'HEAD' | 'GET' | 'PUT' | 'PATCH' | 'POST' | 'DELETE';
  * Available transports
  */
 export type Transport = 'HTTP' | 'SOCKET';
-
-/**
- * Available response types
- */
-export type ResponseObject = Response | StreamableResponse;
 
 export interface BaseDefinition {
   name: string;

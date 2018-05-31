@@ -23,6 +23,7 @@ import {SecurityController} from './controllers/security-controller';
 import {AsyncEventDispatcher} from '@rxstack/async-event-dispatcher';
 import {TokenAuthenticationProvider} from './authentication/token.authentication-provider';
 import {SocketListener} from './event-listeners/socket-listener';
+import {KeyLoader, TokenManager} from './services';
 
 export const AUTH_PROVIDER_REGISTRY = new InjectionToken<AuthenticationProviderInterface[]>('AUTH_PROVIDER_REGISTRY');
 export const USER_PROVIDER_REGISTRY = new InjectionToken<UserProviderInterface[]>('USER_PROVIDER_REGISTRY');
@@ -43,6 +44,14 @@ export class SecurityModule {
             return new SecurityConfiguration(configuration);
           },
           deps: []
+        },
+        {
+          provide: KeyLoader,
+          useClass: KeyLoader
+        },
+        {
+          provide: TOKEN_MANAGER,
+          useClass: TokenManager
         },
         {
           provide: EncoderFactory,
@@ -76,11 +85,10 @@ export class SecurityModule {
         },
         {
           provide: REFRESH_TOKEN_MANAGER,
-          useFactory: (tokenManager: TokenManagerInterface) => {
-            const ttl = (60 * 60 * 24);
-            return new InMemoryRefreshTokenManager(tokenManager, ttl);
+          useFactory: (tokenManager: TokenManagerInterface, config: SecurityConfiguration) => {
+            return new InMemoryRefreshTokenManager(tokenManager, config.refresh_token_ttl);
           },
-          deps: [TOKEN_MANAGER]
+          deps: [TOKEN_MANAGER, SecurityConfiguration]
         },
         {
           provide: PASSWORD_ENCODER_REGISTRY,

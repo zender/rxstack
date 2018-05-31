@@ -2,19 +2,18 @@ import 'reflect-metadata';
 import {Configuration} from '@rxstack/configuration';
 Configuration.initialize(__dirname + '/environments', 'express_server_environment');
 import {ExpressServer} from '../src/express.server';
-import {AppModule} from './mocks/app.module';
 import {Injector} from 'injection-js';
 import {IncomingMessage} from 'http';
 import {Application, ServerManager} from '@rxstack/core';
 import {express_server_environment} from './environments/express_server_environment';
+import {EXPRESS_APP_OPTIONS} from './mocks/express-app-options';
 const rp = require('request-promise');
-const fs = require('fs-extra');
 
 describe('ExpressServer', () => {
 
   // Setup application
   const assetsDir = process.env.APP_DIR + '/test/assets';
-  const app = new Application(AppModule, express_server_environment);
+  const app = new Application(EXPRESS_APP_OPTIONS);
   let injector: Injector;
   let host: string;
   let expressServer: ExpressServer;
@@ -49,7 +48,9 @@ describe('ExpressServer', () => {
         response['statusCode'].should.be.equal(200);
         response['body'].should.be.equal('something');
       })
-      .catch((err: any) => console.log(err))
+      .catch((err: any) => {
+        true.should.be.false;
+      })
     ;
   });
 
@@ -67,7 +68,9 @@ describe('ExpressServer', () => {
         response['statusCode'].should.be.equal(200);
         JSON.stringify(response['body']).should.be.equal(JSON.stringify({ id: 'json' }));
       })
-      .catch((err: any) => console.log(err))
+      .catch((err: any) => {
+        true.should.be.false;
+      })
     ;
   });
 
@@ -86,7 +89,9 @@ describe('ExpressServer', () => {
         response['statusCode'].should.be.equal(200);
         JSON.stringify(response['body']).should.be.equal(JSON.stringify({ id: 'express' }));
       })
-      .catch((err: any) => console.log(err))
+      .catch((err: any) => {
+        true.should.be.false;
+      })
     ;
   });
 
@@ -103,7 +108,9 @@ describe('ExpressServer', () => {
         headers['content-disposition'].should.be.equal('attachment; filename="video.mp4"');
         headers['content-type'].should.be.equal('video/mp4');
       })
-      .catch((err: any) => console.log(err))
+      .catch((err: any) => {
+        true.should.be.false;
+      })
     ;
   });
 
@@ -123,7 +130,9 @@ describe('ExpressServer', () => {
         response['headers']['content-range'].should.be.equal('bytes 1-200/424925');
         response['headers']['content-length'].should.be.equal('200');
       })
-      .catch((err: any) => console.log(err))
+      .catch((err: any) => {
+        true.should.be.false;
+      })
     ;
   });
 
@@ -139,6 +148,9 @@ describe('ExpressServer', () => {
     };
 
     await rp(options)
+      .then((response: IncomingMessage) => {
+        true.should.be.false;
+      })
       .catch((err: any) => {
         err['statusCode'].should.be.equal(404);
         err['response']['body']['message'].should.be.equal('Not Found');
@@ -155,8 +167,10 @@ describe('ExpressServer', () => {
     };
 
     await rp(options)
+      .then((response: IncomingMessage) => {
+        true.should.be.false;
+      })
       .catch((err: any) => {
-
         err['statusCode'].should.be.equal(500);
         err['response']['body']['message'].should.be.equal('something');
       })
@@ -173,11 +187,32 @@ describe('ExpressServer', () => {
     };
 
     await rp(options)
+      .then((response: IncomingMessage) => {
+        true.should.be.false;
+      })
       .catch((err: any) => {
         err['statusCode'].should.be.equal(500);
         err['response']['body']['message'].should.be.equal('Internal Server Error');
       })
     ;
     process.env.NODE_ENV = 'testing';
+  });
+
+  it('should handle middleware exception', async () => {
+    const options = {
+      uri: host + '/express-middleware-error',
+      method: 'GET',
+      resolveWithFullResponse: true,
+      json: true
+    };
+
+    await rp(options)
+      .then((response: IncomingMessage) => {
+        true.should.be.false;
+      })
+      .catch((err: any) => {
+        err['statusCode'].should.be.equal(500);
+      })
+    ;
   });
 });

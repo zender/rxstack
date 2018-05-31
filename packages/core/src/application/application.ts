@@ -8,7 +8,7 @@ import {
 import {BootstrapEvent} from './bootstrap-event';
 import {ApplicationEvents} from './application-events';
 import {
-  MODULE_KEY, ModuleInterface, ModuleMetadata, ModuleType,
+  MODULE_KEY, ModuleMetadata, ModuleType,
   ProviderDefinition
 } from './interfaces';
 import {ServerManager} from '../server';
@@ -20,13 +20,14 @@ export class Application {
   private providers: ProviderDefinition[];
   private injector?: Injector;
   private options: ApplicationOptions;
-  constructor(private module: ModuleInterface, options: ApplicationOptions) {
+  constructor(options: ApplicationOptions) {
     this.options = new ApplicationOptions(options);
   }
 
   async start(): Promise<this> {
     this.providers = [];
-    this.resolveModule(this.module);
+    this.options.imports.forEach((module) => this.resolveModule(module));
+    this.providers.push(...this.options.providers);
     this.injector = await this.doBootstrap();
     const manager = this.injector.get(ServerManager);
     await manager.start();
@@ -35,7 +36,8 @@ export class Application {
 
   async runCli(): Promise<this> {
     this.providers = [];
-    this.resolveModule(this.module);
+    this.options.imports.forEach((module) => this.resolveModule(module));
+    this.providers.push(...this.options.providers);
     this.injector = await this.doBootstrap(true);
     this.injector.get(CommandManager).execute();
     return this;
@@ -77,14 +79,12 @@ export class Application {
 
   private resolveModule(target: ModuleType): void {
     const moduleMetadata: ModuleMetadata = this.getModuleMetadata(target);
-    moduleMetadata.imports.forEach((m) => this.resolveModule(m));
     moduleMetadata.providers.forEach((provider: ProviderDefinition) => this.providers.push(provider));
   }
 
   private getModuleMetadata(target: ModuleType): ModuleMetadata {
     const moduleMetadata: ModuleMetadata =
       Reflect.getMetadata(MODULE_KEY, target['module'] ? target['module'] : target);
-    Array.isArray(target['imports']) ? moduleMetadata.imports.push(...target['imports']) : null;
     Array.isArray(target['providers']) ? moduleMetadata.providers.push(...target['providers']) : null;
     return moduleMetadata;
   }

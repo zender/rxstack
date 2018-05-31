@@ -1,17 +1,14 @@
 import 'reflect-metadata';
-import {Configuration} from '@rxstack/configuration';
-Configuration.initialize(__dirname + '/../environments', 'application_environment');
 import {Injector} from 'injection-js';
 import {Exception, InternalServerErrorException} from '@rxstack/exceptions';
 import {Kernel, Request, Response} from '../../src/kernel';
 import {Application} from '../../src/application';
-import {KernelModule} from './fixtures/kernel.module';
-import {application_environment} from '../environments/application_environment';
+import {KERNEL_APP_OPTIONS} from './fixtures/kernel-app-options';
 
 describe('Kernel', () => {
 
   // Setup application
-  const app = new Application(KernelModule, application_environment);
+  const app = new Application(KERNEL_APP_OPTIONS);
   let injector: Injector;
   let kernel: Kernel;
 

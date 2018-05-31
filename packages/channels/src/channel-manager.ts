@@ -10,9 +10,18 @@ export class ChannelManager {
   }
 
   channel(name: string): Channel {
-    if (!this.stack.has(name))
+    if (!this.hasChannel(name)) {
       this.stack.set(name, new Channel(name));
+    }
     return this.stack.get(name);
+  }
+
+  hasChannel(name: string): boolean {
+    return this.stack.has(name);
+  }
+
+  removeChannel(name: string): void {
+    this.stack.delete(name);
   }
 
   reset(): void {

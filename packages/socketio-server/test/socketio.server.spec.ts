@@ -1,18 +1,15 @@
 import 'reflect-metadata';
-import {Configuration} from '@rxstack/configuration';
-Configuration.initialize(__dirname + '/environments');
 import {Application, ServerManager} from '@rxstack/core';
-import {AppModule} from './mocks/app.module';
 import {Injector} from 'injection-js';
 import {SocketioServer} from '../src/socketio.server';
 import {MockEventListener} from './mocks/mock-event-listener';
-import {environment} from './environments/environment';
+import {SOCKET_APP_OPTIONS} from './mocks/socketio-app-options';
 const io = require('socket.io-client');
 
 
 describe('SocketIOServer', () => {
   // Setup application
-  const app = new Application(AppModule, environment);
+  const app = new Application(SOCKET_APP_OPTIONS);
   let injector: Injector;
   let host: string;
   let server: SocketioServer;
@@ -100,7 +97,7 @@ describe('SocketIOServer', () => {
   it('should throw exception if streamable', (done: Function) => {
     defaultNs.emit('mock_stream', null, function (response: any) {
       response['statusCode'].should.be.equal(500);
-      response['message'].should.be.equal('StreamableResponse is not supported.');
+      response['message'].should.be.equal('Streaming is not supported.');
       done();
     });
   });

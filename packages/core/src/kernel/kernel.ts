@@ -1,6 +1,6 @@
-import {HttpDefinition, ResponseObject, WebSocketDefinition} from './interfaces';
+import {HttpDefinition, WebSocketDefinition} from './interfaces';
 import {Injectable, Injector} from 'injection-js';
-import {Request} from './models';
+import {Request, Response} from './models';
 import {AsyncEventDispatcher} from '@rxstack/async-event-dispatcher';
 import {transformToException} from '@rxstack/exceptions';
 import {KernelEvents} from './kernel-events';
@@ -57,7 +57,7 @@ export class Kernel implements InjectorAwareInterface {
       path: path,
       name: metadata.name,
       method: metadata.httpMethod,
-      handler: async (request: Request): Promise<ResponseObject> => {
+      handler: async (request: Request): Promise<Response> => {
         request.method = metadata.httpMethod;
         request.path = path;
         request.routeName = metadata.name;
@@ -70,7 +70,7 @@ export class Kernel implements InjectorAwareInterface {
   private pushWebSocketDefinition(metadata: WebSocketMetadata, controller: Object): void {
     this.webSocketDefinitions.push({
       name: metadata.name,
-      handler: async (request: Request): Promise<ResponseObject> => {
+      handler: async (request: Request): Promise<Response> => {
         request.routeName = metadata.name;
         request.controller = controller;
         return this.process(request, controller, metadata.propertyKey);
@@ -78,8 +78,8 @@ export class Kernel implements InjectorAwareInterface {
     });
   }
 
-  private async process(request: Request, controller: Object, propertyKey: string): Promise<ResponseObject> {
-    let response: ResponseObject;
+  private async process(request: Request, controller: Object, propertyKey: string): Promise<Response> {
+    let response: Response;
     try {
       const requestEvent = new RequestEvent(request);
       await this.injector.get(AsyncEventDispatcher).dispatch(KernelEvents.KERNEL_REQUEST, requestEvent);
@@ -108,7 +108,7 @@ export class Kernel implements InjectorAwareInterface {
     }
   }
 
-  private async handleResponse(response: ResponseObject, request: Request): Promise<ResponseObject> {
+  private async handleResponse(response: Response, request: Request): Promise<Response> {
     try {
       const responseEvent = new ResponseEvent(request, response);
       await this.injector.get(AsyncEventDispatcher).dispatch(KernelEvents.KERNEL_RESPONSE, responseEvent);

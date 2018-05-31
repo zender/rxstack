@@ -1,6 +1,6 @@
 import * as http from 'http';
 import {
-  Request, ResponseObject, WebSocketDefinition, StreamableResponse,
+  Request, Response, WebSocketDefinition,
   AbstractServer, ServerConfigurationEvent, ServerEvents, SocketEvent, Transport
 } from '@rxstack/core';
 import {AsyncEventDispatcher} from '@rxstack/async-event-dispatcher';
@@ -9,6 +9,7 @@ import {Exception} from '@rxstack/exceptions';
 import {Injectable} from 'injection-js';
 import {SocketioServerConfiguration} from './socketio-server-configuration';
 import {EventEmitter} from 'events';
+import {Stream} from 'stream';
 
 @Injectable()
 export class SocketioServer extends AbstractServer {
@@ -58,7 +59,7 @@ export class SocketioServer extends AbstractServer {
   private registerRoute(definition: WebSocketDefinition, socket: EventEmitter): void {
     socket.on(definition.name, async (args: any, callback: Function) => {
       return definition.handler(this.createRequest(definition, socket, args))
-        .then((response: ResponseObject) => this.responseHandler(response, callback))
+        .then((response: Response) => this.responseHandler(response, callback))
         .catch((err: Exception) => this.errorHandler(err, callback));
     });
   }
@@ -75,10 +76,11 @@ export class SocketioServer extends AbstractServer {
     return request;
   }
 
-  private responseHandler(response: ResponseObject, callback: Function): void {
+  private responseHandler(response: Response, callback: Function): void {
     // todo - implement streams
-    if (response instanceof StreamableResponse)
-      throw new Exception('StreamableResponse is not supported.');
+    if (response.content instanceof Stream.Readable) {
+      throw new Exception('Streaming is not supported.');
+    }
 
     callback.call(null, {
       'statusCode': response.statusCode,
@@ -90,9 +92,9 @@ export class SocketioServer extends AbstractServer {
     const status = err['statusCode'] ?  err['statusCode'] : 500;
     err['statusCode'] = status;
     if (status >= 500) {
-      this.getLogger().error(err.message);
+      this.getLogger().error(err.message, err);
     } else {
-      this.getLogger().debug(err.message);
+      this.getLogger().debug(err.message, err);
     }
 
     if (process.env.NODE_ENV === 'production' && status >= 500) {

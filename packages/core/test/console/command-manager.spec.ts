@@ -1,9 +1,8 @@
 import 'reflect-metadata';
 const yargs = require('yargs');
 import {Application} from '../../src/application';
-import {application_environment} from '../environments/application_environment';
-import {ConsoleModule} from './fixtures/console.module';
 import {CommandManager} from '../../src/console';
+import {CONSOLE_APP_OPTIONS} from './fixtures/console-app-options';
 const stdMocks = require('std-mocks');
 
 describe('CommandManager', () => {
@@ -12,7 +11,7 @@ describe('CommandManager', () => {
     type: 'string',
     default: 'hello'
   });
-  const app = new Application(ConsoleModule, application_environment);
+  const app = new Application(CONSOLE_APP_OPTIONS);
 
   it('should register and execute testing command', async () => {
     stdMocks.use();

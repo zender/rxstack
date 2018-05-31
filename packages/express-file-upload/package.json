@@ -1,6 +1,6 @@
 {
   "name": "@rxstack/express-file-upload",
-  "version": "0.0.10",
+  "version": "0.0.11",
   "description": "RxStack Express File Upload Module",
   "private": false,
   "author": "Nikolay Gergiev <symfonist@gmail.com>",
@@ -17,7 +17,8 @@
   "dependencies": {
     "@rxstack/async-event-dispatcher": "^0.0.24",
     "@rxstack/exceptions": "^0.0.21",
-    "@rxstack/express-server": "^0.0.36",
+    "@rxstack/core": "^0.0.10",
+    "@rxstack/express-server": "^0.0.37",
     "reflect-metadata": "^0.1.12",
     "injection-js": "^2.1.0",
     "mime": "^2.2.0",
@@ -33,6 +34,7 @@
     "@types/mocha": "^2.2.48",
     "@types/node": "^7.0.62",
     "@types/sinon": "^1.16.36",
+    "app-root-path": "^2.0.1",
     "chai": "^3.4.1",
     "chai-as-promised": "^6.0.0",
     "codecov": "^2.1.0",
