@@ -1,6 +1,6 @@
 {
   "name": "@rxstack/configuration",
-  "version": "0.0.28",
+  "version": "0.0.29",
   "description": "RxStack Configuration Component",
   "private": false,
   "author": "Nikolay Gergiev <symfonist@gmail.com>",
@@ -53,12 +53,13 @@
   "bugs": {
     "url": "https://github.com/rxstack/rxstack/issues"
   },
-  "homepage": "https://github.com/rxstack/rxstack#readme",
+  "homepage": "https://github.com/rxstack/rxstack/blob/master/packages/configuration/README.md",
   "main": "index.js",
   "directories": {
     "test": "test"
   },
   "keywords": [
-    "configuration"
+    "configuration",
+    "rxstack"
   ]
 }

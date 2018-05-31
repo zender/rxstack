@@ -1,4 +1,4 @@
-# The Channels Component
+# The RxStack Channels Component
 
 > With channels component you'll be able to create channels, add/remove connections (instance of `EventEmitter`) 
 and send messages. The component is intended to be used with socketio or any other realtime framework.

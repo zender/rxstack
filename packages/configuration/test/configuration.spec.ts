@@ -1,6 +1,7 @@
 import {Configuration} from '../src/index';
 import {environment} from './environments/environment';
 const path = require('path');
+const appRootPath = require('app-root-path').path;
 
 describe('Configuration', () => {
   process.env.NODE_ENV = 'TESTING';
@@ -9,14 +10,14 @@ describe('Configuration', () => {
 
   it('should throw exception if directory does not exist', () => {
     const fn = () => {
-      Configuration.initialize(__dirname + '/not-exist');
+      Configuration.initialize();
     };
 
     fn.should.throw('Base environment file');
   });
 
   it('should set app dir', () => {
-    process.env.APP_DIR.should.equal(path.resolve(__dirname + '/../../../'));
+    process.env.APP_DIR.should.equal(path.resolve(appRootPath));
   });
 
   it('should override default configuration', () => {

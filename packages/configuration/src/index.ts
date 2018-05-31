@@ -8,8 +8,9 @@ const appRootPath = require('app-root-path').path;
  */
 export class Configuration {
 
-  static initialize(dir: string, filename = 'environment'): void {
+  static initialize(directory?: string, filename = 'environment'): void {
     Configuration.initAppDirectory();
+    const dir = directory ? directory : process.env.APP_DIR + path.sep + 'src' + path.sep + 'environments';
     const basePath = dir + path.sep + filename;
     const envPath = dir + path.sep + filename + '.' + Configuration.getEnvironment();
     if (!fs.existsSync(basePath + '.js')) {
@@ -21,7 +22,6 @@ export class Configuration {
       const envFile: Object = require(dir + path.sep + filename + '.' + Configuration.getEnvironment());
       _.merge(baseFile, envFile);
     }
-
     Configuration.normalize(baseFile);
   }
 
@@ -39,6 +39,10 @@ export class Configuration {
   static normalize(data: Object): Object {
     Object.keys(data).forEach(name => {
       let value = data[name];
+
+      if (Array.isArray(value)) {
+        value.map((sub: any) => this.normalize(value));
+      }
 
       if (typeof value === 'object') {
         data[name] = Configuration.normalize(value);
