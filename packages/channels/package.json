@@ -1,6 +1,6 @@
 {
   "name": "@rxstack/channels",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "RxStack Channels Component",
   "private": false,
   "author": "Nikolay Gergiev <symfonist@gmail.com>",
@@ -47,12 +47,13 @@
   "bugs": {
     "url": "https://github.com/rxstack/rxstack/issues"
   },
-  "homepage": "https://github.com/rxstack/rxstack#readme",
+  "homepage": "https://github.com/rxstack/rxstack/blob/master/packages/channels/README.md",
   "main": "index.js",
   "directories": {
     "test": "test"
   },
   "keywords": [
+    "rxstack",
     "channels"
   ]
 }

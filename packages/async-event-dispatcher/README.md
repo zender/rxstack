@@ -60,6 +60,7 @@ method associates any valid callable to an event:
 
 ```typescript
 // ...
+
 dispatcher.addListener('pre.foo', async (event: CustomEvent): Promise<void> => {
   // do something
 }, 10);
@@ -103,7 +104,8 @@ const order = new Order();
 const event = new OrderEvent(order);
 await dispatcher.dispatch(OrderEvent.eventName, event);
 ```
-Notice that the special `OrderEvent` object is created and passed to the dispatch() method. 
+Notice that the special `OrderEvent` object is created and passed to the dispatch() method 
+and a promise is returned and needs to be resolved. 
 Now, any listener to the `order.placed` event will receive the OrderEvent.
 
 ### <a name="stopping-event-flow/propagation"></a> Stopping Event Flow/Propagation
@@ -114,17 +116,18 @@ This can be accomplished from inside a listener via the `stopPropagation()` meth
 
 ```typescript
 // ...
+
 dispatcher.addListener('pre.foo', async (event: CustomEvent): Promise<void> => {
   // do something
   event.stopPropagation();
 });
 ```
 
-Now, any listeners to `order.placed` that have not yet been called will not be called.
+Now, any listeners to `pre.foo` that have not yet been called will not be called.
 
 ### <a name="using-decorators"></a> Using decorators to register event listeners
 Sometimes you may want to use classes to register event listeners. 
-In this case you can take advantage from `@Observe` decorator.
+In this case you can take advantage of `@Observe` decorator.
 
 ```typescript
 // ...
