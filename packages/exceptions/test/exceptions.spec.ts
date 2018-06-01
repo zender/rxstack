@@ -52,7 +52,7 @@ describe('Exceptions', () => {
         throw exceptionInstance;
       } catch (e) {
         e.should.be.an.instanceof(HttpException);
-        e.getStatusCode().should.be.equal(check.code);
+        e.statusCode.should.be.equal(check.code);
         e.name.should.be.equal(exceptionInstance.constructor.name);
       }
     });
@@ -70,7 +70,7 @@ describe('Exceptions', () => {
       children: undefined,
     }];
 
-    let exception = new ValidationException(null, errors);
+    let exception = new ValidationException(errors);
 
     exception.data.should.be.equal(errors);
   });

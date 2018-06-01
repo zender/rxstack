@@ -40,9 +40,6 @@ export class Gulpfile {
    */
   @Task()
   compile() {
-    gulp.src('./src/*.json')
-      .pipe(gulp.dest('./build/compiled/src'));
-
     return gulp.src('*.ts', { read: false })
       .pipe(shell(['tsc']));
   }
@@ -69,7 +66,7 @@ export class Gulpfile {
    */
   @Task()
   npmPublish() {
-    return gulp.src('')
+    return gulp.src('*.js', { read: false })
       .pipe(shell([
         'cd ./build/package && npm publish --access=public'
       ]));

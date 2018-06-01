@@ -15,8 +15,13 @@ then we need to create a new file `/src/environments/environment.production.ts`.
 The production environment will inherit all configurations from `environment.ts`. 
 Under the hood it uses lodash `_.merge()` to overwrite configurations.
 
+* [Example](#standard-exceptions)
+* [Changing the location of the environments directory](#changing-location)
+* [Variable types](#variable-types)
+* [Setting app directory variable](#app-dir)
 
-### Example
+
+### <a name="example"></a>  Example
 In `environments/environment.ts` we want to use the local development environment:
 
 ```typescript
@@ -48,7 +53,7 @@ import {environment} from './environments/environment';
 environment.host
 ```
 
-### Changing the location of the environments directory
+### <a name="changing-location"></a>  Changing the location of the environments directory
 
 The `Configuration.initialize()` takes up to two options:
 
@@ -58,13 +63,13 @@ You can change it for example to `Configuration.initialize(process.env.AP_DIR + 
 You can change the name `Configuration.initialize(null, 'config')` then it will become `config.ts`
 
 
-### Variable types
+### <a name="variable-types"></a> Variable types
 `@rxstack/configuration` uses the following variable mechanisms:
 
 - If the value is a valid environment variable (e.v. NODE_ENV), use its value instead
 - If the value starts with `./` or `../` turn it into an absolute path relative to the application root path
 
-### Setting app directory variable
+### <a name="app-dir"></a> Setting app directory variable
 When calling `Configuration.initialize()` or `Configuration.initAppDirectory()`, 
-it will set `process.env.APP_DIR` to the absolute path of root project directory
+it will set `process.env.APP_DIR` to the absolute path of your root project directory
 

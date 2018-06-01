@@ -12,7 +12,6 @@ describe('Configuration', () => {
     const fn = () => {
       Configuration.initialize();
     };
-
     fn.should.throw('Base environment file');
   });
 
