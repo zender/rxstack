@@ -1,13 +1,13 @@
 {
   "name": "@rxstack/query-filter",
-  "version": "0.0.23",
+  "version": "0.0.24",
   "description": "RxStack QueryFilter Component",
-  "private": true,
+  "private": false,
   "author": "Nikolay Gergiev <symfonist@gmail.com>",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git://github.com/rxstack/rxstack.git"
+    "url": "https://github.com/rxstack/rxstack/tree/master/packages/query-filter"
   },
   "readmeFilename": "README.md",
   "scripts": {
@@ -20,9 +20,9 @@
     "@types/chai-as-promised": "0.0.30",
     "@types/chalk": "^2.2.0",
     "@types/gulp": "^4.0.2",
-    "@types/lodash": "^4.14.91",
-    "@types/mocha": "^2.2.45",
-    "@types/node": "^7.0.51",
+    "@types/lodash": "^4.14.109",
+    "@types/mocha": "^2.2.48",
+    "@types/node": "^7.0.65",
     "@types/sinon": "^1.16.36",
     "chai": "^3.4.1",
     "chai-as-promised": "^6.0.0",
@@ -34,31 +34,32 @@
     "gulp-mocha": "^3.0.1",
     "gulp-replace": "^0.5.4",
     "gulp-shell": "^0.6.5",
-    "gulp-sourcemaps": "^2.6.3",
+    "gulp-sourcemaps": "^2.6.4",
     "gulp-tslint": "^7.1.0",
-    "gulp-typescript": "^3.1.6",
+    "gulp-typescript": "^3.2.4",
     "gulpclass": "0.1.2",
     "mocha": "^3.2.0",
-    "remap-istanbul": "^0.9.1",
+    "remap-istanbul": "^0.9.6",
     "sinon": "^2.1.0",
     "sinon-chai": "^2.9.0",
     "ts-node": "^3.0.2",
     "tslint": "^4.5.1",
     "tslint-stylish": "^2.1.0",
-    "typescript": "^2.6.2"
+    "typescript": "^2.9.1"
   },
   "dependencies": {
-    "lodash": "^4.17.4"
+    "lodash": "^4.17.10"
   },
   "bugs": {
     "url": "https://github.com/rxstack/rxstack/issues"
   },
-  "homepage": "https://github.com/rxstack/rxstack#readme",
+  "homepage": "https://github.com/rxstack/rxstack/tree/master/packages/query-filter/README.md",
   "main": "index.js",
   "directories": {
     "test": "test"
   },
   "keywords": [
+    "rxstack",
     "query-filter"
   ]
 }

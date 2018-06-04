@@ -8,7 +8,7 @@ export interface QueryFilterResult {
   where: Object;
   limit: number;
   skip: number;
-  sort: Sort;
+  sort?: Sort;
 }
 
 export interface QueryFilterSchema {

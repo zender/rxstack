@@ -125,10 +125,11 @@ export class QueryFilter {
   static normalize(rawQuery: Object): Object {
     const normalized = {};
     _.forEach(rawQuery, (value: any, key: any): void => {
-      if (typeof value !== 'object')
+      if (typeof value !== 'object') {
         normalized[key] = {'$eq': value};
-      else
+      }  else {
         normalized[key] = value;
+      }
     });
 
     return normalized;

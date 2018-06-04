@@ -1,6 +1,6 @@
-# @rxstack/utils
+# The RxStack Utils Component
 
-> The Utils component.
+> The Utils component is collection of helper functions.
 
 ## Installation
 
@@ -10,6 +10,15 @@ npm install @rxstack/utils --save
 
 ## Documentation
 
-## License
+* [Parse range](#parse-range)
 
-Licensed under the [MIT license](LICENSE).
+### <a name="parse-range"></a>  Parse range
+Parse the given header string where size is the maximum size of the resource.
+
+```typescript
+import {parseRange} from '@rxstack/utils'
+
+parseRange('bytes=0-1023', 10000); 
+// output {'start': 0, 'end': 1023, 'chunkSize': 1024}
+
+```
