@@ -1,5 +1,4 @@
 import {LoggerTransportInterface} from '../interfaces';
-import {ConsoleTransportInstance, ConsoleTransportOptions} from 'winston';
 import {formatFunc} from '../utils';
 import {Injectable} from 'injection-js';
 const winston = require('winston');
@@ -9,7 +8,7 @@ export class ConsoleTransport implements LoggerTransportInterface {
 
   static transportName = 'console';
 
-  createInstance(options: ConsoleTransportOptions): ConsoleTransportInstance {
+  createInstance(options: any): any {
     options['format'] = this.createFormatter();
     return new winston.transports.Console(options);
   }

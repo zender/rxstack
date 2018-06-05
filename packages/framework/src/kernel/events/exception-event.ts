@@ -1,6 +1,6 @@
 import {KernelEvent} from './kernel-event';
 import {Exception} from '@rxstack/exceptions';
-import {Request} from '../models/request';
+import {Response, Request} from '../models';
 
 /**
  * Allows to create a response for a thrown exception.
@@ -14,6 +14,16 @@ export class ExceptionEvent extends KernelEvent {
    */
   constructor(private exception: Exception, request: Request) {
     super(request);
+  }
+
+  /**
+   * Sets the response object
+   *
+   * @param {Response} response
+   */
+  setResponse(response: Response): void {
+    super.setResponse(response);
+    this.stopPropagation();
   }
 
   /**

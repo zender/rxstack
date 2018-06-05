@@ -3,7 +3,7 @@ import {VersionCommand} from '../../src/console';
 const stdMocks = require('std-mocks');
 
 describe('Console:VersionCommand', () => {
-  it('should shall package version', async () => {
+  it('should show package version', async () => {
     stdMocks.use();
     const v = new VersionCommand();
     await v.handler({});

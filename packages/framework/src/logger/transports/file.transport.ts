@@ -1,5 +1,4 @@
 import {LoggerTransportInterface} from '../interfaces';
-import {FileTransportInstance, FileTransportOptions} from 'winston';
 import {formatFunc} from '../utils';
 import {Injectable} from 'injection-js';
 const winston = require('winston');
@@ -9,7 +8,7 @@ export class FileTransport implements LoggerTransportInterface {
 
   static transportName = 'file';
 
-  createInstance(options: FileTransportOptions): FileTransportInstance {
+  createInstance(options: any): any {
     options['format'] = this.createFormatter();
     return new winston.transports.File(options);
   }

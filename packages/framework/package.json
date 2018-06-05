@@ -1,7 +1,7 @@
 {
-  "name": "@rxstack/core",
-  "version": "0.0.10",
-  "description": "RxStack Core",
+  "name": "@rxstack/framework",
+  "version": "0.0.1",
+  "description": "RxStack Framework",
   "private": false,
   "author": "Nikolay Gergiev <symfonist@gmail.com>",
   "license": "MIT",
@@ -17,12 +17,12 @@
     "publish-package": "gulp publish"
   },
   "devDependencies": {
-    "@rxstack/configuration": "latest",
     "@types/chai": "^3.4.35",
     "@types/chai-as-promised": "0.0.30",
     "@types/gulp": "^4.0.2",
+    "@types/lodash": "^4.14.109",
     "@types/mocha": "^2.2.40",
-    "@types/node": "^7.0.57",
+    "@types/node": "^7.0.65",
     "@types/sinon": "^1.16.36",
     "chai": "^3.4.1",
     "chai-as-promised": "^6.0.0",
@@ -47,17 +47,16 @@
     "ts-node": "^3.0.2",
     "tslint": "^4.5.1",
     "tslint-stylish": "^2.1.0",
-    "typescript": "^2.7.2"
+    "typescript": "^2.9.1"
   },
   "dependencies": {
-    "@rxstack/async-event-dispatcher": "^0.0.24",
-    "@rxstack/exceptions": "^0.0.21",
-    "@types/lodash": "^4.14.106",
-    "@types/winston": "^2.3.8",
+    "@rxstack/async-event-dispatcher": "^0.0.25",
+    "@rxstack/configuration": "0.0.29",
+    "@rxstack/exceptions": "^0.0.24",
     "injection-js": "^2.1.0",
-    "lodash": "^4.17.5",
+    "lodash": "^4.17.10",
     "reflect-metadata": "^0.1.12",
-    "winston": "^3.0.0-rc2",
+    "winston": "^3.0.0-rc6",
     "yargonaut": "^1.1.2",
     "yargs": "^11.1.0"
   },
@@ -67,6 +66,7 @@
   "homepage": "https://github.com/rxstack/rxstack#readme",
   "main": "index.js",
   "keywords": [
-    "rxstack"
+    "rxstack",
+    "framework"
   ]
 }

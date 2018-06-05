@@ -51,7 +51,7 @@ export class Request {
   controller: Object;
 
   /**
-   * Name of th route
+   * Name of the route
    */
   routeName: string;
 

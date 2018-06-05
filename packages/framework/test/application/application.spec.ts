@@ -3,7 +3,6 @@ import {Application} from '../../src/application';
 import {Injector} from 'injection-js';
 import {app_environment} from '../environments/app_environment';
 import {ServerManager} from '../../src/server';
-import {Service1} from './fixtures/service1';
 import {Service2} from './fixtures/service2';
 import {Test1ModuleConfiguration} from './fixtures/test1.module';
 import {APP_OPTIONS} from './fixtures/app-options';
