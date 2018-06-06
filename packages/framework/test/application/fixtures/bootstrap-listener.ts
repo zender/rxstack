@@ -1,7 +1,7 @@
 import {BootstrapEvent} from '../../../src/application/bootstrap-event';
 import {Observe} from '@rxstack/async-event-dispatcher';
 import {ApplicationEvents} from '../../../src/application/application-events';
-import {Injectable} from 'injection-js';
+import {Injectable, ResolvedReflectiveProvider} from 'injection-js';
 import {Service1} from './service1';
 
 @Injectable()
@@ -15,7 +15,7 @@ export class BootstrapListener {
       useClass: Service1
     });
 
-    event.resolvedProviders.forEach((resolvedProvider) => {
+    event.resolvedProviders.forEach((resolvedProvider: ResolvedReflectiveProvider) => {
       const service = event.injector.get(resolvedProvider.key.token);
       if (typeof service['setService1'] === 'function') {
         service['setService1'](service1);
