@@ -10,5 +10,6 @@ export const CONSOLE_APP_OPTIONS: ApplicationOptions = {
   ],
   imports: [Console1Module],
   servers: application_environment.servers,
-  logger: application_environment.logger
+  logger: application_environment.logger,
+  console: true
 };

@@ -19,7 +19,7 @@
 - logger: logger configurations
 
 ```typescript
-import {ApplicationOptions} from '@rxstack/framework'
+import {ApplicationOptions} from '@rxstack/core'
 import {ExpressModule} from '@rxstack/express-server';
 
 export const APP_OPTIONS: ApplicationOptions = {
@@ -43,7 +43,7 @@ export const APP_OPTIONS: ApplicationOptions = {
 // creates application instance
 const app = new Application(APP_OPTIONS);
 // bootstraps components and starts the servers
-await app.start()
+await app.start();
 // gets the injector
 const injector = app.getInjector();
 // stops the servers
@@ -56,7 +56,7 @@ Modules are reusable components plugged into your application. They are register
 please check [bootstrap event](#bootstrap-event)
 
 ```typescript
-import {Module, ModuleWithProviders} from '@rxstack/framework'
+import {Module, ModuleWithProviders} from '@rxstack/core'
 
 @Module({
   providers: [
@@ -75,7 +75,7 @@ const app = new Application({
 with configurations:
 
 ```typescript
-import {Module, ModuleWithProviders} from '@rxstack/framework'
+import {Module, ModuleWithProviders} from '@rxstack/core'
 
 @Module()
 export class MyCustomModule {
@@ -146,7 +146,7 @@ Here is an example how you can create a service and inject in other services by 
 ```typescript
 import {Injectable, ResolvedReflectiveProvider} from 'injection-js';
 import {Observe} from '@rxstack/async-event-dispatcher';
-import {ApplicationEvents} from '@rxstack/framework';
+import {ApplicationEvents} from '@rxstack/core';
 
 @Injectable()
 export class BootstrapListener {

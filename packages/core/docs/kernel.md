@@ -19,7 +19,7 @@ the [AsyncEventDispatcher](https://github.com/rxstack/rxstack/tree/master/packag
 There are two decorators `@Http` and `@Websocket` which helps you to register controller methods into the `kernel`.
 
 ```typescript
-import {Request, Response, Http, WebSocket} from '@rxstack/framework';
+import {Request, Response, Http, WebSocket} from '@rxstack/core';
 
 export class IndexController {
   @Http('GET', '/index', 'index')
@@ -46,7 +46,7 @@ Once decorators are defined in the controller then metadata is extracted from th
 You can register methods without using decorators:
 
 ```typescript
-import {httpMetadataStorage, webSocketMetadataStorage} from '@rxstack/framework';
+import {httpMetadataStorage, webSocketMetadataStorage} from '@rxstack/core';
 
 httpMetadataStorage.add({
   'target': IndexController,

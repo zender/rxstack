@@ -1,7 +1,7 @@
 {
-  "name": "@rxstack/framework",
-  "version": "0.0.1",
-  "description": "RxStack Framework",
+  "name": "@rxstack/core",
+  "version": "0.0.11",
+  "description": "RxStack Core Component",
   "private": false,
   "author": "Nikolay Gergiev <symfonist@gmail.com>",
   "license": "MIT",

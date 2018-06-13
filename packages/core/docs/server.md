@@ -22,7 +22,7 @@ Fortunately `@rxstack` has created two ready-to-use server modules  for you
 Here is how you can import them in your application:
 
 ```typescript
-import {Application} from '@rxstack/framework'
+import {Application} from '@rxstack/core'
 import {ExpressModule} from '@rxstack/express-server';
 import {SocketioModule} from '@rxstack/socketio-server';
 
@@ -50,7 +50,7 @@ Let's create the listener:
 ```typescript
 import {Injectable} from 'injection-js';
 import {Observe} from '@rxstack/async-event-dispatcher';
-import {ServerConfigurationEvent, ServerEvents} from '@rxstack/framework';
+import {ServerConfigurationEvent, ServerEvents} from '@rxstack/core';
 import {ExpressServer} from '@rxstack/express-server';
 import {Application} from 'express';
 const cors = require('cors');
@@ -79,7 +79,7 @@ The `server.connected` event is dispatched when client is connected to the serve
 ```typescript
 import {Injectable} from 'injection-js';
 import {Observe} from '@rxstack/async-event-dispatcher';
-import {SocketEvent, ServerEvents} from '@rxstack/framework';
+import {SocketEvent, ServerEvents} from '@rxstack/core';
 
 @Injectable()
 export class SocketServerListener {
@@ -98,7 +98,7 @@ Purpose: it is very useful with [`@rxstack-channels`](https://github.com/rxstack
 ```typescript
 import {Injectable} from 'injection-js';
 import {Observe} from '@rxstack/async-event-dispatcher';
-import {SocketEvent, ServerEvents} from '@rxstack/framework';
+import {SocketEvent, ServerEvents} from '@rxstack/core';
 
 @Injectable()
 export class SocketServerListener {
@@ -112,12 +112,12 @@ export class SocketServerListener {
  
 ### <a name="create-your-own-server-module"></a>  How to create your own server module
 Creating a server module is relatively simple. You need to extend 
-[`AbstractServer`](https://github.com/rxstack/rxstack/blob/master/packages/framework/src/server/abstract-server.ts) class 
+[`AbstractServer`](https://github.com/rxstack/rxstack/blob/master/packages/core/src/server/abstract-server.ts) class 
 and implement certain methods. It needs also to be registered in the application providers:
 
 ```typescript
 
-import {SERVER_REGISTRY} from '@rxstack/framework';
+import {SERVER_REGISTRY} from '@rxstack/core';
 
 // ...
 providers: [

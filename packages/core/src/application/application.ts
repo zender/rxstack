@@ -28,18 +28,13 @@ export class Application {
     this.providers = [];
     this.options.imports.forEach((module) => this.resolveModule(module));
     this.providers.push(...this.options.providers);
-    this.injector = await this.doBootstrap();
-    const manager = this.injector.get(ServerManager);
-    await manager.start();
-    return this;
-  }
-
-  async runCli(): Promise<this> {
-    this.providers = [];
-    this.options.imports.forEach((module) => this.resolveModule(module));
-    this.providers.push(...this.options.providers);
-    this.injector = await this.doBootstrap(true);
-    this.injector.get(CommandManager).execute();
+    this.injector = await this.doBootstrap(this.options.console);
+    if (this.options.console) {
+      this.injector.get(CommandManager).execute();
+    } else {
+      const manager = this.injector.get(ServerManager);
+      await manager.start();
+    }
     return this;
   }
 

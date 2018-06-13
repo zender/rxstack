@@ -15,7 +15,7 @@ describe('CommandManager', () => {
 
   it('should register and execute testing command', async () => {
     stdMocks.use();
-    await app.runCli();
+    await app.start();
     stdMocks.restore();
     const output = stdMocks.flush();
     const consoleOutput = output.stdout.pop();

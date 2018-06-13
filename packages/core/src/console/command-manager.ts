@@ -25,6 +25,13 @@ export class CommandManager {
   }
 
   execute(): void {
+    require('yargonaut')
+      .style('blue')
+      .style('yellow', 'required')
+      .helpStyle('green')
+      .errorsStyle('red')
+    ;
+
     cli.usage(`Usage: $0 <command> [options]`);
     this.commands.forEach((command) => {
       cli.command(command);
@@ -36,13 +43,6 @@ export class CommandManager {
       .help('h')
       .alias('h', 'help')
       .argv
-    ;
-
-    require('yargonaut')
-      .style('blue')
-      .style('yellow', 'required')
-      .helpStyle('green')
-      .errorsStyle('red')
     ;
   }
 }

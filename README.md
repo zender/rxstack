@@ -1,6 +1,7 @@
 # RxStack
 
-> RxStack is a REST and realtime framework for developing micro service web applications.
+> RxStack is a realtime object-oriented framework which helps you build a micro service web applications
+on top of other frameworks like `expressjs` and `socketio` by adding an abstraction layer.
 
 ## Documentation
 

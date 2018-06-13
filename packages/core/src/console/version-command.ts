@@ -4,7 +4,7 @@ const exec = require('child_process').exec;
 
 @Injectable()
 export class VersionCommand extends AbstractCommand {
-  static npm_command = 'npm list | grep @rxstack/framework';
+  static npm_command = 'npm list | grep @rxstack/core';
 
   command = 'version';
   describe = 'Prints RXStack version this project uses.';
@@ -13,7 +13,7 @@ export class VersionCommand extends AbstractCommand {
     const localNpmVersion = await VersionCommand.executeCommand(VersionCommand.npm_command);
 
     if (localNpmVersion) {
-      console.log('Local installed version:', localNpmVersion.replace('@rxstack/framework', ''));
+      console.log('Local installed version:', localNpmVersion.replace('@rxstack/core', ''));
     } else {
       console.log('No local installed RxStack was found.');
     }
