@@ -26,8 +26,8 @@ describe('ConsoleTransport', () => {
     winston.error('console error');
     stdMocks.restore();
 
-    const output = stdMocks.flush();
-    const consoleOutput = output.stderr.pop();
+    const output = stdMocks.flush(); console.log(output);
+    const consoleOutput = output.stdout.pop();
     consoleOutput.includes('console error').should.be.true;
   });
 

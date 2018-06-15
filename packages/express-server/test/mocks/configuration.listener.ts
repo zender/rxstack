@@ -10,7 +10,7 @@ export class ConfigurationListener {
 
   private injector: Injector;
 
-  public setInjector(injector: Injector): void {
+  setInjector(injector: Injector): void {
     this.injector = injector;
   }
 

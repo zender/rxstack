@@ -87,14 +87,6 @@ export class ExpressServer extends AbstractServer {
 
   private errorHandler(): ErrorRequestHandler {
     return (err: any, req: ExpressRequest, res: ExpressResponse, next: NextFunction): void => {
-      process.on('uncaughtException', (err: any) => {
-        this.getLogger().error('uncaughtException', err);
-      });
-
-      process.on('unhandledRejection', function (reason: any, promise: Promise<any>) {
-        this.getLogger().error('unhandledRejection', {reason: reason, promise: promise});
-      });
-
       const status = err.statusCode ? err.statusCode : 500;
       if (status >= 500) {
         this.getLogger().error(err.message, err);

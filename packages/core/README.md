@@ -1,6 +1,10 @@
-# The RxStack Core
+# The RxStack Core Component
 
 > `@rxstack/core` is set of components which are the backbone of rxstack framework.
+
+## Installation
+
+` npm install @rxstack/core --save `
 
 ## Documentation
 

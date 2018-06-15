@@ -22,7 +22,7 @@ describe('Logger', () => {
     stdMocks.restore();
 
     const output = stdMocks.flush();
-    const consoleOutput = output.stderr.pop();
+    const consoleOutput = output.stdout.pop();
     consoleOutput.includes('some error').should.be.true;
   });
 
@@ -32,7 +32,7 @@ describe('Logger', () => {
     stdMocks.restore();
 
     const output = stdMocks.flush();
-    const consoleOutput = output.stderr.pop();
+    const consoleOutput = output.stdout.pop();
     consoleOutput.includes('[TestSource]').should.be.true;
     consoleOutput.includes('another error').should.be.true;
     consoleOutput.includes('my prop').should.be.true;
