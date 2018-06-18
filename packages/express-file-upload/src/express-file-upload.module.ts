@@ -1,13 +1,6 @@
 import {Module, ModuleWithProviders} from '@rxstack/core';
 import {FileUploadListener} from './file-upload.listener';
 import {ExpressFileUploadConfiguration} from './express-file-upload-configuration';
-import {Exception} from '@rxstack/exceptions';
-const fs = require('fs');
-
-const validate = (configuration: ExpressFileUploadConfiguration): void =>  {
-  if (!fs.existsSync(configuration.directory))
-    new Exception('Directory does not exist');
-};
 
 @Module()
 export class ExpressFileUploadModule {
@@ -18,9 +11,7 @@ export class ExpressFileUploadModule {
         {
           provide: ExpressFileUploadConfiguration,
           useFactory: () => {
-            const configs = new ExpressFileUploadConfiguration(configuration);
-            validate(configs);
-            return configs;
+            return new ExpressFileUploadConfiguration(configuration);
           },
           deps: []
         },

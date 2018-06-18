@@ -20,7 +20,6 @@ export class MockServer extends AbstractServer {
     this.engine = 'my engine';
     this.httpServer = http.createServer();
     const dispatcher = this.injector.get(AsyncEventDispatcher);
-    await dispatcher
-      .dispatch(ServerEvents.CONFIGURE, new ServerConfigurationEvent(this));
+    await dispatcher.dispatch(ServerEvents.CONFIGURE, new ServerConfigurationEvent(this));
   }
 }

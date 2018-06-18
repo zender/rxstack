@@ -37,7 +37,7 @@ describe('ExpressFileUpload', () => {
         response['body']['name'].should.be.equal('image.jpg');
         response['statusCode'].should.be.equal(200);
       })
-      .catch((err: any) => console.log(err))
+      .catch((err: any) => true.should.be.false)
     ;
   });
 
@@ -54,7 +54,7 @@ describe('ExpressFileUpload', () => {
         response['body'].should.be.equal('dummy');
         response['statusCode'].should.be.equal(200);
       })
-      .catch((err: any) => console.log(err))
+      .catch((err: any) => true.should.be.false)
     ;
   });
 });

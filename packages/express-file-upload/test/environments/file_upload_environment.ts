@@ -14,7 +14,6 @@ export const file_upload_environment = {
     port: 3210
   },
   express_file_upload: {
-    enabled: true,
-    directory: './test/uploads'
+    enabled: true
   }
 };
