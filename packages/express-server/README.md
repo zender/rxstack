@@ -31,14 +31,19 @@ export const EXPRESS_APP_OPTIONS: ApplicationOptions = {
     })
   ],
   servers: ['express'], //enables the server
-  // providers, logger ...
+  providers: [
+    // ...
+  ],
+  logger: {
+    // ...
+  }
 };
 
 new Application(EXPRESS_APP_OPTIONS).start();
 ```
 
 ### <a name="module-options"></a>  Module Options
-The available options in the express module are:
+The module accepts the following options::
 - `host`: the server host, ex: `127.0.0.1` or `0.0.0.0` (for docker). By default is set to `localhost`
 - `port`: the server port. By default is set to `3000`
 - `prefix`: the prefix for each route, ex: '/api/products. By default is set to `null`
@@ -78,7 +83,7 @@ export class ConfigurationListener implements InjectorAwareInterface {
 ### <a name="express-middleware"></a>  Express Middleware
 In addition to rxstack controllers you can register express middleware to you application.
 
-> Important: native express middleware will bypass  [`kernel`](https://github.com/rxstack/rxstack/blob/master/packages/core/docs/kernel.md).
+> Important: If response is sent then native express middleware will bypass [`kernel`](https://github.com/rxstack/rxstack/blob/master/packages/core/docs/kernel.md).
 
 ```typescript
 import {
@@ -92,7 +97,6 @@ export function myCustomExpressMiddleware(injector: Injector): RequestHandler {
     response.json({'id': 'express'});
   };
 }
-
 ```
 You need to register `myCustomExpressMiddleware` in the `express` application by using `ConfigurationListener`.
 
@@ -102,6 +106,8 @@ You need to register `myCustomExpressMiddleware` in the `express` application by
 const app: Application;
 app.get('/my-custom-express-middleware', expressMiddleware(this.injector));
 ```
+
+> You need to register the listener in the application providers
 
 You get get any of the registered services from `injector`.
 

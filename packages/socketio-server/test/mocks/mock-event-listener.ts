@@ -9,7 +9,6 @@ import {EventEmitter} from 'events';
 export class MockEventListener {
 
   connectedUsers: EventEmitter[] = [];
-  connectedCustomNamespaceUsers: EventEmitter[] = [];
 
   private injector: Injector;
 
