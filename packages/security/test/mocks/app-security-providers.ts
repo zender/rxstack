@@ -32,7 +32,7 @@ export const APP_SECURITY_PROVIDERS: ProviderDefinition[] = [
   {
     provide: PASSWORD_ENCODER_REGISTRY,
     useFactory: () => {
-      return new PlainTextPasswordEncoder(true);
+      return new PlainTextPasswordEncoder();
     },
     deps: [],
     multi: true

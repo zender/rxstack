@@ -3,7 +3,7 @@ import {AbstractToken} from './abstract-token';
 export class AnonymousToken extends AbstractToken {
   constructor() {
     super();
-    this.setAuthenticated(true);
+    this.setAuthenticated(false);
   }
   getUsername(): string {
     return 'anon';
@@ -12,4 +12,6 @@ export class AnonymousToken extends AbstractToken {
   getCredentials(): string {
     return null;
   }
+
+  eraseCredentials(): void { }
 }

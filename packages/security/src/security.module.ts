@@ -24,6 +24,7 @@ import {AsyncEventDispatcher} from '@rxstack/async-event-dispatcher';
 import {TokenAuthenticationProvider} from './authentication/token.authentication-provider';
 import {SocketListener} from './event-listeners/socket-listener';
 import {KeyLoader, TokenManager} from './services';
+import {PlainTextPasswordEncoder} from './password-encoders';
 
 export const AUTH_PROVIDER_REGISTRY = new InjectionToken<AuthenticationProviderInterface[]>('AUTH_PROVIDER_REGISTRY');
 export const USER_PROVIDER_REGISTRY = new InjectionToken<UserProviderInterface[]>('USER_PROVIDER_REGISTRY');
@@ -93,6 +94,11 @@ export class SecurityModule {
         {
           provide: PASSWORD_ENCODER_REGISTRY,
           useClass: BcryptPasswordEncoder,
+          multi: true
+        },
+        {
+          provide: PASSWORD_ENCODER_REGISTRY,
+          useClass: PlainTextPasswordEncoder,
           multi: true
         },
         {

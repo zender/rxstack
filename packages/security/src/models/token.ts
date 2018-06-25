@@ -12,4 +12,8 @@ export class Token extends AbstractToken {
   getCredentials(): string {
     return this.raw;
   }
+
+  eraseCredentials(): void {
+    // no need to erase
+  }
 }

@@ -33,6 +33,7 @@ export interface UserInterface {
 
 export interface TokenInterface {
   getCredentials(): string;
+  eraseCredentials(): void;
   getUsername(): string;
   getRoles(): string[];
   hasRole(role: string): boolean;

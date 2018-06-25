@@ -55,4 +55,6 @@ export abstract class AbstractToken implements TokenInterface {
   abstract getUsername(): string;
 
   abstract getCredentials(): string;
+
+  abstract eraseCredentials(): void;
 }

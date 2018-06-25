@@ -16,8 +16,9 @@ export class TokenExtractorListener {
     let token = new AnonymousToken();
     if (request.transport === 'HTTP') {
       const rawToken = this.extractor.extract(request);
-      if (rawToken)
+      if (rawToken) {
         token = new Token(rawToken);
+      }
     } else if (request.transport === 'SOCKET') {
       request.connection['token'] ? token = request.connection['token'] : request.connection['token'] = token;
     }

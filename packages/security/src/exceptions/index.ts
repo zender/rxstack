@@ -18,7 +18,7 @@ export class BadCredentialsException extends AuthenticationException {
 
 export class UserNotFoundException extends AuthenticationException {
   constructor(public readonly username: string) {
-    super('UsernameNotFoundException');
+    super('Username or password is not found');
     this.name = 'UsernameNotFoundException';
   }
 }

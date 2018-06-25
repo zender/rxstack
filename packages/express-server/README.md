@@ -43,7 +43,7 @@ new Application(EXPRESS_APP_OPTIONS).start();
 ```
 
 ### <a name="module-options"></a>  Module Options
-The module accepts the following options::
+The module accepts the following options:
 - `host`: the server host, ex: `127.0.0.1` or `0.0.0.0` (for docker). By default is set to `localhost`
 - `port`: the server port. By default is set to `3000`
 - `prefix`: the prefix for each route, ex: '/api/products. By default is set to `null`

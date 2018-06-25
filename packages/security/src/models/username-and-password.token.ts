@@ -12,4 +12,8 @@ export class UsernameAndPasswordToken extends AbstractToken {
   getCredentials(): string {
     return this.password;
   }
+
+  eraseCredentials(): void {
+    this.password = null;
+  }
 }

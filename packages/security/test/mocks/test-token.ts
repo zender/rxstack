@@ -16,4 +16,6 @@ export class TestToken extends AbstractToken {
   getPayload(): Object {
     return {};
   }
+
+  eraseCredentials(): void { }
 }

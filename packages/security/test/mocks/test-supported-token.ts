@@ -9,4 +9,6 @@ export class TestSupportedToken extends AbstractToken {
   getCredentials(): string {
     return 'unknown';
   }
+
+  eraseCredentials(): void { }
 }

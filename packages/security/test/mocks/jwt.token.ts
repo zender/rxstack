@@ -12,4 +12,6 @@ export class JwtToken extends AbstractToken {
   getCredentials(): string {
     return this.raw;
   }
+
+  eraseCredentials(): void { }
 }
