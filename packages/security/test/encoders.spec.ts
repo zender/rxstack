@@ -50,24 +50,14 @@ describe('Security:Encoder', () => {
   });
 
   describe('PlainTextEncoder', () => {
-    it('should encode and validate with case ignore', async () => {
-      const encoder = new PlainTextPasswordEncoder(true);
-      const encoded = await encoder.encodePassword('paSS');
+    it('should encode and validate', async () => {
+      const encoder = new PlainTextPasswordEncoder();
+      const encoded = await encoder.encodePassword('pass');
       const result1 = await encoder.isPasswordValid(encoded, 'pass');
       result1.should.be.true;
       const result2 = await encoder.isPasswordValid(encoded, 'pass1');
       result2.should.be.false;
     });
-
-    it('should encode and validate with case ignore set to false', async () => {
-      const encoder = new PlainTextPasswordEncoder(false);
-      const encoded = await encoder.encodePassword('pass');
-      const result1 = await encoder.isPasswordValid(encoded, 'pass');
-      result1.should.be.true;
-      const result2 = await encoder.isPasswordValid(encoded, 'paSS');
-      result2.should.be.false;
-    });
-
   });
 
   describe('BcryptPasswordEncoder', () => {

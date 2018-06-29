@@ -6,12 +6,12 @@ export const environmentSecurity = {
         {
           username: 'admin',
           password: 'admin',
-          roles: ['ADMIN']
+          roles: ['ROLE_ADMIN']
         },
         {
           username: 'user',
           password: 'user',
-          roles: ['USER']
+          roles: ['ROLE_USER']
         }
       ]
     }
@@ -27,7 +27,6 @@ export const environmentSecurity = {
     ]
   },
   security: {
-    transports: ['HTTP', 'SOCKET'],
     token_extractors: {
       query_parameter: {
         enabled: true,

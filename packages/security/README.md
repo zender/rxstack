@@ -13,6 +13,9 @@ npm install @rxstack/security --save
 
 * [Setup](#setup)
 * [Configurations](#configurations)
+* [Token Extractors](#token-extractors)
+    - [Query String Extractor](#query-string-extractor)
+    - [Header Extractor](#header-extractor)
 * [User Providers](#user-providers)
     - [InMemoryUserProvider](#in-memory-user-provider)
     - [PayloadUserProvider](#payload-user-provider)
@@ -35,7 +38,7 @@ npm install @rxstack/security --save
     - [UnauthenticateAction](#unauthenticate-action)
     - [Local Authentication Events](#local-authentication-events)
 * [Token Manager](#token-manager)
-* [Refresh Token Manager](#token-manager)
+* [Refresh Token Manager](#refresh-token-manager)
 
 ### <a name="setup"></a>  Setup
 `Security` module needs to be configured and registered in the `application`. Let's create the application:
@@ -49,7 +52,6 @@ export const SECURITY_APP_OPTIONS: ApplicationOptions = {
     // ...
     SecurityModule.configure({
       local_authentication: true,
-      transports: ['HTTP', 'SOCKET'],
       token_extractors: {
         query_parameter: {
           enabled: true,
@@ -83,7 +85,6 @@ The module accepts the following options
 
 - `local_authentication`: allows you to authenticate users with username and password, facility to refresh jwt token,
 authenticate via sockets and logout from the application. Defaults to `false`.
-- `transports`: enables `HTTP` and/or `SOCKET` for local authentication.
 - `token_extractors`: extracts the token from `query string` or `header`
     1. `query_parameter` - extracts the token from query string parameter
     2. `authorization_header` -extracts the token from http header
@@ -99,7 +100,6 @@ authenticate via sockets and logout from the application. Defaults to `false`.
 - `user_identity_field` - name of the property in the decoded payload which is used to look up the user.
 
 For more information, please check [jsonwebtoken](https://www.npmjs.com/package/jsonwebtoken)
-
 
 ### <a name="user-providers"></a> User Providers
 [`UserProviderManager`](https://github.com/rxstack/rxstack/blob/master/packages/security/src/user-providers/user-provider-manager.ts)
@@ -147,7 +147,7 @@ providers: [
   },
 ]
 
-const user = await injector.get(UserProviderManager).getByName('in-memory').loadUserByUsername('admin');
+const user = await injector.get(UserProviderManager).loadUserByUsername('admin');
 ```
 
 > Provider uses `UserWithEncoder`, you can read more about [encoders here](#password-encoders).
@@ -693,6 +693,104 @@ export class AuthListener {
 
 Make sure you register the listener in the application providers.
 
+### <a name="token-manager"></a> Token Manager
+
+`TokenManager` service is responsible for encoding and decoding the JSON Web Token (JWT). 
+Under the hood it uses [jsonwebtoken](https://github.com/auth0/node-jsonwebtoken).
+
+There are two async methods:
+
+- `encode(rawToken)`- encodes the raw token
+- `decode(encodedToken)` - decodes the encoded token
+
+If you want to replace JWT with any other token based authentication the you can create your own token manager 
+and replace the current one.
+
+```typescript
+import {TokenManagerInterface} from '@rxstack/security';
+import {Injectable} from 'injection-js';
+
+@Injectable()
+export class MyTokenManager implements TokenManagerInterface {
+
+  async encode(payload: Object): Promise<string> {
+    return 'encoded-token';
+  }
+
+  async decode(token: string): Promise<Object> {
+    return 'decoded-token';
+  }
+}
+```
+
+then you need to register it in the application providers. The new one will replace the old one:
+
+```typescript
+import {TOKEN_MANAGER} from '@rxstack/security';
+
+providers: [
+  {
+      provide: TOKEN_MANAGER,
+      useClass: MyTokenManager
+  }
+]
+```
+
+### <a name="refresh-token-manager"></a> Refresh Token Manager
+
+`RefreshTokenManager` is responsible for refreshing and validating the actual token by passing an unique identifier.
+By default `InMemoryRefreshTokenManager` is enabled but it has some drawbacks because it stores keys in memory 
+of the application instance. You can easily replace it with your own which implement [redis](https://redis.io/) or example.
+
+```typescript
+import {RefreshTokenManagerInterface, RefreshTokenInterface} from '@rxstack/security';
+import {Injectable} from 'injection-js';
+
+@Injectable()
+export class MyRefreshTokenManager implements RefreshTokenManagerInterface {
+
+  async count(): Promise<number> {
+    return // number of all tokens;
+  }
+
+  async has(refreshToken: string): Promise<boolean> {
+    return // if token exists;
+  }
+
+  async get(refreshToken: string): Promise<RefreshTokenInterface> {
+    return // retrieve the token;
+  }
+
+  async create(authToken: TokenInterface): Promise<RefreshTokenInterface> {
+    return // create the token;
+  }
+
+  async disable(refreshToken: RefreshTokenInterface): Promise<void> {
+    // invalidates the token
+  }
+
+  async refresh(refreshToken: RefreshTokenInterface): Promise<string> {
+    return // refreshes the token and returns it
+  }
+
+  async clear(): Promise<void> {
+    // clear all tokens
+  }
+}
+```
+
+then you need to register it in the application providers. The new one will replace the old one:
+
+```typescript
+import {REFRESH_TOKEN_MANAGER} from '@rxstack/security';
+
+providers: [
+  {
+      provide: REFRESH_TOKEN_MANAGER,
+      useClass: MyRefreshTokenManager
+  }
+]
+```
 
 ## License
 

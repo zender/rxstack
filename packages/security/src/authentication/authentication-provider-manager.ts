@@ -30,6 +30,7 @@ export class AuthenticationProviderManager {
       throw e;
     }
     if (authToken) {
+      authToken.eraseCredentials();
       const authenticationEvent = new AuthenticationEvent(authToken);
       await this.eventDispatcher.dispatch(
         AuthenticationEvents.AUTHENTICATION_SUCCESS, authenticationEvent

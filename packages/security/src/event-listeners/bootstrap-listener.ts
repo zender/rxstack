@@ -48,13 +48,8 @@ export class BootstrapListener {
         }
       ];
 
-      if (this.configuration.transports.includes('HTTP')) {
-        httpMetadata.forEach(meta => httpMetadataStorage.add(this.createHttpMetadata(meta)));
-      }
-
-      if (this.configuration.transports.includes('SOCKET')) {
-        socketMetadata.forEach(meta => webSocketMetadataStorage.add(this.createWebSocketMetadata(meta)));
-      }
+      httpMetadata.forEach(meta => httpMetadataStorage.add(this.createHttpMetadata(meta)));
+      socketMetadata.forEach(meta => webSocketMetadataStorage.add(this.createWebSocketMetadata(meta)));
     }
   }
 

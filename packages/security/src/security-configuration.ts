@@ -43,7 +43,6 @@ export class Rsa {
 }
 
 export class SecurityConfiguration {
-  transports: string[];
   token_extractors: TokenExtractorsOptions;
   local_authentication?: boolean;
   user_identity_field?: string;
@@ -53,7 +52,6 @@ export class SecurityConfiguration {
   ttl?: number;
   refresh_token_ttl?: number;
   constructor(obj?: any) {
-    this.transports = obj.transports || [];
     this.token_extractors = new TokenExtractorsOptions(obj.token_extractors);
     this.local_authentication = obj.local_authentication || false;
     this.user_identity_field = obj.user_identity_field || 'username';

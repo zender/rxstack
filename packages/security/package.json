@@ -1,6 +1,6 @@
 {
   "name": "@rxstack/security",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "RxStack Security Module",
   "private": false,
   "author": "Nikolay Gergiev <symfonist@gmail.com>",
@@ -49,9 +49,9 @@
     "typescript": "^2.8.3"
   },
   "dependencies": {
-    "@rxstack/async-event-dispatcher": "^0.0.24",
-    "@rxstack/core": "^0.0.10",
-    "@rxstack/exceptions": "^0.0.21",
+    "@rxstack/async-event-dispatcher": "^0.0.25",
+    "@rxstack/core": "^0.0.12",
+    "@rxstack/exceptions": "^0.0.24",
     "bcrypt": "^1.0.3",
     "crypto-js": "^3.1.9-1",
     "injection-js": "^2.1.0",

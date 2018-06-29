@@ -36,7 +36,7 @@ describe('Security:AuthenticationProviderManager', () => {
     const authToken = await manager.authenticate(token);
     authToken.isAuthenticated().should.be.true;
     authToken.getUser().should.be.instanceOf(User);
-    authToken.hasRole('ADMIN').should.be.true;
+    authToken.hasRole('ROLE_ADMIN').should.be.true;
     injector.get(AuthListener).successCalled.should.be.true;
   });
 

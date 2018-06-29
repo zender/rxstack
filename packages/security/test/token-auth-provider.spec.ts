@@ -28,7 +28,7 @@ describe('Security:TokenAuthenticationProvider', () => {
     const authToken = await provider.authenticate(token);
     authToken.isAuthenticated().should.be.true;
     authToken.getUser().should.be.instanceOf(User);
-    authToken.hasRole('ADMIN').should.be.true;
+    authToken.hasRole('ROLE_ADMIN').should.be.true;
   });
 
   it('should throw an exception if user identity field is not found', async () => {

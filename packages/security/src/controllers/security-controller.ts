@@ -66,8 +66,9 @@ export class SecurityController {
 
   private async findRefreshTokenOr404(token: string): Promise<RefreshTokenInterface> {
     const refreshToken = await this.refreshTokenManager.get(token);
-    if (!refreshToken)
+    if (!refreshToken) {
       throw new NotFoundException();
+    }
     return refreshToken;
   }
 

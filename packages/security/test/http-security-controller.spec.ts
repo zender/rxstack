@@ -48,7 +48,7 @@ describe('Security:HttpController', () => {
       exception = e;
     }
     exception.should.be.instanceOf(UserNotFoundException);
-    exception.getStatusCode().should.be.equal(401);
+    exception.statusCode.should.be.equal(401);
   });
 
   it('should refresh token', async () => {

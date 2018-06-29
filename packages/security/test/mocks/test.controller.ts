@@ -8,7 +8,7 @@ export class TestController {
   @Http('GET', '/test/index', 'test_index')
   @WebSocket('test_index')
   async indexAction(request: Request): Promise<Response> {
-    if (!request.token.hasRole('ADMIN')) {
+    if (!request.token.hasRole('ROLE_ADMIN')) {
       throw new UnauthorizedException();
     }
     return new Response(request.token.getUsername());
