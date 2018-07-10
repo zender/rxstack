@@ -1,6 +1,6 @@
 {
   "name": "@rxstack/express-server",
-  "version": "0.0.40",
+  "version": "0.0.42",
   "description": "RxStack ExpressServer Module",
   "private": false,
   "author": "Nikolay Gergiev <symfonist@gmail.com>",
@@ -16,7 +16,7 @@
   },
   "dependencies": {
     "@rxstack/async-event-dispatcher": "^0.0.25",
-    "@rxstack/core": "^0.0.11",
+    "@rxstack/core": "^0.0.12",
     "@rxstack/exceptions": "^0.0.24",
     "body-parser": "^1.18.3",
     "compression": "^1.7.1",

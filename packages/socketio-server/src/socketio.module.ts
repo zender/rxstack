@@ -4,7 +4,7 @@ import {SocketioServerConfiguration} from './socketio-server-configuration';
 
 @Module()
 export class SocketioModule {
-  static configure(configuration: SocketioServerConfiguration): ModuleWithProviders {
+  static configure(configuration?: SocketioServerConfiguration): ModuleWithProviders {
     return {
       module: SocketioModule,
       providers: [

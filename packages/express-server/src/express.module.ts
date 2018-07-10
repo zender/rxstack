@@ -4,7 +4,7 @@ import {Module, ModuleWithProviders, SERVER_REGISTRY} from '@rxstack/core';
 
 @Module()
 export class ExpressModule {
-  static configure(configuration: ExpressServerConfiguration): ModuleWithProviders {
+  static configure(configuration?: ExpressServerConfiguration): ModuleWithProviders {
     return {
       module: ExpressModule,
       providers: [
