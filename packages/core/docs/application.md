@@ -174,4 +174,4 @@ export class BootstrapListener {
 ### <a name="learn-more"></a> Learn more
 
 * [How to create a custom module](#)
-* [How to programatecally register kernel definitions](#)
+* [How to programatically register kernel definitions](#)

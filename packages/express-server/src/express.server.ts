@@ -77,7 +77,7 @@ export class ExpressServer extends AbstractServer {
 
   private responseHandler(response: Response, res: ExpressResponse): void {
     response.headers.forEach((value, key) => res.header(key, value));
-    res.status(response.statusCode);
+    res.sendStatus(response.statusCode);
     if (response.content instanceof Stream.Readable) {
       response.content.pipe(res);
     } else {

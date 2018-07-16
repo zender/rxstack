@@ -32,7 +32,7 @@ export class IndexController {
 
 `@Http` decorator takes up to three arguments:
 1. Http method: `'HEAD' | 'GET' | 'PUT' | 'PATCH' | 'POST' | 'DELETE'`
-2. Http path:  used by underlying framework to match the route
+2. Http path:  used by underlying framework to match the route.
 3. Route name: unique identifier
 
 
@@ -86,6 +86,22 @@ A Request object holds information about the client request. This information ca
  
  - `content`: any type of data, defaults to `null`
  - `statusCode`: number, defaults to `200`
+ 
+Streaming file:
+ 
+```typescript
+  @Http('GET', '/download', 'app_download')
+  async downloadAction(request: Request): Promise<Response> {
+    const path =  'path_to_file';
+    const st = fs.createReadStream(path);
+    const response = new Response(st);
+    response.headers.set('Content-Disposition', `attachment; filename="my_file.txt"`);
+    response.headers.set('Content-Type', 'text/plain');
+    return response;
+  }
+```
+
+> Currently streaming is not supported by websockets!
  
 ### <a name="events"></a>  Events
 The `kernel` works internally by dispatching events. 
