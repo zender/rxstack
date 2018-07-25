@@ -18,6 +18,13 @@ Component tree goes here
     - [The Request and Response Object]()
 - [Event Listeners](#event-listeners)
 - [Security](#security)
+    - [Installation](#security-installation)
+    - [Configurations](#security-configuration)
+    - [Registering a user provider](#security-user-provider)
+    - [Securing a controller](#security-controller)
+    - [Obtaining the token](#security-obtaining-token)
+    - [Securing controller with authentication listener](#security-listener)
+    - [References](https://github.com/rxstack/rxstack/tree/master/packages/security)
 - [Servers](#servers)
     - [Express](#)
     - [SocketIO](#)
@@ -346,12 +353,11 @@ This is called an "in memory" provider, but it's better to think of it as an "in
 
 ```typescript
 // my-project/src/app/models/user.ts
-
-import {EncoderAwareInterface, User as BaseUser} from '@rxstack/security';
+import {EncoderAwareInterface, PlainTextPasswordEncoder, User as BaseUser} from '@rxstack/security';
 
 export class User extends BaseUser implements EncoderAwareInterface {
   getEncoderName(): string {
-    return 'plain-text';
+    return PlainTextPasswordEncoder.ENCODER_NAME;
   }
 }
 ```
@@ -434,38 +440,7 @@ export const APP_OPTIONS: ApplicationOptions = {
 };
 ```
 
-[Lear more about user providers](https://github.com/rxstack/rxstack/tree/master/packages/security#user-providers)
-
-##### <a name="security-obtaing-token"></a> Obtaining the token
-By default `@rxstack/security` is using JWT. The token could be generated on a dedicated authentication server 
-or in the `RxStack` application if `local_authentication` is enabled.
-
-[Learn more about local authentication](https://github.com/rxstack/rxstack/tree/master/packages/security#local-authentication)
-
-Let's obtain the token:
-
-```bash
-curl -X POST \
-  http://localhost:3000/security/login \
-  -H 'content-type: application/json' \
-  -d '{
-	"username": "admin",
-	"password": "admin"
-}'
-```
-
-or via sockets:
-
-
-```typescript
-const io = require('socket.io-client');
-const conn = io('ws://localhost:4000', {transports: ['websocket']});
-
-conn.emit('app_security_login', {params: {username: "admin", password: "admin"}}, function (response: any) {
-  console.log(response.content); // should output {"token": "...", "refreshToken": "..."}
-});
-```
-
+[Learn more about user providers](https://github.com/rxstack/rxstack/tree/master/packages/security#user-providers)
 
 ##### <a name="security-controller"></a> Securing a controller
 As we successfully set up and configured security module, let's create our first secured controller:
@@ -506,6 +481,67 @@ export const APP_CONTROLLER_PROVIDERS: ProviderDefinition[] = [
 As you see in the `Request` object we retrieve the security token and check if the logged in user has a certain role.
 
 [Learn more about tokens](https://github.com/rxstack/rxstack/tree/master/packages/security#working-with-token)
+
+##### <a name="security-obtaining-token"></a> Obtaining the token
+By default `@rxstack/security` is using JWT. The token could be generated on a dedicated authentication server 
+or in the `RxStack` application if `local_authentication` is enabled.
+
+Let's obtain the token:
+
+```bash
+curl -X POST \
+  http://localhost:3000/security/login \
+  -H 'content-type: application/json' \
+  -d '{
+	"username": "admin",
+	"password": "admin"
+}'
+```
+
+or via websockets:
+
+
+```typescript
+const io = require('socket.io-client');
+const conn = io('ws://localhost:4000', {transports: ['websocket']});
+
+conn.emit('security_login', {params: {username: "admin", password: "admin"}}, function (response: any) {
+  console.log(response.content); // should output {"token": "...", "refreshToken": "..."}
+});
+```
+
+> Token expiration time is set in the `ttl` option in the security module.
+
+
+As we now have the token we can try to access `app_secured_admin` via http:
+
+```bash
+curl -X GET \
+  http://localhost:3000/secured/admin \
+  -H 'authorization: Bearer your-generated-token' 
+```
+
+To access secured controller actions via websocket, you first need to authenticate:
+
+```typescript
+// ...
+
+conn.emit('security_authenticate', {params: {bearer: "your-generated-token"}}, function (response: any) {
+  console.log(response.statusCode); // should output 204 or 401
+});
+```
+
+After you are successfully authenticated, you can access `app_secured_admin`:
+
+```typescript
+// ...
+
+conn.emit('app_secured_admin', null, function (response: any) {
+  console.log(response.statusCode); // should output 200
+});
+```
+
+[Learn more about local authentication](https://github.com/rxstack/rxstack/tree/master/packages/security#local-authentication)
 
 ##### <a name="security-listener"></a> Securing with authentication listener
 If you need to restrict the access on application level then you need to create an authentication listener.
@@ -569,7 +605,7 @@ export const APP_LISTENERS_PROVIDERS: ProviderDefinition[] = [
 ];
 ```
 
-As you see `RxStack` security module provides powerful and fliexible authentication system.
+As you see `RxStack` security module provides powerful and flexible authentication system.
 
 [Complete security module documentations](https://github.com/rxstack/rxstack/tree/master/packages/security)
 
