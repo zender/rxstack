@@ -7,6 +7,7 @@ export class Exception implements Error {
   data: any;
 
   constructor(public message: string) {
+    Error.captureStackTrace(this);
     this.name = 'Exception';
   }
 }
