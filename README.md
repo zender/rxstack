@@ -11,12 +11,14 @@ Component tree goes here
 - [Prerequisites](#prerequisites)
 - [Installation](#installation)
 - [Project folder and file structure](#project-structure)
+- [Configuration](#configuration)
 - [Controllers](#controllers)
     - [Creating a Controller]()
     - [Mapping a URL and socket event to a Controller]()
     - [Managing errors]()
     - [The Request and Response Object]()
 - [Event Listeners](#event-listeners)
+- [Console](#console)
 - [Security](#security)
     - [Installation](#security-installation)
     - [Configurations](#security-configuration)
@@ -26,9 +28,13 @@ Component tree goes here
     - [Securing controller with authentication listener](#security-listener)
     - [References](https://github.com/rxstack/rxstack/tree/master/packages/security)
 - [Servers](#servers)
-    - [Express](#)
-    - [SocketIO](#)
-- [Databases](#quides)
+- [Channels](#channels)
+    - [Installation](#channel-manager-installation)
+    - [Adding and removing users from a channel](#channel-manager-adding-removing)
+    - [Usage server side](#channel-manager-usage-server-side)
+    - [Usage client side](#channel-manager-usage-client-side)
+    - [References](https://github.com/rxstack/rxstack/tree/master/packages/channels)
+- [Databases](#databases)
     - [TypeORM](#databases)
     - [Mongoose](#databases)
 - [Testing](#testing)
@@ -608,6 +614,149 @@ export const APP_LISTENERS_PROVIDERS: ProviderDefinition[] = [
 As you see `RxStack` security module provides powerful and flexible authentication system.
 
 [Complete security module documentations](https://github.com/rxstack/rxstack/tree/master/packages/security)
+
+### <a name="servers"></a> Servers
+The whole point of `RxStack` is staying as a platform-agnostic. A framework's architecture is focused on being applicable 
+to any kind of server-side solution. Build once, use everywhere!
+
+There are two build-in server modules:
+
+- [ExpressServerModule](https://github.com/rxstack/rxstack/tree/master/packages/express-server)
+- [SocketioServerModule](https://github.com/rxstack/rxstack/tree/master/packages/socketio-server)
+
+### <a name="channel-manager"></a> Channel Manager
+`ChannelManager` allows you to add connected users to a channel. 
+You'll be able to notify specific group of user of certain events.
+
+##### <a name="channel-manager-installation"></a> Installation
+
+```bash
+npm install @rxstack/channels --save
+```
+
+and now let's register it in the application common providers:
+
+```typescript
+// my-project/src/app/common.providers.ts
+import {ProviderDefinition} from '@rxstack/core';
+import {ChannelManager} from '@rxstack/channels';
+
+export const APP_COMMON_PROVIDERS: ProviderDefinition[] = [
+  {
+    provide: ChannelManager,
+    useClass: ChannelManager
+  }
+];
+```
+
+##### <a name="channel-manager-adding-removing"></a> Adding and removing users from a channel
+To add an authenticated user to a channel we need to observe to `AuthenticationEvents.SOCKET_AUTHENTICATION_SUCCESS` event,
+and on `ServerEvents.DISCONNECTED` event we need to remove the user from the channel.
+
+> Note: works only with socket servers
+
+Let's create the listener:
+
+```typescript
+// my-project/src/app/event-listeners/channel-manager.listener.ts
+import {Injectable} from 'injection-js';
+import {ServerEvents, SocketEvent} from '@rxstack/core';
+import {Observe} from '@rxstack/async-event-dispatcher';
+import {AuthenticationEvents} from '@rxstack/security';
+import {AuthenticationRequestEvent} from '@rxstack/security/events/authentication-request-event';
+import {ChannelManager} from '@rxstack/channels';
+
+@Injectable()
+export class ChannelManagerListener {
+
+  constructor(private channelManager: ChannelManager) { }
+
+  @Observe(AuthenticationEvents.SOCKET_AUTHENTICATION_SUCCESS)
+  async onSocketAuthenticationSuccess(event: AuthenticationRequestEvent): Promise<void> {
+    // any time user is authenticated via websocket connection then he will be added to the "general" channel.
+    this.channelManager.channel('general').join(event.request.connection);
+  }
+
+  @Observe(ServerEvents.DISCONNECTED)
+  async onDisconnect(event: SocketEvent): Promise<void> {
+    // if user exists in the "general" channel then on disconnect he will be removed from it
+    this.channelManager.channel('general').leave(event.socket);
+  }
+}
+```
+
+> Do not forget to register the listener in the application event listener providers.
+
+All authenticated users are added/removed from the `general` channel. 
+
+##### <a name="channel-manager-usage-server-side"></a> Usage server side
+Let's create a controller action:
+
+```typescript
+// my-project/src/app/controllers/hello.controller.ts
+import {Injectable, Injector} from 'injection-js';
+import {Http, InjectorAwareInterface, Request, Response, WebSocket} from '@rxstack/core';
+import {ChannelManager} from '@rxstack/channels';
+import {ForbiddenException} from '@rxstack/exceptions';
+
+@Injectable()
+export class HelloController implements InjectorAwareInterface {
+
+  private injector: Injector;
+
+  setInjector(injector: Injector): void {
+    this.injector = injector;
+  }
+
+  @WebSocket('app_say_hello')
+  async sayHelloAction(request: Request): Promise<Response> {
+    if (!request.token.isAuthenticated()) {
+      throw new ForbiddenException();
+    }
+    const channelManager = this.injector.get(ChannelManager);
+    const channel = channelManager.channel('general');
+    channel.send('say_hello', {'message': 'Hello there'}, (conn) => conn !== request.connection);
+    return new Response({'number_of_connected_users': channel.length});
+  }
+}
+```
+
+The `sayHelloAction` will send a message to all users in that channel except for the current user.
+
+> Notice: we implemented `InjectorAwareInterface` in order to get `ChannelManager` from the `Injector`
+
+> Do not forget to register `HelloController` in the application controller providers
+
+
+##### <a name="channel-manager-usage-client-side"></a> Usage client side
+
+Let's `say hello`:
+
+```typescript
+conn.emit('app_say_hello', null, function (data: any) {
+  console.log(response); // should output: {"number_of_connected_users": 2}
+});
+```
+
+Let's subscribe to the `say_hello` event:
+
+```typescript
+conn.on('say_hello', function (data: any) {
+  console.log(response); // should output: Hello there
+});
+```
+
+> Notice: all connected users should be authenticated!
+
+[Learn more about channels](https://github.com/rxstack/rxstack/tree/master/packages/channels)
+
+### <a name="database"></a> Databases
+
+
+### <a name="testing"></a> Testing
+Automatic tests are an essential part of the fully functional software product. That is very critical to cover at least 
+the most sensitive parts of your system. In order to achieve that goal, we produce a set of different tests 
+like integration tests, unit tests, functional tests, and so on.
 
 ## License
 
