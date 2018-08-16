@@ -4,8 +4,6 @@
 on top of other frameworks like `express` and `socketio` by adding an abstraction layer.
 
 
-Component tree goes here
-
 ## Getting started
 
 - [Prerequisites](#prerequisites)
@@ -17,6 +15,7 @@ Component tree goes here
     - [Mapping a URL and socket event to a Controller]()
     - [Managing errors]()
     - [The Request and Response Object]()
+    - [File upload]()
 - [Event Listeners](#event-listeners)
 - [Console](#console)
 - [Security](#security)
@@ -42,7 +41,20 @@ Component tree goes here
     - [Integration]()
     - [Functional]()
     - [Load]()
-
+- [References]()
+    - [Async Event Dispatcher](https://github.com/rxstack/rxstack/tree/master/packages/async-event-dispatcher)
+    - [Channels](https://github.com/rxstack/rxstack/tree/master/packages/channels)
+    - [Exceptions](https://github.com/rxstack/rxstack/tree/master/packages/exceptions)
+    - [Query Filter](https://github.com/rxstack/rxstack/tree/master/packages/query-filter)
+    - [Configuration](https://github.com/rxstack/rxstack/tree/master/packages/configuration)
+    - [Core](https://github.com/rxstack/rxstack/tree/master/packages/core)
+    - [Express Server](https://github.com/rxstack/rxstack/tree/master/packages/express-server)
+    - [Express File Upload](https://github.com/rxstack/rxstack/tree/master/packages/express-file-upload)
+    - [SocketIO Server](https://github.com/rxstack/rxstack/tree/master/packages/socketio-server)
+    - [Security](https://github.com/rxstack/rxstack/tree/master/packages/security)
+    - [Utils](https://github.com/rxstack/rxstack/tree/master/packages/utils)
+    
+![Dependency Tree](https://github.com/rxstack/rxstack/blob/master/dependency_tree.jpg)  
 
 ### <a name="prerequisites"></a> Prerequisites
 `RxStack` requires `Node v8.0.0` and later. On MacOS and other Unix systems the 
@@ -105,6 +117,7 @@ conn.emit('app_index', null, function (response: any) {
 - `tslint.json` - typescript linter configuration
 - `tsconfig.json` - typescript configuration
     
+      
 ### <a name="controllers"></a> Controllers
 A controller is a typescript function you create that reads information from the `Request` object 
 and creates and returns a `Response` object. The response could be an HTML page, JSON, XML, a file download, 
@@ -230,6 +243,13 @@ Learn more about [Request Object](https://github.com/rxstack/rxstack/blob/master
 The `Response` object passes information to the underlying framework to construct the response and send it to the client.
 
 Learn more about [Response Object](https://github.com/rxstack/rxstack/blob/master/packages/core/docs/kernel.md#response-object).
+
+##### <a name="file-upload"></a> File upload
+
+> Uploading files is supported only over http (at the moment) with
+[express server module](https://github.com/rxstack/rxstack/tree/master/packages/express-server).
+
+`RxStack` comes with [ExpressFileUpload Module](https://github.com/rxstack/rxstack/tree/master/packages/express-file-upload)
 
 ### <a name="event-listeners"></a> Events and Event Listeners
 During the execution of a `RxStack` application, some event notifications are triggered. 
@@ -1031,8 +1051,10 @@ const result = await service.create({
 });
 ```
 
+As you see you can integrate any databse framework.
+
 ### <a name="testing"></a> Testing
-Automatic tests are an essential part of the fully functional software product. That is very critical to cover at least 
+Automated tests are an essential part of the fully functional software product. That is very critical to cover at least 
 the most sensitive parts of your system. In order to achieve that goal, we produce a set of different tests 
 like integration tests, unit tests, functional tests, and so on.
 
