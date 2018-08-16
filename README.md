@@ -626,7 +626,7 @@ There are two build-in server modules:
 
 ### <a name="channel-manager"></a> Channel Manager
 `ChannelManager` allows you to add connected users to a channel. 
-You'll be able to notify specific group of user of certain events.
+You'll be able to notify specific group of users of certain events.
 
 ##### <a name="channel-manager-installation"></a> Installation
 
@@ -750,8 +750,286 @@ conn.on('say_hello', function (data: any) {
 
 [Learn more about channels](https://github.com/rxstack/rxstack/tree/master/packages/channels)
 
-### <a name="database"></a> Databases
+### <a name="databases"></a> Databases
 
+`RxStack` doesn't provide a module to work with the database, but you can add any of your choice.
+Below you find some database examples:
+
+
+##### <a name="databases-typeorm"></a> TypeOrm
+TypeORM is Object Relational Mapper
+
+[Please read the documentations](http://typeorm.io)
+
+> We assume that mysql is installed and running on your machine.
+
+Let's install dependencies: 
+
+```bash
+$ npm install --save typeorm mysql
+```
+
+Next step is to add the configurations:
+
+```typescript
+// my-project/src/environments/environment.ts
+
+// ...
+  typeorm: {
+    type: 'mysql',
+    host: 'localhost',
+    port: 3306,
+    username: 'root',
+    password: 'root',
+    database: 'demo',
+    entities: [process.env.APP_DIR + '/dist/src/app/entities/*{.ts,.js}'],
+    synchronize: true, // set it to false in production
+  }
+```
+
+now we can create the typeorm connection provider:
+
+```typescript
+// my-project/src/app/common.providers.ts
+import {ProviderDefinition} from '@rxstack/core';
+import {Provider} from 'injection-js';
+import {environment} from '../environments/environment';
+import {createConnection, Connection} from 'typeorm';
+import {MysqlConnectionOptions} from 'typeorm/driver/mysql/MysqlConnectionOptions';
+
+const typeormProvider =  async function(): Promise<Provider> {
+  const connection: Connection = await createConnection(<MysqlConnectionOptions>environment.typeorm);
+  return { provide: Connection, useValue: connection};
+};
+
+export const APP_COMMON_PROVIDERS: ProviderDefinition[] = [
+  // ...
+  typeormProvider()
+];
+```
+
+> Pay attention how we register async providers
+
+Let's create the entity:
+
+```typescript
+// my-project/src/app/entities/cat.ts
+
+import {Column, Entity, PrimaryGeneratedColumn} from 'typeorm';
+
+@Entity()
+export class Cat {
+  @PrimaryGeneratedColumn()
+  id: number;
+
+  @Column()
+  name: string;
+
+  @Column()
+  age: number;
+
+  @Column()
+  breed: string;
+}
+```
+
+Let's create the service class:
+
+```typescript
+// my-project/src/app/services/cat.service.ts
+
+import {Injectable} from 'injection-js';
+import {Cat} from '../entities/cat';
+import {Repository} from 'typeorm';
+
+@Injectable()
+export class CatService {
+
+  constructor(protected repo: Repository<Cat>) { }
+
+  async create(data: any): Promise<Cat> {
+    const createdCat = await this.repo.merge(this.repo.create(), data);
+    return await this.repo.save(createdCat);
+  }
+
+  async findAll(): Promise<Cat[]> {
+    return await this.repo.find();
+  }
+}
+```
+
+we need to register the service in the service providers:
+
+```typescript
+
+// my-project/src/app/services/providers.ts
+
+import {ProviderDefinition} from '@rxstack/core';
+import {CatService} from './cat.service';
+import {Connection} from 'typeorm';
+import {Cat} from '../entities/cat';
+
+export const APP_SERVICE_PROVIDERS: ProviderDefinition[] = [
+  {
+    provide: CatService,
+    useFactory: (connection: Connection) => {
+      return new CatService(connection.getRepository(Cat));
+    },
+    deps: [Connection]
+  },
+];
+```
+
+> `APP_SERVICE_PROVIDERS` needs to be registered in the application providers
+
+That's it, we can get the service from anywhere:
+
+```typescript
+// ...
+
+const service = this.injector.get(CatService);
+const result = await service.create({
+  'name': 'amanda', 'age': 5, 'breed': 'Birman'
+});
+```
+
+##### <a name="databases-mongoose"></a> Mongoose
+Mongoose provides a straight-forward, schema-based solution to model your application data. 
+It includes built-in type casting, validation, query building, business logic hooks and more, out of the box.
+
+[Please read the documentations](http://mongoosejs.com/)
+
+> We assume that mongodb is installed and running on your machine.
+
+Let's install dependencies: 
+
+```bash
+$ npm install --save mongodb mongoose @types/mongoose
+```
+
+Next step is to add the configurations:
+
+```typescript
+// my-project/src/environments/environment.ts
+
+// ...
+  mongoose: {
+    uri: 'mongodb://localhost:27017/test',
+    options: {
+      useNewUrlParser: true
+    }
+  }
+```
+
+now we can create the mongoose connection provider:
+
+```typescript
+// my-project/src/app/common.providers.ts
+import {ProviderDefinition} from '@rxstack/core';
+import {Connection} from 'mongoose';
+import mongoose = require('mongoose');
+import {Provider} from 'injection-js';
+import {environment} from '../environments/environment';
+mongoose.Promise = global.Promise;
+
+const mongooseProvider =  async function(): Promise<Provider> {
+  const connection: Connection = mongoose.createConnection(environment.mongoose.uri, environment.mongoose.options);
+  return { provide: Connection, useValue: connection};
+};
+
+export const APP_COMMON_PROVIDERS: ProviderDefinition[] = [
+  mongooseProvider()
+];
+```
+
+> Pay attention how we register async providers
+
+Let's create the model:
+
+```typescript
+// my-project/src/app/models/cat.interface.ts
+
+export interface CatInterface {
+  name: string;
+  age: number;
+  breed: string;
+}
+```
+
+and the schema:
+
+
+```typescript
+// my-project/src/app/schemas/cat.schema.ts
+
+import * as mongoose from 'mongoose';
+
+export const CatSchema = new mongoose.Schema({
+  name: String,
+  age: Number,
+  breed: String,
+});
+```
+
+Let's create the service class:
+
+```typescript
+// my-project/src/app/services/cat.service.ts
+
+import {Injectable} from 'injection-js';
+import {Model} from 'mongoose';
+import {CatInterface} from '../models/cat.interface';
+
+@Injectable()
+export class CatService {
+
+  constructor(protected model: Model<any>) { }
+
+  async create(data: any): Promise<CatInterface> {
+      const result = await this.model.create(data);
+      return result.toObject ? result.toObject() : result;
+  }
+
+  async findAll(): Promise<CatInterface[]> {
+    return await this.model.find().lean(true).exec();
+  }
+}
+```
+
+we need to register the service in the service providers:
+
+```typescript
+
+// my-project/src/app/services/providers.ts
+
+import {ProviderDefinition} from '@rxstack/core';
+import {CatService} from './cat.service';
+import {Connection} from 'mongoose';
+import {CatSchema} from '../schemas/cat.schema';
+
+export const APP_SERVICE_PROVIDERS: ProviderDefinition[] = [
+  {
+    provide: CatService,
+    useFactory: (connection: Connection) => {
+      return new CatService(connection.model('Cat', CatSchema, 'cats'));
+    },
+    deps: [Connection]
+  },
+];
+```
+
+> `APP_SERVICE_PROVIDERS` needs to be registered in the application providers
+
+That's it, we can get the service from anywhere:
+
+```typescript
+// ...
+
+const service = this.injector.get(CatService);
+const result = await service.create({
+  'name': 'amanda', 'age': 5, 'breed': 'Birman'
+});
+```
 
 ### <a name="testing"></a> Testing
 Automatic tests are an essential part of the fully functional software product. That is very critical to cover at least 
