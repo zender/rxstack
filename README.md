@@ -3,7 +3,7 @@
 > RxStack is a realtime object-oriented framework which helps you build a micro service web applications
 on top of other frameworks like `express` and `socketio` by adding an abstraction layer.
 
-![Dependency Tree](https://github.com/rxstack/rxstack/blob/master/dependency_tree.jpg)  
+![Dependency Tree](https://github.com/rxstack/rxstack/blob/master/deps.jpg)  
 
 ## Getting started
 
