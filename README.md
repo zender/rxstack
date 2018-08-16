@@ -3,6 +3,7 @@
 > RxStack is a realtime object-oriented framework which helps you build a micro service web applications
 on top of other frameworks like `express` and `socketio` by adding an abstraction layer.
 
+![Dependency Tree](https://github.com/rxstack/rxstack/blob/master/dependency_tree.jpg)  
 
 ## Getting started
 
@@ -54,7 +55,6 @@ on top of other frameworks like `express` and `socketio` by adding an abstractio
     - [Security](https://github.com/rxstack/rxstack/tree/master/packages/security)
     - [Utils](https://github.com/rxstack/rxstack/tree/master/packages/utils)
     
-![Dependency Tree](https://github.com/rxstack/rxstack/blob/master/dependency_tree.jpg)  
 
 ### <a name="prerequisites"></a> Prerequisites
 `RxStack` requires `Node v8.0.0` and later. On MacOS and other Unix systems the 
