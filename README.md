@@ -3,7 +3,7 @@
 > RxStack is a realtime object-oriented framework which helps you build a micro service web applications
 on top of other frameworks like `express` and `socketio` by adding an abstraction layer.
 
-![Dependency Tree](https://github.com/rxstack/rxstack/blob/master/deps.jpg)  
+![Dependency Tree](lifecycle.jpg)  
 
 ## Getting started
 
@@ -41,7 +41,6 @@ on top of other frameworks like `express` and `socketio` by adding an abstractio
     - [Unit]()
     - [Integration]()
     - [Functional]()
-    - [Load]()
 - [References]()
     - [Async Event Dispatcher](https://github.com/rxstack/rxstack/tree/master/packages/async-event-dispatcher)
     - [Channels](https://github.com/rxstack/rxstack/tree/master/packages/channels)
@@ -1051,12 +1050,301 @@ const result = await service.create({
 });
 ```
 
-As you see you can integrate any databse framework.
+As you see you can integrate any database framework.
 
 ### <a name="testing"></a> Testing
 Automated tests are an essential part of the fully functional software product. That is very critical to cover at least 
 the most sensitive parts of your system. In order to achieve that goal, we produce a set of different tests 
 like integration tests, unit tests, functional tests, and so on.
+
+> `RxStack` uses  [mocha](https://mochajs.org/#getting-started), [chai](http://www.chaijs.com/) 
+and [sinon](https://sinonjs.org/) testing frameworks. 
+
+
+##### <a name="testing-unit"></a> Unit Tests
+
+Services are often the easiest files to unit test. Let's create a `ValueService` :
+
+```typescript
+// my-project/src/app/services/value.service.ts
+
+export class ValueService {
+  getValue(): string {
+    return 'real value';
+  }
+}
+```
+
+and test it:
+
+```typescript
+// my-project/test/unit/services/value.service.spec.ts
+
+import {ValueService} from '../../../src/app/services/value.service';
+
+describe('Unit:ValueService', () => {
+  it('#getValue should return real value', async () => {
+    const valueService = new ValueService();
+    valueService.getValue().should.equal('real value');
+  });
+});
+```
+
+Services often depend on other services, but injecting the real service rarely works well as most dependent 
+services are difficult to create and control.
+Instead you can mock the dependency, use a dummy value, or create a spy on the pertinent service method.
+
+Let's create a `MasterService` which depends on `ValueService`:
+
+```typescript
+// my-project/src/app/services/value.service.ts
+
+import {ValueService} from './value.service';
+
+export class MasterService {
+
+  constructor(private valueService: ValueService) { }
+
+  getValue(): string {
+    return this.valueService.getValue();
+  }
+}
+```
+
+and test it:
+
+```typescript
+// my-project/test/unit/services/master.service.spec.ts
+
+import {MasterService} from '../../../src/app/services/master.service';
+import {ValueService} from '../../../src/app/services/value.service';
+
+const sinon = require('sinon');
+
+describe('Unit:MasterService', () => {
+
+  it('#getValue should return fake value', async () => {
+    const valueService = sinon.createStubInstance(ValueService);
+    valueService.getValue.returns('fake value');
+    const masterService = new MasterService(valueService);
+    masterService.getValue().should.equal('fake value');
+  });
+});
+```
+
+These standard testing techniques are great for unit testing services in isolation.
+
+##### <a name="testing-integration"></a> Integration Tests
+
+Integration tests determine if independently developed units of software work correctly when they are connected to each other. 
+To test these services we need to bootstrap the application and pull them from the `Injector` and 
+if needed we can replace services with stubs.
+
+Let's make our `MasterService` and `ValueService` services injectable:
+
+```typescript
+import {Injectable} from 'injection-js';
+
+@Injectable()
+export class MasterService {
+  // ...
+}
+
+@Injectable()
+export class ValueService {
+  // ...
+}
+```
+
+and now we need to register them in service providers:
+
+```typescript
+// my-project/src/app/services/providers.ts
+import {ProviderDefinition} from '@rxstack/core';
+import {MasterService} from './master.service';
+import {ValueService} from './value.service';
+
+export const APP_SERVICE_PROVIDERS: ProviderDefinition[] = [
+  // ...
+  {
+    provide: MasterService,
+    useClass: MasterService
+  },
+  {
+    provide: ValueService,
+    useClass: ValueService
+  }
+];
+```
+
+and now let's test it:
+
+```typescript
+import 'reflect-metadata';
+import {Configuration} from '@rxstack/configuration';
+
+Configuration.initAppDirectory();
+Configuration.initialize(process.env.APP_DIR + '/dist/src/environments');
+
+import {MasterService} from '../../../src/app/services/master.service';
+import {Application} from '@rxstack/core';
+import {APP_OPTIONS} from '../../../src/app/app-options';
+import {Injector} from 'injection-js';
+
+describe('Integration:MasterService', () => {
+
+  // Setup application
+  const app = new Application(APP_OPTIONS);
+  let injector: Injector;
+  let masterService: MasterService;
+
+  before(async () => {
+    await app.start();
+    injector = app.getInjector();
+    masterService = injector.get(MasterService);
+  });
+
+  after(async () => {
+    await app.stop();
+  });
+
+  it('#getValue should return real value', async () => {
+    masterService.getValue().should.equal('real value');
+  });
+});
+```
+
+sometimes you need to replace the real service with the mock one:
+
+```typescript
+import 'reflect-metadata';
+import {Configuration} from '@rxstack/configuration';
+
+Configuration.initAppDirectory();
+Configuration.initialize(process.env.APP_DIR + '/dist/src/environments');
+
+import {MasterService} from '../../../src/app/services/master.service';
+import {Application} from '@rxstack/core';
+import {APP_OPTIONS} from '../../../src/app/app-options';
+import {Injector} from 'injection-js';
+import {ValueService} from '../../../src/app/services/value.service';
+import * as _ from 'lodash';
+
+const sinon = require('sinon');
+
+describe('Integration:MasterService', () => {
+
+  // Setup application
+  const opt = _.cloneDeep(APP_OPTIONS); // clone it otherwse it will affect other tests
+  const valueService = sinon.createStubInstance(ValueService);
+  valueService.getValue.returns('fake value');
+
+  // replace the real service
+  opt.providers.push({
+    provide: ValueService,
+    useValue: valueService
+  });
+
+  const app = new Application(opt);
+  let injector: Injector;
+  let masterService: MasterService;
+
+  before(async () => {
+    await app.start();
+    injector = app.getInjector();
+    masterService = injector.get(MasterService);
+  });
+
+  after(async () => {
+    await app.stop();
+  });
+
+  it('#getValue should return fake value', async () => {
+    masterService.getValue().should.equal('fake value');
+  });
+});
+```
+> These type of tests are very useful to test services with real database connection.
+
+##### <a name="testing-functional"></a> Functional Tests 
+ 
+Functional tests let you check a controller action response:
+
+- Make a request (http or socket)
+- Test the response
+- Rinse and repeat
+
+As an example, a test could look like this using [request-promise](https://github.com/request/request-promise) and [socket.io-client](https://github.com/socketio/socket.io-client) :
+
+> You can use you any other http or socket client
+
+```typescript
+import 'reflect-metadata';
+import {Configuration} from '@rxstack/configuration';
+Configuration.initAppDirectory();
+Configuration.initialize(process.env.APP_DIR + '/dist/src/environments');
+import {Injector} from 'injection-js';
+import {APP_OPTIONS} from '../../../../src/app/app-options';
+import {Application, ServerManager} from '@rxstack/core';
+import {IncomingMessage} from 'http';
+
+const rp = require('request-promise');
+const io = require('socket.io-client');
+
+describe('Functional:Controllers:HelloController', () => {
+
+  // Setup application
+  const app = new Application(APP_OPTIONS);
+  let injector: Injector;
+  let httpHost: string;
+  let wsHost: string;
+  let conn: any;
+
+  before(async () => {
+    await app.start();
+    injector = app.getInjector();
+    httpHost = injector.get(ServerManager).getByName('express').getHost();
+    wsHost = injector.get(ServerManager).getByName('socketio').getHost();
+    conn = io(wsHost, {transports: ['websocket']});
+  });
+
+  after(async () => {
+    await conn.close();
+    await app.stop();
+  });
+
+  it('#sayHello over http should return hello', async () => {
+    const options = {
+      uri: httpHost + '/hello',
+      resolveWithFullResponse: true,
+      json: false
+    };
+
+    await rp(options)
+      .then((response: IncomingMessage) => {
+        const headers = response.headers;
+        headers['x-powered-by'].should.be.equal('Express');
+        response['statusCode'].should.be.equal(200);
+        response['content'].should.be.equal('hello');
+      })
+      .catch((err: any) => {
+        // make sure test fails
+        true.should.be.false;
+      })
+    ;
+  });
+
+  it('#sayHello over socket should return hello', (done: Function) => {
+    conn.emit('app_hello', null, function (response: any) {
+      response['statusCode'].should.be.equal(200);
+      response['content'].should.be.equal('hello');
+      done();
+    });
+  });
+});
+```
+
+> You can test the response content against JSON schema
 
 ## License
 
