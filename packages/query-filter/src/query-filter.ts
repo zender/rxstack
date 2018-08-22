@@ -114,7 +114,7 @@ export class QueryFilter {
     });
 
     return query;
-  };
+  }
 
   /**
    * Creates $eq operator when provided like that: ?id=12

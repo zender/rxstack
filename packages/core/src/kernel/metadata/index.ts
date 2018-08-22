@@ -1,3 +1,3 @@
-export * from './decorators'
-export * from './metadata'
-export * from './metadata-storage'
+export * from './decorators';
+export * from './metadata';
+export * from './metadata-storage';

@@ -10,12 +10,12 @@ describe('Console:DebugWebSocketMetaDataCommand', () => {
   const app = new Application(CONSOLE_APP_OPTIONS);
   let consoleSpy: any;
 
-  beforeEach(async () => {
+  before(async () => {
     await app.start();
     consoleSpy = sinon.spy(console, 'log');
   });
 
-  afterEach(async () => {
+  after(async () => {
     consoleSpy.restore();
     app.stop();
   });
