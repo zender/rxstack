@@ -20,7 +20,7 @@ describe('CommandManager', () => {
     const output = stdMocks.flush();
     const consoleOutput = output.stdout.pop();
     consoleOutput.includes('hello').should.be.true;
-    app.getInjector().get(CommandManager).commands.length.should.be.equal(2);
+    app.getInjector().get(CommandManager).commands.length.should.be.equal(4);
     app.stop();
   });
 

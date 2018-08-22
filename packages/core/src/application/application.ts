@@ -28,7 +28,7 @@ export class Application {
     this.providers = [];
     this.options.imports.forEach((module) => this.resolveModule(module));
     this.providers.push(...this.options.providers);
-    this.injector = await this.doBootstrap(this.options.console);
+    this.injector = await this.doBootstrap();
     if (this.options.console) {
       this.injector.get(CommandManager).execute();
     } else {
@@ -53,7 +53,7 @@ export class Application {
     return this.injector;
   }
 
-  private async doBootstrap(skipKernel = false): Promise<Injector> {
+  private async doBootstrap(): Promise<Injector> {
     return Promise.all(this.providers).then(async (providers) => {
       const resolvedProviders = ReflectiveInjector.resolve(CORE_PROVIDERS(this.options).concat(providers));
       const injector = ReflectiveInjector.fromResolvedProviders(resolvedProviders);
@@ -65,9 +65,7 @@ export class Application {
       });
       const bootstrapEvent = new BootstrapEvent(injector, resolvedProviders);
       await dispatcher.dispatch(ApplicationEvents.BOOTSTRAP, bootstrapEvent);
-      if (false === skipKernel) {
-        injector.get(Kernel).initialize();
-      }
+      injector.get(Kernel).initialize();
       return injector;
     });
   }

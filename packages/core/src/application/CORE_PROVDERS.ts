@@ -8,9 +8,10 @@ import {ApplicationOptions} from './application-options';
 import {LoggerTransportInterface} from '../logger/interfaces';
 import {NoopHttpServer} from '../server/noop-http.server';
 import {NoopWebsocketServer} from '../server/noop-websocket.server';
-import {COMMAND_REGISTRY, CommandManager} from '../console';
-import {VersionCommand} from '../console/version-command';
+import {COMMAND_REGISTRY, CommandManager, DebugHttpMetadataCommand} from '../console';
+import {VersionCommand} from '../console/version.command';
 import {AbstractCommand} from '../console/abstract-command';
+import {DebugWebSocketMetadataCommand} from '../console/debug-web-socket-metadata.command';
 
 export const CORE_PROVIDERS = function (options: ApplicationOptions): Provider[]  {
   return [
@@ -35,6 +36,8 @@ export const CORE_PROVIDERS = function (options: ApplicationOptions): Provider[]
       deps: [SERVER_REGISTRY, Kernel]
     },
     { provide: COMMAND_REGISTRY, useClass: VersionCommand, multi: true },
+    { provide: COMMAND_REGISTRY, useClass: DebugHttpMetadataCommand, multi: true },
+    { provide: COMMAND_REGISTRY, useClass: DebugWebSocketMetadataCommand, multi: true },
     {
       provide: CommandManager,
       useFactory: (registry: AbstractCommand[]) => {

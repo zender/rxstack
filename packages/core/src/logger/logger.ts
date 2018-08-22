@@ -6,18 +6,11 @@ const winstonLogger = require('winston');
 @Injectable()
 export class Logger {
 
-  private sourceName?: string;
-
   private transports: Map<string, LoggerTransportInterface> = new Map();
 
   constructor(registry: LoggerTransportInterface[], handlers: LoggerHandler[]) {
     registry.forEach((transport) => this.registerTransport(transport));
     this.init(handlers);
-  }
-
-  source(source: string): this {
-    this.sourceName = source;
-    return this;
   }
 
   error(message: string, meta?: any): this {
@@ -46,7 +39,7 @@ export class Logger {
 
   log(logLevel: LoggingLevel, message: string, meta?: any) {
     meta = meta ? meta : {};
-    winstonLogger.log(logLevel, message, Object.assign({}, meta, {'source': this.sourceName}));
+    winstonLogger.log(logLevel, message, meta);
     return this;
   }
 

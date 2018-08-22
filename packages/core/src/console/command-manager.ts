@@ -9,7 +9,7 @@ export class CommandManager {
 
   commands: Object[] = [];
 
-  constructor(registry: AbstractCommand[]) {
+  constructor(private registry: AbstractCommand[]) {
     registry.forEach((command) => {
       let obj = {
         'command': command.command,
@@ -44,5 +44,9 @@ export class CommandManager {
       .alias('h', 'help')
       .argv
     ;
+  }
+
+  getCommand(command: string): AbstractCommand {
+    return this.registry.find((service: AbstractCommand) =>  service.command === command);
   }
 }

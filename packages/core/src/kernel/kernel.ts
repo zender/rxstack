@@ -5,7 +5,6 @@ import {AsyncEventDispatcher} from '@rxstack/async-event-dispatcher';
 import {transformToException} from '@rxstack/exceptions';
 import {KernelEvents} from './kernel-events';
 import {RequestEvent, ResponseEvent, ExceptionEvent} from './events';
-import {Logger} from '../logger';
 import {InjectorAwareInterface} from '../application';
 import {HttpMetadata, httpMetadataStorage, WebSocketMetadata, webSocketMetadataStorage} from './metadata';
 
@@ -47,8 +46,6 @@ export class Kernel implements InjectorAwareInterface {
     } else {
       this.pushWebSocketDefinition(<WebSocketMetadata>metadata, controller);
     }
-    this.injector.get(Logger).source(this.constructor.name)
-      .debug(`registered ${metadata.transport} ${metadata.name}`);
   }
 
   private pushHttpDefinition(metadata: HttpMetadata, controller: Object): void {

@@ -28,7 +28,7 @@ describe('Logger', () => {
 
   it('should output debug with source', () => {
     stdMocks.use();
-    logger.source('TestSource').debug('another error', {'prop': 'my prop'});
+    logger.debug('another error', {'prop': 'my prop', 'source': 'TestSource'});
     stdMocks.restore();
 
     const output = stdMocks.flush();

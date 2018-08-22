@@ -81,7 +81,8 @@ export abstract class AbstractServer {
    */
   async startEngine(): Promise<void> {
     this.getHttpServer()
-      .listen(this.port, this.host, () => this.getLogger().debug(`Starting ${this.getHost()}`));
+      .listen(this.port, this.host, () =>
+        this.getLogger().debug(`Starting ${this.getHost()}`, {'source': this.constructor.name}));
   }
 
   /**
@@ -90,7 +91,8 @@ export abstract class AbstractServer {
    * @returns {Promise<void>}
    */
   async stopEngine(): Promise<void> {
-    this.getHttpServer().close(() => this.getLogger().debug(`Stopping ${this.getHost()}`));
+    this.getHttpServer().close(() =>
+      this.getLogger().debug(`Stopping ${this.getHost()}`, {'source': this.constructor.name}));
   }
 
   /**
@@ -121,7 +123,7 @@ export abstract class AbstractServer {
    * @returns {Logger}
    */
   protected getLogger(): Logger {
-    return this.getInjector().get(Logger).source(this.constructor.name);
+    return this.getInjector().get(Logger);
   }
 
   /**
