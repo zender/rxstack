@@ -10,46 +10,48 @@ import {SecurityConfiguration} from '../security-configuration';
 @Injectable()
 export class BootstrapListener {
 
-  constructor(private configuration: SecurityConfiguration) {}
+  static httpMetadata = [
+    {
+      path: '/login',
+      name: 'security_login',
+      action: 'loginAction'
+    },
+    {
+      path: '/refresh-token',
+      name: 'security_refresh_token',
+      action: 'refreshTokenAction'
+    },
+    {
+      path: '/logout',
+      name: 'security_logout',
+      action: 'logoutAction'
+    }
+  ];
+
+  static socketMetadata = [
+    {
+      name: 'security_login',
+      action: 'loginAction'
+    },
+    {
+      name: 'security_authenticate',
+      action: 'authenticateAction'
+    },
+    {
+      name: 'security_unauthenticate',
+      action: 'unauthenticateAction'
+    }
+  ];
+
+  constructor(private configuration: SecurityConfiguration) { }
 
   @Observe(ApplicationEvents.BOOTSTRAP)
   async onBootstrap(event: BootstrapEvent): Promise<void> {
     if (this.configuration.local_authentication) {
-      const httpMetadata = [
-        {
-          path: '/login',
-          name: 'security_login',
-          action: 'loginAction'
-        },
-        {
-          path: '/refresh-token',
-          name: 'security_refresh_token',
-          action: 'refreshTokenAction'
-        },
-        {
-          path: '/logout',
-          name: 'security_logout',
-          action: 'logoutAction'
-        }
-      ];
-
-      const socketMetadata = [
-        {
-          name: 'security_login',
-          action: 'loginAction'
-        },
-        {
-          name: 'security_authenticate',
-          action: 'authenticateAction'
-        },
-        {
-          name: 'security_unauthenticate',
-          action: 'unauthenticateAction'
-        }
-      ];
-
-      httpMetadata.forEach(meta => httpMetadataStorage.add(this.createHttpMetadata(meta)));
-      socketMetadata.forEach(meta => webSocketMetadataStorage.add(this.createWebSocketMetadata(meta)));
+      BootstrapListener.httpMetadata
+        .forEach(meta => httpMetadataStorage.add(this.createHttpMetadata(meta)));
+      BootstrapListener.socketMetadata
+        .forEach(meta => webSocketMetadataStorage.add(this.createWebSocketMetadata(meta)));
     }
   }
 
