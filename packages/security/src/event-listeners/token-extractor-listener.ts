@@ -1,6 +1,6 @@
 import {Injectable} from 'injection-js';
 import {TokenExtractorManager} from '../token-extractors/token-extractor-manager';
-import {KernelEvents, RequestEvent} from '@rxstack/core';
+import {KernelEvents, Request, RequestEvent} from '@rxstack/core';
 import {Observe} from '@rxstack/async-event-dispatcher';
 import {Token} from '../models/token';
 import {AnonymousToken} from '../models/anonymous.token';
@@ -13,15 +13,27 @@ export class TokenExtractorListener {
   @Observe(KernelEvents.KERNEL_REQUEST, -150)
   async onRequest(event: RequestEvent): Promise<void> {
     const request = event.getRequest();
-    let token = new AnonymousToken();
-    if (request.transport === 'HTTP') {
-      const rawToken = this.extractor.extract(request);
-      if (rawToken) {
-        token = new Token(rawToken);
-      }
-    } else if (request.transport === 'SOCKET') {
-      request.connection['token'] ? token = request.connection['token'] : request.connection['token'] = token;
+    request.token = new AnonymousToken();
+    switch (request.transport) {
+      case 'HTTP':
+        this.createTokenFromHttpRequest(request);
+        break;
+      case 'SOCKET':
+        this.createTokenFromSocketRequest(request);
+        break;
     }
-    request.token = token;
+  }
+
+  private createTokenFromHttpRequest(request: Request): void {
+    const rawToken = this.extractor.extract(request);
+    if (rawToken) {
+      request.token = new Token(rawToken);
+    }
+  }
+
+  private createTokenFromSocketRequest(request: Request): void {
+    if (request.connection['token']) {
+      request.token = request.connection['token'];
+    }
   }
 }

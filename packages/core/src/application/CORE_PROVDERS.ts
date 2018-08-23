@@ -13,10 +13,8 @@ import {VersionCommand} from '../console/version.command';
 import {AbstractCommand} from '../console/abstract-command';
 import {DebugWebSocketMetadataCommand} from '../console/debug-web-socket-metadata.command';
 
-export const CORE_PROVIDERS = function (options: ApplicationOptions): Provider[]  {
+const LOGGER_PROVIDERS = function (options: ApplicationOptions): Provider[] {
   return [
-    { provide: AsyncEventDispatcher, useClass: AsyncEventDispatcher},
-    { provide: Kernel, useClass: Kernel },
     { provide: LOGGER_TRANSPORT_REGISTRY, useClass: FileTransport, multi: true },
     { provide: LOGGER_TRANSPORT_REGISTRY, useClass: ConsoleTransport, multi: true },
     {
@@ -25,7 +23,13 @@ export const CORE_PROVIDERS = function (options: ApplicationOptions): Provider[]
         return new Logger(registry, options.logger.handlers);
       },
       deps: [LOGGER_TRANSPORT_REGISTRY]
-    },
+    }
+  ];
+};
+
+
+const SERVER_PROVIDERS = function (options: ApplicationOptions): Provider[] {
+  return [
     { provide: SERVER_REGISTRY, useClass: NoopHttpServer, multi: true },
     { provide: SERVER_REGISTRY, useClass: NoopWebsocketServer, multi: true },
     {
@@ -34,7 +38,12 @@ export const CORE_PROVIDERS = function (options: ApplicationOptions): Provider[]
         return new ServerManager(registry, kernel, options.servers);
       },
       deps: [SERVER_REGISTRY, Kernel]
-    },
+    }
+  ];
+};
+
+const COMMAND_PROVIDERS = function (options: ApplicationOptions): Provider[] {
+  return [
     { provide: COMMAND_REGISTRY, useClass: VersionCommand, multi: true },
     { provide: COMMAND_REGISTRY, useClass: DebugHttpMetadataCommand, multi: true },
     { provide: COMMAND_REGISTRY, useClass: DebugWebSocketMetadataCommand, multi: true },
@@ -45,5 +54,15 @@ export const CORE_PROVIDERS = function (options: ApplicationOptions): Provider[]
       },
       deps: [COMMAND_REGISTRY]
     }
+  ];
+};
+
+export const CORE_PROVIDERS = function (options: ApplicationOptions): Provider[]  {
+  return [
+    { provide: AsyncEventDispatcher, useClass: AsyncEventDispatcher},
+    { provide: Kernel, useClass: Kernel },
+    ...LOGGER_PROVIDERS(options),
+    ...SERVER_PROVIDERS(options),
+    ...COMMAND_PROVIDERS(options),
   ];
 };
