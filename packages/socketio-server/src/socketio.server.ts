@@ -88,7 +88,7 @@ export class SocketioServer extends AbstractServer {
   }
 
   private errorHandler(err: Exception, callback: Function) {
-    err['statusCode'] =  err['statusCode'] || 500;
+    err['statusCode'] = err['statusCode'] || 500;
     if (err['statusCode'] >= 500) {
       this.getLogger().error(err.message, err);
     } else {
