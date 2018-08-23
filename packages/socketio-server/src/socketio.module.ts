@@ -12,7 +12,7 @@ export class SocketioModule {
         {
           provide: SocketioServerConfiguration,
           useFactory: () => {
-            return new SocketioServerConfiguration(configuration);
+            return Object.assign(new SocketioServerConfiguration(), configuration);
           },
           deps: []
         },

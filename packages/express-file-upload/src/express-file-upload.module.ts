@@ -11,7 +11,7 @@ export class ExpressFileUploadModule {
         {
           provide: ExpressFileUploadConfiguration,
           useFactory: () => {
-            return new ExpressFileUploadConfiguration(configuration);
+            return Object.assign(new ExpressFileUploadConfiguration(), configuration);
           },
           deps: []
         },
