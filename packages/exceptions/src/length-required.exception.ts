@@ -5,8 +5,6 @@ import {HttpException} from './http.exception';
  */
 export class LengthRequiredException extends HttpException {
   constructor(message = 'Length Required') {
-    super(message);
-    this.name = 'LengthRequiredException';
-    this.statusCode = 411;
+    super(message, 'LengthRequiredException', 411);
   }
 }

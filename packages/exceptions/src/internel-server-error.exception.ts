@@ -5,7 +5,6 @@ import {HttpException} from './http.exception';
  */
 export class InternalServerErrorException extends HttpException {
   constructor(message = 'Internal Server Error') {
-    super(message);
-    this.name = 'InternalServerErrorException';
+    super(message, 'InternalServerErrorException');
   }
 }

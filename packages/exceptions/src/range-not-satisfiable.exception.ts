@@ -5,8 +5,6 @@ import {HttpException} from './http.exception';
  */
 export class RangeNotSatisfiableException extends HttpException {
   constructor(message = 'Range Not Satisfiable') {
-    super(message);
-    this.name = 'RangeNotSatisfiableException';
-    this.statusCode = 416;
+    super(message, 'RangeNotSatisfiableException', 416);
   }
 }

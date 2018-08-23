@@ -5,8 +5,6 @@ import {HttpException} from './http.exception';
  */
 export class RequestTimeoutException extends HttpException {
   constructor(message = 'Request Timeout') {
-    super(message);
-    this.name = 'RequestTimeoutException';
-    this.statusCode = 408;
+    super(message, 'RequestTimeoutException', 408);
   }
 }

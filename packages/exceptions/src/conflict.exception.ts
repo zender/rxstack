@@ -5,8 +5,6 @@ import {HttpException} from './http.exception';
  */
 export class ConflictException extends HttpException {
   constructor(message: string = 'Conflict') {
-    super(message);
-    this.name = 'ConflictException';
-    this.statusCode = 409;
+    super(message, 'ConflictException', 409);
   }
 }

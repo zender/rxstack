@@ -2,12 +2,10 @@
  * Defines base Error class
  */
 export class Exception implements Error {
-  name: string;
   stack?: string;
   data: any;
 
-  constructor(public message: string) {
+  constructor(public message: string, public name = 'Exception') {
     Error.captureStackTrace(this);
-    this.name = 'Exception';
   }
 }

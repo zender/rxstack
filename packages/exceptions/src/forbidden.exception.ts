@@ -5,8 +5,6 @@ import {HttpException} from './http.exception';
  */
 export class ForbiddenException extends HttpException {
   constructor(message = 'Forbidden') {
-    super(message);
-    this.name = 'ForbiddenException';
-    this.statusCode = 403;
+    super(message, 'ForbiddenException', 403);
   }
 }

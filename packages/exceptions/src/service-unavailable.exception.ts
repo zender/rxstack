@@ -5,8 +5,6 @@ import {HttpException} from './http.exception';
  */
 export class ServiceUnavailableException extends HttpException {
   constructor(message = 'Service Unavailable') {
-    super(message);
-    this.name = 'ServiceUnavailableException';
-    this.statusCode = 503;
+    super(message, 'ServiceUnavailableException', 503);
   }
 }

@@ -5,8 +5,6 @@ import {HttpException} from './http.exception';
  */
 export class URITooLongException extends HttpException {
   constructor(message = 'URI Too Long') {
-    super(message);
-    this.name = 'URITooLongException';
-    this.statusCode = 414;
+    super(message, 'URITooLongException', 414);
   }
 }

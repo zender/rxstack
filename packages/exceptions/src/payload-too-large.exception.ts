@@ -5,8 +5,6 @@ import {HttpException} from './http.exception';
  */
 export class PayloadTooLargeException extends HttpException {
   constructor(message = 'Payload Too Large') {
-    super(message);
-    this.name = 'PayloadTooLargeException';
-    this.statusCode = 413;
+    super(message, 'PayloadTooLargeException', 413);
   }
 }

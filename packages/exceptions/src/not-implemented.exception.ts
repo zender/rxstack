@@ -5,8 +5,6 @@ import {HttpException} from './http.exception';
  */
 export class NotImplementedException extends HttpException {
   constructor(message = 'Not Implemented') {
-    super(message);
-    this.name = 'NotImplementedException';
-    this.statusCode = 501;
+    super(message, 'NotImplementedException', 501);
   }
 }

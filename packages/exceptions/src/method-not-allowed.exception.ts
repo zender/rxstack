@@ -5,8 +5,6 @@ import {HttpException} from './http.exception';
  */
 export class MethodNotAllowedException extends HttpException {
   constructor(message = 'Method Not Allowed') {
-    super(message);
-    this.name = 'MethodNotAllowedException';
-    this.statusCode = 405;
+    super(message, 'MethodNotAllowedException', 405);
   }
 }

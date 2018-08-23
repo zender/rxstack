@@ -5,8 +5,6 @@ import {HttpException} from './http.exception';
  */
 export class UnprocessableEntityException extends HttpException {
   constructor(message = 'Unprocessable Entity') {
-    super(message);
-    this.name = 'UnprocessableEntityException';
-    this.statusCode = 422;
+    super(message, 'UnprocessableEntityException', 422);
   }
 }

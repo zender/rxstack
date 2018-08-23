@@ -5,8 +5,6 @@ import {HttpException} from './http.exception';
  */
 export class PreconditionFailedException extends HttpException {
   constructor(message = 'Precondition Failed') {
-    super(message);
-    this.name = 'PreconditionFailedException';
-    this.statusCode = 412;
+    super(message, 'PreconditionFailedException', 412);
   }
 }
