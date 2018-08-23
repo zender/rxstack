@@ -81,7 +81,6 @@ export class SocketioServer extends AbstractServer {
     if (response.content instanceof Stream.Readable) {
       throw new Exception('Streaming is not supported.');
     }
-
     callback.call(null, {
       'statusCode': response.statusCode,
       'content': response.content || null,
@@ -89,16 +88,15 @@ export class SocketioServer extends AbstractServer {
   }
 
   private errorHandler(err: Exception, callback: Function) {
-    const status = err['statusCode'] ?  err['statusCode'] : 500;
-    err['statusCode'] = status;
-    if (status >= 500) {
+    err['statusCode'] =  err['statusCode'] || 500;
+    if (err['statusCode'] >= 500) {
       this.getLogger().error(err.message, err);
     } else {
       this.getLogger().debug(err.message, err);
     }
 
-    if (process.env.NODE_ENV === 'production' && status >= 500) {
-      callback.call(null, {message: 'Internal Server Error', statusCode: status});
+    if (process.env.NODE_ENV === 'production' && err['statusCode'] >= 500) {
+      callback.call(null, {message: 'Internal Server Error', statusCode: err['statusCode']});
     } else {
       callback.call(null, err);
     }

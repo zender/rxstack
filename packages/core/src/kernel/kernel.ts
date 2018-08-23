@@ -2,7 +2,7 @@ import {HttpDefinition, WebSocketDefinition} from './interfaces';
 import {Injectable, Injector} from 'injection-js';
 import {Request, Response} from './models';
 import {AsyncEventDispatcher} from '@rxstack/async-event-dispatcher';
-import {transformToException} from '@rxstack/exceptions';
+import {Exception, transformToException} from '@rxstack/exceptions';
 import {KernelEvents} from './kernel-events';
 import {RequestEvent, ResponseEvent, ExceptionEvent} from './events';
 import {InjectorAwareInterface} from '../application';
@@ -89,19 +89,20 @@ export class Kernel implements InjectorAwareInterface {
       response = await controller[propertyKey].call(controller, request);
       return await this.handleResponse(response, request);
     } catch (e) {
-      let exception = transformToException(e);
+      return await this.handleException(transformToException(e), request);
+    }
+  }
 
-      try {
-        const exceptionEvent = new ExceptionEvent(exception, request);
-        await this.injector.get(AsyncEventDispatcher).dispatch(KernelEvents.KERNEL_EXCEPTION, exceptionEvent);
-        exception = exceptionEvent.getException();
-        if (exceptionEvent.hasResponse()) {
-          return await this.handleResponse(exceptionEvent.getResponse(), request);
-        }
-        throw exception;
-      } catch (e) {
-        throw transformToException(e);
+  private async handleException(exception: Exception, request: Request): Promise<Response> {
+    try {
+      const exceptionEvent = new ExceptionEvent(exception, request);
+      await this.injector.get(AsyncEventDispatcher).dispatch(KernelEvents.KERNEL_EXCEPTION, exceptionEvent);
+      if (exceptionEvent.hasResponse()) {
+        return await this.handleResponse(exceptionEvent.getResponse(), request);
       }
+      throw exceptionEvent.getException();
+    } catch (e) {
+      throw transformToException(e);
     }
   }
 

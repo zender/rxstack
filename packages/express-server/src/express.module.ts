@@ -11,7 +11,7 @@ export class ExpressModule {
         {
           provide: ExpressServerConfiguration,
           useFactory: () => {
-            return new ExpressServerConfiguration(configuration);
+            return Object.assign(new ExpressServerConfiguration(), configuration);
           },
           deps: []
         },
