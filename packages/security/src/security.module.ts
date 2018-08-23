@@ -1,4 +1,4 @@
-import {Module, ModuleWithProviders} from '@rxstack/core';
+import {Module, ModuleWithProviders, ProviderDefinition} from '@rxstack/core';
 import {SecurityConfiguration} from './security-configuration';
 import {InjectionToken} from 'injection-js';
 import {
@@ -46,122 +46,116 @@ export class SecurityModule {
           },
           deps: []
         },
-        {
-          provide: KeyLoader,
-          useClass: KeyLoader
-        },
-        {
-          provide: TOKEN_MANAGER,
-          useClass: TokenManager
-        },
-        {
-          provide: EncoderFactory,
-          useFactory: (registry: PasswordEncoderInterface[]) => {
-            return new EncoderFactory(registry);
-          },
-          deps: [PASSWORD_ENCODER_REGISTRY]
-        },
-        {
-          provide: BootstrapListener,
-          useClass: BootstrapListener,
-        },
-        {
-          provide: SocketListener,
-          useClass: SocketListener,
-        },
-        {
-          provide: SecurityController,
-          useFactory: (authManager: AuthenticationProviderManager,
-                       tokenManager: TokenManagerInterface,
-                       refreshTokenManager: RefreshTokenManagerInterface,
-                       dispatcher: AsyncEventDispatcher,
-                       configuration: SecurityConfiguration
-          ) => {
-            return new SecurityController(authManager, tokenManager, refreshTokenManager, dispatcher, configuration);
-          },
-          deps: [
-            AuthenticationProviderManager, TOKEN_MANAGER, REFRESH_TOKEN_MANAGER,
-            AsyncEventDispatcher, SecurityConfiguration
-          ]
-        },
-        {
-          provide: REFRESH_TOKEN_MANAGER,
-          useFactory: (tokenManager: TokenManagerInterface, config: SecurityConfiguration) => {
-            return new InMemoryRefreshTokenManager(tokenManager, config.refresh_token_ttl);
-          },
-          deps: [TOKEN_MANAGER, SecurityConfiguration]
-        },
-        {
-          provide: PASSWORD_ENCODER_REGISTRY,
-          useClass: BcryptPasswordEncoder,
-          multi: true
-        },
-        {
-          provide: PASSWORD_ENCODER_REGISTRY,
-          useClass: PlainTextPasswordEncoder,
-          multi: true
-        },
-        {
-          provide: UserProviderManager,
-          useFactory: (registry: UserProviderInterface[]) => {
-            return new UserProviderManager(registry);
-          },
-          deps: [USER_PROVIDER_REGISTRY]
-        },
-        {
-          provide: USER_PROVIDER_REGISTRY,
-          useClass: NoopUserProvider,
-          multi: true
-        },
-        {
-          provide: AuthenticationProviderManager,
-          useFactory: (registry: AuthenticationProviderInterface[],
-                       eventDispatcher: AsyncEventDispatcher) => {
-            return new AuthenticationProviderManager(registry, eventDispatcher);
-          },
-          deps: [AUTH_PROVIDER_REGISTRY, AsyncEventDispatcher]
-        },
-        {
-          provide: AUTH_PROVIDER_REGISTRY,
-          useFactory: (userProvider: UserProviderManager,
-                       tokenManager: TokenManagerInterface,
-                       config: SecurityConfiguration) => {
-            return new TokenAuthenticationProvider(userProvider, tokenManager, config);
-          },
-          deps: [UserProviderManager, TOKEN_MANAGER, SecurityConfiguration],
-          multi: true
-        },
-        {
-          provide: AUTH_PROVIDER_REGISTRY,
-          useClass: UserPasswordAuthenticationProvider,
-          multi: true
-        },
-        {
-          provide: TokenExtractorManager,
-          useFactory: (registry: TokenExtractorInterface[]) => {
-            return new TokenExtractorManager(registry);
-          },
-          deps: [TOKEN_EXTRACTOR_REGISTRY]
-        },
-        {
-          provide: TOKEN_EXTRACTOR_REGISTRY,
-          useClass: QueryParameterTokenExtractor,
-          multi: true
-        },
-        {
-          provide: TOKEN_EXTRACTOR_REGISTRY,
-          useClass: HeaderTokenExtractor,
-          multi: true
-        },
-        {
-          provide: TokenExtractorListener,
-          useClass: TokenExtractorListener,
-        },
-        {
-          provide: AuthenticationTokenListener,
-          useClass: AuthenticationTokenListener,
-        },
+        ...this.addCommonProviders(),
+        ...this.addEncoderRelatedProviders(),
+        ...this.addLocalAuthenticationProviders(),
+        ...this.addUserRelatedProviders(),
+        ...this.addAuthenticationRelatedProviders(),
+        ...this.addTokenExtractorRelatedProviders(),
       ],
     };
+  }
+
+  private static addCommonProviders(): ProviderDefinition[] {
+    return [
+      { provide: KeyLoader, useClass: KeyLoader },
+      { provide: TOKEN_MANAGER,  useClass: TokenManager },
+    ];
+  }
+
+  private static addEncoderRelatedProviders(): ProviderDefinition[] {
+    return [
+      {
+        provide: EncoderFactory,
+        useFactory: (registry: PasswordEncoderInterface[]) => {
+          return new EncoderFactory(registry);
+        },
+        deps: [PASSWORD_ENCODER_REGISTRY]
+      },
+      { provide: PASSWORD_ENCODER_REGISTRY, useClass: BcryptPasswordEncoder, multi: true },
+      { provide: PASSWORD_ENCODER_REGISTRY, useClass: PlainTextPasswordEncoder, multi: true },
+    ];
+  }
+
+  private static addLocalAuthenticationProviders(): ProviderDefinition[] {
+    return [
+      {
+        provide: SecurityController,
+        useFactory: (authManager: AuthenticationProviderManager,
+                     tokenManager: TokenManagerInterface,
+                     refreshTokenManager: RefreshTokenManagerInterface,
+                     dispatcher: AsyncEventDispatcher,
+                     configuration: SecurityConfiguration
+        ) => {
+          return new SecurityController(authManager, tokenManager, refreshTokenManager, dispatcher, configuration);
+        },
+        deps: [
+          AuthenticationProviderManager, TOKEN_MANAGER, REFRESH_TOKEN_MANAGER,
+          AsyncEventDispatcher, SecurityConfiguration
+        ]
+      },
+      {
+        provide: REFRESH_TOKEN_MANAGER,
+        useFactory: (tokenManager: TokenManagerInterface, config: SecurityConfiguration) => {
+          return new InMemoryRefreshTokenManager(tokenManager, config.refresh_token_ttl);
+        },
+        deps: [TOKEN_MANAGER, SecurityConfiguration]
+      },
+      { provide: BootstrapListener, useClass: BootstrapListener },
+      { provide: SocketListener, useClass: SocketListener },
+    ];
+  }
+
+  private static addUserRelatedProviders(): ProviderDefinition[] {
+    return [
+      {
+        provide: UserProviderManager,
+        useFactory: (registry: UserProviderInterface[]) => {
+          return new UserProviderManager(registry);
+        },
+        deps: [USER_PROVIDER_REGISTRY]
+      },
+      { provide: USER_PROVIDER_REGISTRY, useClass: NoopUserProvider, multi: true },
+    ];
+  }
+
+  private static addTokenExtractorRelatedProviders(): ProviderDefinition[] {
+    return [
+      {
+        provide: TokenExtractorManager,
+        useFactory: (registry: TokenExtractorInterface[]) => {
+          return new TokenExtractorManager(registry);
+        },
+        deps: [TOKEN_EXTRACTOR_REGISTRY]
+      },
+      { provide: TOKEN_EXTRACTOR_REGISTRY, useClass: QueryParameterTokenExtractor, multi: true },
+      { provide: TOKEN_EXTRACTOR_REGISTRY, useClass: HeaderTokenExtractor, multi: true },
+      { provide: TokenExtractorListener, useClass: TokenExtractorListener },
+    ];
+  }
+
+  private static addAuthenticationRelatedProviders(): ProviderDefinition[] {
+    return [
+      {
+        provide: AuthenticationProviderManager,
+        useFactory: (registry: AuthenticationProviderInterface[],
+                     eventDispatcher: AsyncEventDispatcher) => {
+          return new AuthenticationProviderManager(registry, eventDispatcher);
+        },
+        deps: [AUTH_PROVIDER_REGISTRY, AsyncEventDispatcher]
+      },
+      {
+        provide: AUTH_PROVIDER_REGISTRY,
+        useFactory: (userProvider: UserProviderManager,
+                     tokenManager: TokenManagerInterface,
+                     config: SecurityConfiguration) => {
+          return new TokenAuthenticationProvider(userProvider, tokenManager, config);
+        },
+        deps: [UserProviderManager, TOKEN_MANAGER, SecurityConfiguration],
+        multi: true
+      },
+      { provide: AUTH_PROVIDER_REGISTRY, useClass: UserPasswordAuthenticationProvider, multi: true },
+      { provide: AuthenticationTokenListener, useClass: AuthenticationTokenListener },
+    ];
   }
 }
