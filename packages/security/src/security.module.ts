@@ -90,8 +90,7 @@ export class SecurityModule {
           return new SecurityController(authManager, tokenManager, refreshTokenManager, dispatcher, configuration);
         },
         deps: [
-          AuthenticationProviderManager, TOKEN_MANAGER, REFRESH_TOKEN_MANAGER,
-          AsyncEventDispatcher, SecurityConfiguration
+          AuthenticationProviderManager, TOKEN_MANAGER, REFRESH_TOKEN_MANAGER, AsyncEventDispatcher, SecurityConfiguration
         ]
       },
       {
