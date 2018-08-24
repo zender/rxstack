@@ -8,11 +8,8 @@ import * as http from 'http';
 
 @Injectable()
 export class NoopWebsocketServer extends AbstractServer {
-
-  static SERVER_NAME = 'noop-websocket';
-
   getName(): string {
-    return NoopWebsocketServer.SERVER_NAME;
+    return 'websocket';
   }
 
   getTransport(): Transport {
