@@ -16,11 +16,6 @@ const remapIstanbul = require('remap-istanbul/lib/gulpRemapIstanbul');
 
 @Gulpclass()
 export class Gulpfile {
-
-  // -------------------------------------------------------------------------
-  // General tasks
-  // -------------------------------------------------------------------------
-
   /**
    * Cleans build folder.
    */

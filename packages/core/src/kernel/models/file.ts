@@ -4,7 +4,7 @@ export class File {
   type: string;
   path: string;
   hash?: string;
-  
+
   constructor(obj: any) {
     Object.assign(this, obj);
   }
