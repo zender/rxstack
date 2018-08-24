@@ -5,6 +5,6 @@ import {HttpException} from './http.exception';
  */
 export class PaymentRequiredException extends HttpException {
   constructor(message = 'Payment Required') {
-    super(message, 'PaymentRequiredException', 402);
+    super(message, 402);
   }
 }

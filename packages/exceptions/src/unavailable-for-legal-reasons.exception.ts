@@ -5,6 +5,6 @@ import {HttpException} from './http.exception';
  */
 export class UnavailableForLegalReasonsException extends HttpException {
   constructor(message = 'Unavailable For Legal Reasons') {
-    super(message, 'UnavailableForLegalReasonsException', 451);
+    super(message, 451);
   }
 }

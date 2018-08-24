@@ -5,6 +5,6 @@ import {HttpException} from './http.exception';
  */
 export class GoneException extends HttpException {
   constructor(message = 'Gone') {
-    super(message, 'GoneException', 410);
+    super(message, 410);
   }
 }

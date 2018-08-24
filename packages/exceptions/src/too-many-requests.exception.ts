@@ -5,6 +5,6 @@ import {HttpException} from './http.exception';
  */
 export class TooManyRequestsException extends HttpException {
   constructor(message = 'Too Many Requests') {
-    super(message, 'TooManyRequestsException', 429);
+    super(message, 429);
   }
 }

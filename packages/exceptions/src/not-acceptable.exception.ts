@@ -5,6 +5,6 @@ import {HttpException} from './http.exception';
  */
 export class NotAcceptableException extends HttpException {
   constructor(message = 'Not Acceptable') {
-    super(message, 'NotAcceptableException', 406);
+    super(message, 406);
   }
 }

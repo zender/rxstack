@@ -8,9 +8,9 @@ import * as http from 'http';
 
 @Injectable()
 export class NoopHttpServer extends AbstractServer {
-  
+
   getName(): string {
-    return 'npp-http';
+    return 'noop-http';
   }
 
   getTransport(): Transport {

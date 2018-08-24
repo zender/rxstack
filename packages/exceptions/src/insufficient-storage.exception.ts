@@ -5,6 +5,6 @@ import {HttpException} from './http.exception';
  */
 export class InsufficientStorageException extends HttpException {
   constructor(message = 'Insufficient Storage') {
-    super(message, 'InsufficientStorageException', 507);
+    super(message, 507);
   }
 }

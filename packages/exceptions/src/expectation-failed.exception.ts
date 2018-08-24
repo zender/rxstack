@@ -5,6 +5,6 @@ import {HttpException} from './http.exception';
  */
 export class ExpectationFailedException extends HttpException {
   constructor(message = 'Expectation Failed') {
-    super(message, 'ExpectationFailedException', 417);
+    super(message, 417);
   }
 }

@@ -5,6 +5,6 @@ import {HttpException} from './http.exception';
  */
 export class ProxyAuthenticationRequiredException extends HttpException {
   constructor(message = 'Proxy Authentication Required') {
-    super(message, 'ProxyAuthenticationRequiredException', 407);
+    super(message, 407);
   }
 }

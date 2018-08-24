@@ -5,6 +5,6 @@ import {HttpException} from './http.exception';
  */
 export class UnsupportedMediaTypeException extends HttpException {
   constructor(message = 'Unsupported Media Type') {
-    super(message, 'UnsupportedMediaTypeException', 415);
+    super(message, 415);
   }
 }

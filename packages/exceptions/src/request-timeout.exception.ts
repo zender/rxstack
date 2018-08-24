@@ -5,6 +5,6 @@ import {HttpException} from './http.exception';
  */
 export class RequestTimeoutException extends HttpException {
   constructor(message = 'Request Timeout') {
-    super(message, 'RequestTimeoutException', 408);
+    super(message, 408);
   }
 }

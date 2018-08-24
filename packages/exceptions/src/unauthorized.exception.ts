@@ -5,6 +5,6 @@ import {HttpException} from './http.exception';
 
 export class UnauthorizedException extends HttpException {
   constructor(message = 'Unauthorized') {
-    super(message, 'UnauthorizedException', 401);
+    super(message, 401);
   }
 }
