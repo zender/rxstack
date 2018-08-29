@@ -1,5 +1,9 @@
 # The AsyncEventDispatcher Component
 
+[![Maintainability](https://api.codeclimate.com/v1/badges/fc1db3d2cd6aa8155992/maintainability)](https://codeclimate.com/github/rxstack/async-event-dispatcher/maintainability)
+[![Test Coverage](https://api.codeclimate.com/v1/badges/fc1db3d2cd6aa8155992/test_coverage)](https://codeclimate.com/github/rxstack/async-event-dispatcher/test_coverage)
+[![Build Status](https://travis-ci.org/rxstack/async-event-dispatcher.svg?branch=master)](https://travis-ci.org/rxstack/async-event-dispatcher)
+
 > The AsyncEventDispatcher component provides tools that allow your application components to communicate with each other
   by dispatching events and listening to them.
   

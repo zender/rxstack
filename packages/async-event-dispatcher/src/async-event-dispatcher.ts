@@ -2,7 +2,7 @@ import {GenericEvent} from './generic-event';
 import {EventCallable, Observer} from './interfaces';
 
 /**
- * The AsyncEventDispatcher is the central point of RxStack's event listener system.
+ * The AsyncEventDispatcher
  */
 export class AsyncEventDispatcher {
 
@@ -45,7 +45,7 @@ export class AsyncEventDispatcher {
    * @returns {boolean}
    */
   hasListeners(eventName: string): boolean {
-    return this.stack.has(eventName);
+    return this.getListeners(eventName).length > 0;
   }
 
   /**

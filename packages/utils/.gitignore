@@ -4,7 +4,6 @@ coverage
 html-report
 npm-debug.log
 coverage.json
-.nyc_output/
 *.iml
 .idea/
 packages/express-server/test/uploads/*

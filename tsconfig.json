@@ -14,7 +14,7 @@
         "lib": ["es6"]
     },
     "include": [
-        "src/**/*.ts"
+        "packages/async-event-dispatcher/src/**/*.ts"
     ],
     "exclude": [
         "dist",

@@ -1,7 +1,10 @@
 # RxStack Framework
 
+[![Maintainability](https://api.codeclimate.com/v1/badges/9bb1b2d02b93df616908/maintainability)](https://codeclimate.com/github/rxstack/rxstack/maintainability)
+
 > RxStack is a realtime object-oriented framework which helps you build a micro service web applications
 on top of other frameworks like `express` and `socketio` by adding an abstraction layer.
+
 
 ![Dependency Tree](lifecycle.jpg)  
 

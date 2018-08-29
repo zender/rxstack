@@ -1,0 +1,1 @@
+{"version":3,"file":"generic-event.js","sourceRoot":"","sources":["../src/generic-event.ts"],"names":[],"mappings":";;AACA;;GAEG;AACH;IAAA;QAEE;;;;WAIG;QACK,uBAAkB,GAAG,KAAK,CAAC;IAqBrC,CAAC;IAnBC;;;;OAIG;IACI,oBAAoB;QACzB,OAAO,IAAI,CAAC,kBAAkB,CAAC;IACjC,CAAC;IAED;;;;;;OAMG;IACI,eAAe;QACpB,IAAI,CAAC,kBAAkB,GAAG,IAAI,CAAC;IACjC,CAAC;CACF;AA5BD,oCA4BC"}

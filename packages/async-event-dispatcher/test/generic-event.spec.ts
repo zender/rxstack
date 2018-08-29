@@ -1,4 +1,5 @@
 import {GenericEvent} from '../src/generic-event';
+import { expect } from 'chai';
 
 describe('GenericEvent', () => {
 
@@ -9,11 +10,11 @@ describe('GenericEvent', () => {
   });
 
   it('should not stop propagation', () => {
-    genericEvent.isPropagationStopped().should.be.false;
+    expect(genericEvent.isPropagationStopped()).be.false;
   });
 
   it('should stop propagation', () => {
     genericEvent.stopPropagation();
-    genericEvent.isPropagationStopped().should.be.true;
+    expect(genericEvent.isPropagationStopped()).be.true;
   });
 });
