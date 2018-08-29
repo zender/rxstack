@@ -3,7 +3,6 @@ language: nodejs
 nodejs:
 - "8"
 - "9"
-- "10"
 
 addons:
   code_climate:
